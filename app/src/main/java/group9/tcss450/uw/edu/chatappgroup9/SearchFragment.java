@@ -14,6 +14,7 @@ import android.view.ViewGroup;
  * Activities that contain this fragment must implement the
  * {@link SearchFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
+ * I added this comment just so I could push a change. <3 Cory
  */
 public class SearchFragment extends Fragment {
 
