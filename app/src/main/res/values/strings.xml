@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ChatAppGroup9</string>
+    <string name="app_name">Husky Mingle</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -10,4 +10,11 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <string name="nav_menu_chat_title">Chat Fragment</string>
+    <string name="nav_menu_connection_title">Connection Fragment</string>
+    <string name="nav_menu_landing_title">Landing Fragment</string>
+    <string name="nav_menu_search_title">Search Fragment</string>
+    <string name="nav_menu_weather_title">Weather Fragment</string>
+
 </resources>
