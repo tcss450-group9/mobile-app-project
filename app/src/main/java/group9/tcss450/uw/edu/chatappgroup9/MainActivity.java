@@ -9,8 +9,8 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String EMPTY_USERNAME = "Username cannot be empty";
-    private final String EMPTY_PASSWORD = "Password cannot be empty";
+    private static final String EMPTY_USERNAME = "Username cannot be empty";
+    private static final String EMPTY_PASSWORD = "Password cannot be empty";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,22 +22,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void loginOnClicked(View view){
         Intent intent = new Intent(this, NavigationActivity.class);
-        EditText name = (EditText) findViewById(R.id.userNameEditText);
-        EditText password = (EditText) findViewById(R.id.passwordEditText);
+        EditText name = findViewById(R.id.userNameEditText);
+        EditText password = findViewById(R.id.passwordEditText);
 
         if (TextUtils.isEmpty(name.getText().toString())) {
             name.setError(EMPTY_USERNAME);
         }
-        else if (TextUtils.isEmpty(password.getText().toString())) {
+        if (TextUtils.isEmpty(password.getText().toString())) {
             password.setError(EMPTY_PASSWORD);
+            return;
         } else {
             //TODO login success
             startActivity(intent);
         }
     }
 
-    public void registerOnClicked(View view) {
-        Intent intent = new Intent(this, registerActivity.class);
+    public void toRegistrationActivity(View view) {
+        Intent intent = new Intent(this, RegistrationActivity.class);
             startActivity(intent);
 
     }

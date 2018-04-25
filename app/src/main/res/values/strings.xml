@@ -18,10 +18,17 @@
     <string name="nav_menu_weather_title">Weather Fragment</string>
 
     <!-- Login Page -->
-    <string name="user_name_activity_main">Username</string>
-    <string name="password_activity_main">Password</string>
-    <string name="login_activity_main">Log in</string>
-    <string name="register_activity_main">Register</string>
+    <string name="user_name">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Log in</string>
+    <string name="register">Register</string>
+
+    <!-- Registration Page -->
+    <string name="email">Email</string>
+    <string name="firstname">First Name</string>
+    <string name="lastname">Last Name</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="submit">submit</string>
 
 
 </resources>
