@@ -1,5 +1,6 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -43,7 +44,6 @@ public class RegistrationActivity extends AppCompatActivity {
     public void submitOnClicked(View theSubmitButton){
         verifyRegistrationInfo(theSubmitButton);
         //TODO Register new account
-        //maybe use fragment instead, can't just pop back.
 
 
     }
@@ -70,7 +70,14 @@ public class RegistrationActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(),
                     "Registration success", Toast.LENGTH_LONG).show();
+            backToLogin();
+
         }
+    }
+
+    private void backToLogin() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     private boolean isValidEmail (final String target) {
