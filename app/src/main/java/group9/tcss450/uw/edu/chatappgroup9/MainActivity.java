@@ -3,10 +3,14 @@ package group9.tcss450.uw.edu.chatappgroup9;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final String EMPTY_USERNAME = "Username cannot be empty";
+    private final String EMPTY_PASSWORD = "Password cannot be empty";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,18 +19,25 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    public void sendMessage(View view){
+
+    public void loginOnClicked(View view){
         Intent intent = new Intent(this, NavigationActivity.class);
-        EditText Name = (EditText) findViewById(R.id.Name);
-        EditText Pass = (EditText) findViewById(R.id.Password);
-        String Name1 = Name.getText().toString();
-        String Password = Pass.getText().toString();
-        if (Name1 != null && Name1.contains("@") && Password != null){
+        EditText name = (EditText) findViewById(R.id.userNameEditText);
+        EditText password = (EditText) findViewById(R.id.passwordEditText);
+
+        if (TextUtils.isEmpty(name.getText().toString())) {
+            name.setError(EMPTY_USERNAME);
+        }
+        else if (TextUtils.isEmpty(password.getText().toString())) {
+            password.setError(EMPTY_PASSWORD);
+        } else {
+            //TODO login success
             startActivity(intent);
         }
     }
-    public void registerpress(View view) {
-        Intent intent =new Intent(this, registerActivity.class);
+
+    public void registerOnClicked(View view) {
+        Intent intent = new Intent(this, registerActivity.class);
             startActivity(intent);
 
     }

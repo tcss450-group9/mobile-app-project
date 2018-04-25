@@ -17,4 +17,11 @@
     <string name="nav_menu_search_title">Search Fragment</string>
     <string name="nav_menu_weather_title">Weather Fragment</string>
 
+    <!-- Login Page -->
+    <string name="user_name_activity_main">Username</string>
+    <string name="password_activity_main">Password</string>
+    <string name="login_activity_main">Log in</string>
+    <string name="register_activity_main">Register</string>
+
+
 </resources>
