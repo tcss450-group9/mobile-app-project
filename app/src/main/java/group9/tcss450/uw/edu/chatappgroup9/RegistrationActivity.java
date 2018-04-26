@@ -30,14 +30,14 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        myUsername = findViewById(R.id.usernameEditTextRegister);
-        myPassword = findViewById(R.id.passwordEditTextRegister);
-        myConfirmPassword = findViewById(R.id.confirmPasswordEditText);
-        myEmail = findViewById(R.id.emailEditText);
-        myFirstName = findViewById(R.id.firstnameEditText);
-        myLastName = findViewById(R.id.lastnameEditText);
+        myUsername = findViewById(R.id.registrationEditTextUsername);
+        myPassword = findViewById(R.id.registrationEditTextPassword);
+        myConfirmPassword = findViewById(R.id.registrationEditTextConfirmPassword);
+        myEmail = findViewById(R.id.registrationEditTextEmail);
+        myFirstName = findViewById(R.id.registrationEditTextFirstName);
+        myLastName = findViewById(R.id.registrationEditTextLastName);
 
-        Button submit = findViewById(R.id.submitButton);
+        Button submit = findViewById(R.id.registrationButtonSubmit);
         submit.setOnClickListener(this::submitOnClicked);
     }
 

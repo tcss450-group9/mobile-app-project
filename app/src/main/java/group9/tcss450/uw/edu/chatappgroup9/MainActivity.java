@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void loginOnClicked(View view){
         Intent intent = new Intent(this, NavigationActivity.class);
-        EditText name = findViewById(R.id.userNameEditText);
-        EditText password = findViewById(R.id.passwordEditText);
+        EditText name = findViewById(R.id.mainEditTextUserName);
+        EditText password = findViewById(R.id.mainEditTextPassword);
 
         if (TextUtils.isEmpty(name.getText().toString())) {
             name.setError(EMPTY_USERNAME);
