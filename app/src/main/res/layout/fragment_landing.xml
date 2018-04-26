@@ -9,6 +9,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/nav_menu_landing_title" />
+        android:text="@string/nav_menu_textview_landing_title" />
 
 </FrameLayout>

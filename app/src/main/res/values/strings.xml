@@ -11,24 +11,24 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="nav_menu_chat_title">Chat Fragment</string>
-    <string name="nav_menu_connection_title">Connection Fragment</string>
-    <string name="nav_menu_landing_title">Landing Fragment</string>
-    <string name="nav_menu_search_title">Search Fragment</string>
-    <string name="nav_menu_weather_title">Weather Fragment</string>
+    <string name="nav_menu_textview_chat_title">Chat Fragment</string>
+    <string name="nav_menu_textview_connection_title">Connection Fragment</string>
+    <string name="nav_menu_textview_landing_title">Landing Fragment</string>
+    <string name="nav_menu_textview_search_title">Search Fragment</string>
+    <string name="nav_menu_textview_weather_title">Weather Fragment</string>
 
     <!-- Login Page -->
-    <string name="login_user_name">Username</string>
-    <string name="login_password">Password</string>
-    <string name="login_login_text">Log in</string>
-    <string name="login_register_text">Register</string>
+    <string name="login_edittext_username">Username</string>
+    <string name="login_edittext_password">Password</string>
+    <string name="login_button_login_text">Log in</string>
+    <string name="login_button_register_text">Register</string>
 
     <!-- Registration Page -->
-    <string name="register_email">Email</string>
-    <string name="register_firstname">First Name</string>
-    <string name="register_lastname">Last Name</string>
-    <string name="register_confirm_password">Confirm Password</string>
-    <string name="register_submit">submit</string>
+    <string name="register_edittext_email">Email</string>
+    <string name="register_edittext_firstname">First Name</string>
+    <string name="register_edittext_lastname">Last Name</string>
+    <string name="register_edittext_confirm_password">Confirm Password</string>
+    <string name="register_button_submit">submit</string>
 
 
 </resources>
