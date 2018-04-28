@@ -16,9 +16,9 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:ems="10"
-        android:hint="@string/login_edittext_username"
+        android:hint="@string/main_edittext_username"
         android:inputType="text"
-        android:text="temp"
+        android:text="morethan5"
         app:layout_constraintBottom_toTopOf="@+id/mainEditTextPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -33,7 +33,7 @@
         android:ems="10"
         android:hint="@string/login_edittext_password"
         android:inputType="textPassword"
-        android:text="temp"
+        android:text="morethan5!A"
         app:layout_constraintBottom_toTopOf="@+id/mainButtonRegister"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

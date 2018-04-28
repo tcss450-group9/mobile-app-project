@@ -17,8 +17,8 @@
     <string name="nav_menu_textview_search_title">Search Fragment</string>
     <string name="nav_menu_textview_weather_title">Weather Fragment</string>
 
-    <!-- Login Page -->
-    <string name="login_edittext_username">Username</string>
+    <!-- Main Page -->
+    <string name="main_edittext_username">Username</string>
     <string name="login_edittext_password">Password</string>
     <string name="login_button_login_text">Log in</string>
     <string name="login_button_register_text">Register</string>
@@ -29,6 +29,11 @@
     <string name="register_edittext_lastname">Last Name</string>
     <string name="register_edittext_confirm_password">Confirm Password</string>
     <string name="register_button_submit">submit</string>
+    <string name="register_textview_password_requirement">
+        Use at least 6 character, one number, one lower case letter, one upper case letter,
+        one special character.</string>
+    <string name="register_textview_username_requirement">
+        Username may only contain alphanumeric characters or _</string>
 
 
 </resources>
