@@ -22,6 +22,7 @@
     <string name="login_edittext_password">Password</string>
     <string name="login_button_login_text">Log in</string>
     <string name="login_button_register_text">Register</string>
+    <string name="login_textview_invalid_login">Invalid username or password</string>
 
     <!-- Registration Page -->
     <string name="register_edittext_email">Email</string>
