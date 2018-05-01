@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -64,14 +65,11 @@ public class RegistrationActivity extends AppCompatActivity {
 
     public void submitOnClicked(View theSubmitButton){
         if (isRegistrationInfoGood(theSubmitButton)) {
-            //TODO Register new account, and check username and on server
-
             final Credentials info = new Credentials.Builder(myUsername.getText().toString(),
                     myPassword.getEditableText())
                     .addEmail(myEmail.getText().toString())
                     .addFirstName(myFirstName.getText().toString())
                     .addLastName(myLastName.getText().toString()).build();
-
 
             onRegisterAttempt(info);
 
@@ -80,7 +78,9 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     /**
-     * @return true if the username and password is ready for the server; false otherwise.
+     * This method must be called before submit onRegisterAttempt() to make sure all registration
+     * information meet the requirement.
+     * @return true if the registration information is ready to for the server; false otherwise.
      */
     private boolean isRegistrationInfoGood(View theSubmitButton) {
         boolean result = true;
@@ -119,6 +119,7 @@ public class RegistrationActivity extends AppCompatActivity {
             result = false;
             myUsername.setError(INVALID_CHARACTER);
         } else if (username.length() < MIN_PASSWORD_LENGTH) {
+            result = false;
             myUsername.setError(USERNAME_TOO_SHORT);
         }
 
@@ -140,6 +141,11 @@ public class RegistrationActivity extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * Attempts to submit the registration to the server. It will fail when username or email has
+     * already registered.
+     * @param registrationInfo
+     */
     private void onRegisterAttempt(final Credentials registrationInfo) {
 
         //build the web server URL
@@ -154,9 +160,10 @@ public class RegistrationActivity extends AppCompatActivity {
                 .build().execute();
     }
 
-    private void handleRegistrationOnPost(final String result) {
+
+    private void handleRegistrationOnPost(final String theResult) {
         try {
-            JSONObject resultJSON = new JSONObject(result);
+            JSONObject resultJSON = new JSONObject(theResult);
             boolean success = resultJSON.getBoolean("success");
             String failReason = null;
             if (!success) {
@@ -182,7 +189,7 @@ public class RegistrationActivity extends AppCompatActivity {
             }
 
         } catch (JSONException e) {
-            Log.e("JSON parse error",result + System.lineSeparator()
+            Log.e("JSON parse error",theResult + System.lineSeparator()
                     + e.getMessage()+e.getLocalizedMessage());
         }
     }
@@ -202,3 +209,4 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
 }
+
