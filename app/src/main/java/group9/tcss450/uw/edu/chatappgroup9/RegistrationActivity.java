@@ -1,15 +1,23 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.regex.Pattern;
+
+import group9.tcss450.uw.edu.chatappgroup9.model.Credentials;
+import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -23,6 +31,8 @@ public class RegistrationActivity extends AppCompatActivity {
     private final String EMAIL_INVALID = "Email address is invalid";
     private final String INVALID_CHARACTER = "Invalid character contained";
     private final String PASSWORD_TOO_SIMPLE = "Password is too simple";
+    private final String USERNAME_EXIST = "Username has already exist";
+    private final String EMAIL_EXIST = "Email has already registered";
     /** Regular expression**/
     private final Pattern REG_EX_USERNAME = Pattern.compile("[^a-zA-Z_0-9]");
     private final Pattern REG_EX_NAME = Pattern.compile("[^a-zA-Z]");
@@ -54,15 +64,19 @@ public class RegistrationActivity extends AppCompatActivity {
 
     public void submitOnClicked(View theSubmitButton){
         if (isRegistrationInfoGood(theSubmitButton)) {
-            //TODO Register new account, and check username on server
-            Toast.makeText(getApplicationContext(),
-                    "Client check pass", Toast.LENGTH_LONG).show();
-            backToLogin();
+            //TODO Register new account, and check username and on server
+
+            final Credentials info = new Credentials.Builder(myUsername.getText().toString(),
+                    myPassword.getEditableText())
+                    .addEmail(myEmail.getText().toString())
+                    .addFirstName(myFirstName.getText().toString())
+                    .addLastName(myLastName.getText().toString()).build();
+
+
+            onRegisterAttempt(info);
+
 
         }
-
-
-
     }
 
     /**
@@ -124,6 +138,48 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
         return result;
+    }
+
+    private void onRegisterAttempt(final Credentials registrationInfo) {
+
+        //build the web server URL
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_register)).build();
+
+        //build the JSON object
+        JSONObject msg = registrationInfo.asJSONObject();
+
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handleRegistrationOnPost)
+                .build().execute();
+    }
+
+    private void handleRegistrationOnPost(final String result) {
+        try {
+            JSONObject resultJSON = new JSONObject(result);
+            boolean success = resultJSON.getBoolean("success");
+            String failReason = resultJSON.getJSONObject("error").getString("detail");
+
+            if (success) {
+                backToLogin();
+            } else if (failReason.contains("username")) {
+                myUsername.setError(USERNAME_EXIST);
+                Toast.makeText(getApplicationContext(),
+                        USERNAME_EXIST, Toast.LENGTH_LONG).show();
+            } else if (failReason.contains("email")) {
+                myEmail.setError(EMAIL_EXIST);
+                Toast.makeText(getApplicationContext(),
+                        EMAIL_EXIST, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "This", Toast.LENGTH_LONG).show();
+                Log.e("Registration Activity","Registration fail: " + failReason);
+            }
+
+        } catch (JSONException e) {
+            Log.e("JSON parse error",result + System.lineSeparator()
+                    + e.getMessage());
+        }
     }
 
     private void backToLogin() {
