@@ -158,9 +158,14 @@ public class RegistrationActivity extends AppCompatActivity {
         try {
             JSONObject resultJSON = new JSONObject(result);
             boolean success = resultJSON.getBoolean("success");
-            String failReason = resultJSON.getJSONObject("error").getString("detail");
+            String failReason = null;
+            if (!success) {
+               failReason = resultJSON.getJSONObject("error").getString("detail");
+            }
 
             if (success) {
+                Toast.makeText(getApplicationContext(),
+                        "Registration success", Toast.LENGTH_LONG).show();
                 backToLogin();
             } else if (failReason.contains("username")) {
                 myUsername.setError(USERNAME_EXIST);
@@ -178,7 +183,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         } catch (JSONException e) {
             Log.e("JSON parse error",result + System.lineSeparator()
-                    + e.getMessage());
+                    + e.getMessage()+e.getLocalizedMessage());
         }
     }
 
