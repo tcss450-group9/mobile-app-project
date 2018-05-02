@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 //Login was unsuccessful.
                 //TODO handle failure
                 Log.e("Main activity","Log in unsuccessful");
+                Toast.makeText(this ,"Login Unsuccessful incorrect Username or PassWord", Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
