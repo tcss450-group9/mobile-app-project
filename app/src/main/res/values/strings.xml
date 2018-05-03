@@ -9,7 +9,11 @@
     <string name="nav_header_title">TCSS 450 - Group 9</string>
     <string name="nav_header_subtitle">tcss450group9@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+
+    <string name="action_mediterranean_blues_theme">Change Theme: Mediterranean Blues</string>
+    <string name="action_shimmering_blues_theme">Change Theme: Shimmering Blues</string>
+    <string name="action_turquoise_red_theme">Change Theme: Turquoise and Red</string>
+    <string name="action_orange_sunset_theme">Change Theme: Orange Sunset</string>
 
     <string name="nav_menu_textview_chat_title">Chat Fragment</string>
     <string name="nav_menu_textview_connection_title">Connection Fragment</string>

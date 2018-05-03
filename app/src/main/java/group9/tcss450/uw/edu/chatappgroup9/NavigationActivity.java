@@ -1,5 +1,6 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +16,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
+
+import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -24,10 +28,16 @@ public class NavigationActivity extends AppCompatActivity
         SearchFragment.OnFragmentInteractionListener,
         WeatherFragment.OnFragmentInteractionListener{
 
+    public static int mTheme = ThemeUtil.THEME_MEDITERRANEAN_BLUES;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // To change theme just put your theme id.
+        int theme = ThemeUtil.getThemeId(mTheme);
+        setTheme(theme);
+
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -82,12 +92,36 @@ public class NavigationActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_mediterranean_blues_theme) {
+            changeTheme(ThemeUtil.THEME_MEDITERRANEAN_BLUES);
+        }
+
+        if (id == R.id.action_shimmering_blues_theme) {
+            changeTheme(ThemeUtil.THEME_SHIMMERING_BLUES);
+        }
+
+        if (id == R.id.action_turquoise_red_theme) {
+            changeTheme(ThemeUtil.THEME_TURQUOISE_RED);
+        }
+
+        if (id == R.id.action_orange_sunset_theme) {
+            changeTheme(ThemeUtil.THEME_ORANGE_SUNSET);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void changeTheme(int theme) {
+        // Handles theme changes to activity
+        mTheme = theme;
+        setTheme(mTheme);
+
+        NavigationActivity.this.recreate();
+
+        int duration = Toast.LENGTH_SHORT;
+        Context context = this.getBaseContext();
+        Toast toast = Toast.makeText(context, "Changed Theme", duration);
+        toast.show();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

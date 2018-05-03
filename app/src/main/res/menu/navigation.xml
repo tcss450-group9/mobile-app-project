@@ -2,8 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_mediterranean_blues_theme"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/action_mediterranean_blues_theme"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_shimmering_blues_theme"
+        android:orderInCategory="100"
+        android:title="@string/action_shimmering_blues_theme"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_turquoise_red_theme"
+        android:orderInCategory="100"
+        android:title="@string/action_turquoise_red_theme"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_orange_sunset_theme"
+        android:orderInCategory="100"
+        android:title="@string/action_orange_sunset_theme"
         app:showAsAction="never" />
 </menu>
