@@ -46,13 +46,12 @@ public class MainActivity extends AppCompatActivity {
             myUsername.setError(INVALID_LOGIN_INFO);
             myPassword.setError(INVALID_LOGIN_INFO);
         } else {
-            //TODO attempt to login
+
             Credentials loginInfo = new Credentials.Builder(myUsername.getText().toString(),
                     myPassword.getEditableText()).build();
 
             loginAttempt(loginInfo);
         }
-
     }
 
     /**
@@ -109,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * Checks if the login information is good or not.
+     * This method must be called before attempt to submit the login information to the server.
      * @return true if the username and password is ready for the server; false otherwise.
      */
     private boolean isLoginInfoGood() {
