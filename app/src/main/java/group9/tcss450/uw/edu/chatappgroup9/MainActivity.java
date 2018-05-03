@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             JSONObject resultsJSON = new JSONObject(result);
             boolean success = resultsJSON.getBoolean("success");
-            //TODO need to get fail info from server.
 
             if (success) {
                 //Login was successful. Switch to the chat page.
@@ -96,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             } else {
                 //Login was unsuccessful.
-                //TODO handle failure
                 Log.e("Main activity","Log in unsuccessful");
                 Toast.makeText(this ,"Login Unsuccessful incorrect Username or PassWord", Toast.LENGTH_LONG).show();
             }
@@ -147,7 +145,5 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
 
     }
-
-
 
 }
