@@ -29,7 +29,7 @@
     <string name="register_edittext_firstname">First Name</string>
     <string name="register_edittext_lastname">Last Name</string>
     <string name="register_edittext_confirm_password">Confirm Password</string>
-    <string name="register_button_submit">submit</string>
+    <string name="register_button_submit">Submit</string>
     <string name="register_textview_password_requirement">
         Use at least 6 character, one number, one lower case letter, one upper case letter,
         one special character.</string>
