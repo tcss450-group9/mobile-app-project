@@ -40,5 +40,17 @@
     <string name="register_textview_username_requirement">
         Username may only contain alphanumeric characters or _</string>
 
+    <!-- Registration Page -->
+    <string name="search_textview_title">Search your friends</string>
+    <string name="search_textview_search_email">Search by email</string>
+    <string name="search_edittext_email">Email</string>
+    <string name="search_textview_search_fullname">Search by first name and last name</string>
+    <string name="search_textview_firstname">First Name</string>
+    <string name="search_textview_lastname">Last Name</string>
+    <string name="search_textview_search_username">Search by username</string>
+    <string name="search_textview_username">Username</string>
+    <string name="search_button_search">Search</string>
+    <string name="search_button_request">Send request</string>
+
 
 </resources>

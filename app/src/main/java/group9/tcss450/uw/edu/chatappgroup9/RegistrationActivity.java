@@ -183,8 +183,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         EMAIL_EXIST, Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getApplicationContext(),
-                        "This", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(),
+//                        "This", Toast.LENGTH_LONG).show();
                 Log.e("Registration Activity","Registration fail: " + failReason);
             }
 
