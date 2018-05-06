@@ -17,16 +17,13 @@ import org.json.JSONObject;
 import java.util.regex.Pattern;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.Credentials;
+import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String INVALID_LOGIN_INFO = "Invalid username or password";
     private final int MIN_LENGTH_USERNAME_PASSWORD = 6;
-    /** Regular expression**/
-    private final Pattern REG_EX_USERNAME = Pattern.compile("[^a-zA-Z_0-9]");
-    private final Pattern REG_EX_PASSWORD =
-            Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*(_|[^\\w])).+$");
     private EditText myUsername;
     private EditText myPassword;
 
@@ -122,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             result = false;
         } else if (username.length() < MIN_LENGTH_USERNAME_PASSWORD) {
             result = false;
-        } else if (REG_EX_USERNAME.matcher(username).find()) {
+        } else if (!InputVerificationTool.isUsername(username)) {
             result = false;
             Log.e("Main", "Username contains only A-Z, a-z, 0-9 and _ :" + username);
         }
@@ -130,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             result = false;
         } else if (password.length() < MIN_LENGTH_USERNAME_PASSWORD) {
             result = false;
-        } else if (!REG_EX_PASSWORD.matcher(password).matches()) {
+        } else if (!InputVerificationTool.isUsername(password)) {
             result = false;
             Log.e("Main",
                     "Password needs at least one number " +

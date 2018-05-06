@@ -5,6 +5,10 @@ import android.text.TextUtils;
 
 import java.util.regex.Pattern;
 
+/**
+ * Utility class to check is the username, first name, last name, password, email
+ * match the requirement
+ */
 public class InputVerificationTool {
     /**
      * Regular expression

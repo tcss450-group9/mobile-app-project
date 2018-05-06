@@ -9,20 +9,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.regex.Pattern;
-
 import group9.tcss450.uw.edu.chatappgroup9.model.Credentials;
+import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private int MIN_PASSWORD_LENGTH = 6;
+    private int MIN_LENGTH_USERNAME_PASSWORD = 6;
     private final String USERNAME_EMPTY = "Username cannot be empty";
     private final String USERNAME_TOO_SHORT = "Username is too short";
     private final String FIRST_NAME_EMPTY = "First name cannot be empty";
@@ -34,11 +32,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private final String PASSWORD_TOO_SIMPLE = "Password is too simple";
     private final String USERNAME_EXIST = "Username has already exist";
     private final String EMAIL_EXIST = "Email has already registered";
-    /** Regular expression**/
-    private final Pattern REG_EX_USERNAME = Pattern.compile("[^a-zA-Z_0-9]");
-    private final Pattern REG_EX_NAME = Pattern.compile("[^a-zA-Z]");
-    private final Pattern REG_EX_PASSWORD =
-            Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*(_|[^\\w])).+$");
+
 
     private EditText myUsername;
     private EditText myPassword;
@@ -91,7 +85,7 @@ public class RegistrationActivity extends AppCompatActivity {
         String password = myPassword.getText().toString();
         String confirmPassword = myConfirmPassword.getText().toString();
 
-        if (!isValidEmail(email)) {
+        if (!InputVerificationTool.isEmail(email)) {
             result = false;
             myEmail.setError(EMAIL_INVALID);
         }
@@ -99,7 +93,7 @@ public class RegistrationActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(firstname)) {
             result = false;
             myFirstName.setError(FIRST_NAME_EMPTY);
-        }else if (REG_EX_NAME.matcher(firstname).find()) {
+        }else if (!InputVerificationTool.isName(firstname)) {
             result = false;
             myFirstName.setError(INVALID_CHARACTER);
         }
@@ -107,7 +101,7 @@ public class RegistrationActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(lastname)) {
             result = false;
             myLastName.setError(LAST_NAME_EMPTY);
-        } else if (REG_EX_NAME.matcher(lastname).find()) {
+        } else if (!InputVerificationTool.isName(lastname)) {
             result = false;
             myLastName.setError(INVALID_CHARACTER);
         }
@@ -115,10 +109,10 @@ public class RegistrationActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(username)) {
             result = false;
             myUsername.setError(USERNAME_EMPTY);
-        } else if (REG_EX_USERNAME.matcher(username).find()) {
+        } else if (!InputVerificationTool.isUsername(username)) {
             result = false;
             myUsername.setError(INVALID_CHARACTER);
-        } else if (username.length() < MIN_PASSWORD_LENGTH) {
+        } else if (username.length() < MIN_LENGTH_USERNAME_PASSWORD) {
             result = false;
             myUsername.setError(USERNAME_TOO_SHORT);
         }
@@ -128,11 +122,11 @@ public class RegistrationActivity extends AppCompatActivity {
             result = false;
             myPassword.setError(PASSWORD_NOT_MATCH);
             myConfirmPassword.setError(PASSWORD_NOT_MATCH);
-        } else if (password.length() < MIN_PASSWORD_LENGTH) {
+        } else if (password.length() < MIN_LENGTH_USERNAME_PASSWORD) {
             result = false;
             myPassword.setError(PASSWORD_TOO_SHORT);
             myConfirmPassword.setError(PASSWORD_TOO_SHORT);
-        } else if (!REG_EX_PASSWORD.matcher(password).matches()) {
+        } else if (!InputVerificationTool.isPassword(password)) {
             result = false;
             myPassword.setError(PASSWORD_TOO_SIMPLE);
             myConfirmPassword.setError(PASSWORD_TOO_SIMPLE);
@@ -161,6 +155,11 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * handle the registration response returned from the server.
+     * Could be success or fail.
+     * @param theResult
+     */
     private void handleRegistrationOnPost(final String theResult) {
         try {
             JSONObject resultJSON = new JSONObject(theResult);
@@ -183,8 +182,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         EMAIL_EXIST, Toast.LENGTH_LONG).show();
             } else {
-//                Toast.makeText(getApplicationContext(),
-//                        "This", Toast.LENGTH_LONG).show();
                 Log.e("Registration Activity","Registration fail: " + failReason);
             }
 
@@ -198,15 +195,5 @@ public class RegistrationActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-
-    private boolean isValidEmail (final String target) {
-        if (TextUtils.isEmpty(target)) {
-            return false;
-        } else {
-            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
-        }
-    }
-
-
 }
 
