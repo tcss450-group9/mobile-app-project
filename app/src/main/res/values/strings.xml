@@ -41,7 +41,7 @@
         Username may only contain alphanumeric characters or _</string>
 
     <!-- Registration Page -->
-    <string name="search_textview_title">Search your friends</string>
+    <string name="search_textview_title">Search for friends</string>
     <string name="search_textview_search_email">Search by email</string>
     <string name="search_edittext_email">Email</string>
     <string name="search_textview_search_fullname">Search by first name and last name</string>
@@ -51,6 +51,7 @@
     <string name="search_textview_username">Username</string>
     <string name="search_button_search">Search</string>
     <string name="search_button_request">Send request</string>
+    <string name="search_textview_user_not_found">User not found</string>
 
 
 </resources>

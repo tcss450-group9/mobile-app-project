@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="keys_json_email">email</string>
+    <string name="keys_json_success">success</string>
+    <string name="keys_json_firstname">firstname</string>
+    <string name="keys_json_lastname">lastname</string>
+    <string name="keys_json_username">username</string>
+
+</resources>

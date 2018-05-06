@@ -3,10 +3,8 @@ package group9.tcss450.uw.edu.chatappgroup9;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.view.View;
+import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,8 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 
 public class NavigationActivity extends AppCompatActivity
@@ -66,6 +70,8 @@ public class NavigationActivity extends AppCompatActivity
                         .add(R.id.fragmentContainer, new LandingFragment()).commit();
             }
         }
+
+
     }
 
     @Override
@@ -147,6 +153,69 @@ public class NavigationActivity extends AppCompatActivity
         return true;
     }
 
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+
+    @Override
+    public void onSearchByEmailAttempt(String theEmail) {
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search)).build();
+        JSONObject emailJSON = new JSONObject();
+
+        try {
+            emailJSON.put(getString(R.string.keys_json_email), theEmail);
+        } catch (JSONException theException) {
+            Log.e("NavigationActivity", "Error creating JSON" + theException.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), emailJSON)
+                .onPostExecute(this::handleEndOfSearch).build().execute();
+    }
+
+
+    @Override
+    public void onSearchByUsernameAttempt(String theUsername) {
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search)).build();
+        JSONObject usernameJSON = new JSONObject();
+
+        try {
+            usernameJSON.put(getString(R.string.keys_json_username), theUsername);
+        } catch (JSONException theException) {
+            Log.e("NavigationActivity", "Error creating JSON" + theException.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), usernameJSON)
+                .onPostExecute(this::handleEndOfSearch).build().execute();
+    }
+
+    @Override
+    public void onSearchByNameAttempt(String theFirstName, String theLastName) {
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search)).build();
+        JSONObject nameJSON = new JSONObject();
+
+        try {
+            nameJSON.put(getString(R.string.keys_json_firstname), theFirstName);
+            nameJSON.put(getString(R.string.keys_json_lastname), theLastName);
+        } catch (JSONException theException) {
+            Log.e("NavigationActivity", "Error creating JSON" + theException.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), nameJSON)
+                .onPostExecute(this::handleEndOfSearch).build().execute();
+
+    }
+
+    @Override
+    public void onSendRequestAttempt() {
+        ((Button) findViewById(R.id.searchButtonSendRequest)).setEnabled(false);
+    }
+
     private void loadFragment(Fragment frag) {
         FragmentTransaction ft = getSupportFragmentManager()
                 .beginTransaction()
@@ -156,18 +225,33 @@ public class NavigationActivity extends AppCompatActivity
         ft.commit();
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
+    /**
+     * Handle the search by email response. If found a user, show the user's first name and last name
+     * in the result text view; otherwise show user not found.
+     * @param theResponse the response return from the server
+     */
+    private void handleEndOfSearch(String theResponse) {
+        try {
+            JSONObject responseJSON = new JSONObject(theResponse);
+            boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
+            String firstname = null;
+            String lastname = null;
+            TextView searchResult = findViewById(R.id.searchTextViewSearchResult);
+            Button sendRequest = findViewById(R.id.searchButtonSendRequest);
 
-    }
-
-    @Override
-    public void onSearchAttempt(String searchInfo) {
-
-    }
-
-    @Override
-    public void onSendRequestClicked() {
+            if (success) {
+                firstname = responseJSON.getString(getString(R.string.keys_json_firstname));
+                lastname = responseJSON.getString(getString(R.string.keys_json_lastname));
+                searchResult.setText(firstname + ", " + lastname);
+                sendRequest.setEnabled(true);
+                Log.e("NavigationActivity", "User found");
+            }else {
+                sendRequest.setEnabled(false);
+                searchResult.setText("User not found");
+            }
+        } catch (JSONException theException) {
+            Log.e("NavigationActivity", "JSON parse error");
+        }
 
     }
 }
