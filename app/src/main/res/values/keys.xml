@@ -5,5 +5,7 @@
     <string name="keys_json_firstname">firstname</string>
     <string name="keys_json_lastname">lastname</string>
     <string name="keys_json_username">username</string>
+    <string name="keys_json_error">error</string>
+    <string name="keys_json_detail">detail</string>
 
 </resources>

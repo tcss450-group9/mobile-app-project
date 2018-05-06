@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     private void handleLoginOnPost(String result) {
         try {
             JSONObject resultsJSON = new JSONObject(result);
-            boolean success = resultsJSON.getBoolean("success");
+            boolean success = resultsJSON.getBoolean(getString(R.string.keys_json_success));
 
             if (success) {
                 //Login was successful. Switch to the chat page.

@@ -66,8 +66,6 @@ public class RegistrationActivity extends AppCompatActivity {
                     .addLastName(myLastName.getText().toString()).build();
 
             onRegisterAttempt(info);
-
-
         }
     }
 
@@ -156,33 +154,33 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
     /**
-     * handle the registration response returned from the server.
-     * Could be success or fail.
-     * @param theResult
+     * handles the registration response returned from the server.
+     * the response is in JSON format.
+     * @param theResult the JSON formatted String response from the web service
      */
     private void handleRegistrationOnPost(final String theResult) {
         try {
             JSONObject resultJSON = new JSONObject(theResult);
-            boolean success = resultJSON.getBoolean("success");
+            boolean success = resultJSON.getBoolean(getString(R.string.keys_json_success));
             String failReason = null;
+
             if (!success) {
-               failReason = resultJSON.getJSONObject("error").getString("detail");
+               failReason = resultJSON.getJSONObject(getString(R.string.keys_json_error))
+                       .getString(getString(R.string.keys_json_detail));
             }
 
             if (success) {
                 Toast.makeText(getApplicationContext(),
                         "Registration success", Toast.LENGTH_LONG).show();
                 backToLogin();
-            } else if (failReason.contains("username")) {
+            } else if (failReason.contains(getString(R.string.keys_json_username))) {
                 myUsername.setError(USERNAME_EXIST);
-                Toast.makeText(getApplicationContext(),
-                        USERNAME_EXIST, Toast.LENGTH_LONG).show();
-            } else if (failReason.contains("email")) {
+
+            } else if (failReason.contains(getString(R.string.keys_json_email))) {
                 myEmail.setError(EMAIL_EXIST);
-                Toast.makeText(getApplicationContext(),
-                        EMAIL_EXIST, Toast.LENGTH_LONG).show();
+
             } else {
-                Log.e("Registration Activity","Registration fail: " + failReason);
+                Log.e("Registration Activity","Registration fail reason: " + failReason);
             }
 
         } catch (JSONException e) {
