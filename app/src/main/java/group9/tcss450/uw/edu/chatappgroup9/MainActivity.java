@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             result = false;
         } else if (password.length() < MIN_LENGTH_USERNAME_PASSWORD) {
             result = false;
-        } else if (!InputVerificationTool.isUsername(password)) {
+        } else if (!InputVerificationTool.isPassword(password)) {
             result = false;
             Log.e("Main",
                     "Password needs at least one number " +
