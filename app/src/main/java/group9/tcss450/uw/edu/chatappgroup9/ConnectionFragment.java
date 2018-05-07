@@ -5,8 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 
 
 /**
@@ -15,7 +18,7 @@ import android.view.ViewGroup;
  * {@link ConnectionFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class ConnectionFragment extends Fragment {
+public class ConnectionFragment extends Fragment implements PopupMenu.OnMenuItemClickListener {
 
     private OnFragmentInteractionListener mListener;
 
@@ -32,14 +35,10 @@ public class ConnectionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_connection, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        View v = inflater.inflate(R.layout.fragment_connection, container, false);
+        ImageButton ib = v.findViewById(R.id.connections_imagebutton_dropdown);
+        ib.setOnClickListener(this::toggleSearchOptionsMenu);
+        return v;
     }
 
     @Override
@@ -57,6 +56,35 @@ public class ConnectionFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    /**
+     *
+     * @param v
+     */
+    public void onClick(View v) {
+        if(mListener != null) {
+
+        }
+    }
+
+    /**
+     * Opens the menu containing search criteria for existing connections.
+     * @param v The Button object which opens this menu.
+     */
+    public void toggleSearchOptionsMenu(View v) {
+        PopupMenu pm = new PopupMenu(getContext(), v);
+        pm.setOnMenuItemClickListener(this);
+    }
+
+    /**
+     * Performs the action associated with the MenuItem selected by the user.
+     * @param item The MenuItem selected by the user.
+     * @return
+     */
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        return false;
     }
 
     /**

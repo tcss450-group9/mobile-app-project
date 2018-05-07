@@ -23,6 +23,7 @@
 
     <!-- Main Page -->
     <string name="main_edittext_username">Username</string>
+    <string name="login_edittext_username">Username</string>
     <string name="login_edittext_password">Password</string>
     <string name="login_button_login_text">Log in</string>
     <string name="login_button_register_text">Register</string>
@@ -52,6 +53,13 @@
     <string name="search_button_search">Search</string>
     <string name="search_button_request">Send request</string>
     <string name="search_textview_user_not_found">User not found</string>
+
+    <!-- Connections Page -->
+    <string name="connections_edittext_searchbar">Search</string>
+
+    <string name="connections_popupmenu_item1">Name</string>
+    <string name="connections_popupmenu_item2">Username</string>
+    <string name="connections_popupmenu_item3">Nickname</string>
 
 
 </resources>

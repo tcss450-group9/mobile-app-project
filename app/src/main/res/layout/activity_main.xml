@@ -16,7 +16,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:ems="10"
-        android:hint="@string/main_edittext_username"
+        android:hint="@string/login_edittext_username"
         android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/mainEditTextPassword"
         app:layout_constraintEnd_toEndOf="parent"
