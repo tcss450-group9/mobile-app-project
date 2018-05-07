@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 
 /**
@@ -75,6 +76,8 @@ public class ConnectionFragment extends Fragment implements PopupMenu.OnMenuItem
     public void toggleSearchOptionsMenu(View v) {
         PopupMenu pm = new PopupMenu(getContext(), v);
         pm.setOnMenuItemClickListener(this);
+        pm.inflate(R.menu.connections_menu_search_criteria);
+        pm.show();
     }
 
     /**
@@ -84,7 +87,20 @@ public class ConnectionFragment extends Fragment implements PopupMenu.OnMenuItem
      */
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        return false;
+        switch(item.getItemId()) {
+            case R.id.connections_menu_searchByName:
+                Toast.makeText(getContext(), "Search by name", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.connections_menu_searchByUN:
+                Toast.makeText(getContext(), "Search by Username", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.connections_menu_searchByNickname:
+                Toast.makeText(getContext(), "Search by nickname", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                Toast.makeText(getContext(), "Error choosing item", Toast.LENGTH_SHORT).show();
+                return false;
+        }
     }
 
     /**
