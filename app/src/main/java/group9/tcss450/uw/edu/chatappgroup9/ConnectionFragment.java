@@ -89,13 +89,13 @@ public class ConnectionFragment extends Fragment implements PopupMenu.OnMenuItem
     public boolean onMenuItemClick(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.connections_menu_searchByName:
-                Toast.makeText(getContext(), "Search by name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Search by Name", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.connections_menu_searchByUN:
                 Toast.makeText(getContext(), "Search by Username", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.connections_menu_searchByNickname:
-                Toast.makeText(getContext(), "Search by nickname", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Search by Nickname", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 Toast.makeText(getContext(), "Error choosing item", Toast.LENGTH_SHORT).show();
