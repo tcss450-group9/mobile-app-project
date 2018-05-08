@@ -8,7 +8,7 @@
     <!-- Shimmering Blues theme. -->
     <color name="colorPrimary2">#0AAFF1</color>
     <color name="colorPrimaryDark2">#0444BF </color>
-    <color name="colorAccent2">#EDF259</color>
+    <color name="colorAccent2">#dce05e</color>
 
     <!-- Turquoise and Red theme. -->
     <color name="colorPrimary3">#0294A5</color>
