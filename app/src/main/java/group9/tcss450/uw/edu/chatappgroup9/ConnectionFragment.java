@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 
@@ -22,6 +24,10 @@ import android.widget.Toast;
 public class ConnectionFragment extends Fragment implements PopupMenu.OnMenuItemClickListener {
 
     private OnFragmentInteractionListener mListener;
+    private EditText mySearchBar;
+    private ImageButton mySearchButton;
+    private ImageButton myDropdownMenuButton;
+    private ScrollView myConnectionsScrollView;
 
     public ConnectionFragment() {
         // Required empty public constructor
@@ -39,6 +45,15 @@ public class ConnectionFragment extends Fragment implements PopupMenu.OnMenuItem
         View v = inflater.inflate(R.layout.fragment_connection, container, false);
         ImageButton ib = v.findViewById(R.id.connections_imagebutton_dropdown);
         ib.setOnClickListener(this::toggleSearchOptionsMenu);
+
+        EditText searchBar = v.findViewById(R.id.connections_edittext_searchbar);
+
+        ImageButton searchButton = v.findViewById(R.id.connections_imagebutton_search);
+
+        ImageButton menuButton = v.findViewById(R.id.connections_imagebutton_dropdown);
+
+        ScrollView connections = v.findViewById(R.id.connections_scrollview_connections_table);
+
         return v;
     }
 
