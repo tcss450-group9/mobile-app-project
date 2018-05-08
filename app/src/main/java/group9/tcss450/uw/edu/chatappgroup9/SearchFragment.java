@@ -33,7 +33,6 @@ public class SearchFragment extends Fragment {
     private TextView mySearchResult;
 
 
-
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -89,10 +88,6 @@ public class SearchFragment extends Fragment {
             } else {
                 Log.e("SearchFragment", "Search fail: " + myEmail.getText().toString());
             }
-//            else if () {
-//
-//            }
-
         }
     }
 

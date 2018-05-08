@@ -269,14 +269,12 @@ public class NavigationActivity extends AppCompatActivity
         try {
             JSONObject responseJSON = new JSONObject(theResponse);
             boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
-            String firstname = null;
-            String lastname = null;
             TextView searchResult = findViewById(R.id.searchTextViewSearchResult);
             Button sendRequest = findViewById(R.id.searchButtonSendRequest);
 
             if (success) {
-                firstname = responseJSON.getString(getString(R.string.keys_json_firstname));
-                lastname = responseJSON.getString(getString(R.string.keys_json_lastname));
+                String firstname = responseJSON.getString(getString(R.string.keys_json_firstname));
+                String lastname = responseJSON.getString(getString(R.string.keys_json_lastname));
                 searchResult.setText(firstname + ", " + lastname);
                 sendRequest.setEnabled(true);
                 Log.e("NavigationActivity", "User found");
