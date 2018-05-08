@@ -10,7 +10,7 @@ import group9.tcss450.uw.edu.chatappgroup9.R;
 public class ThemeUtil {
     public static final int THEME_MEDITERRANEAN_BLUES = 0;
     public static final int THEME_SHIMMERING_BLUES = 1;
-    public static final int THEME_TURQUOISE_RED = 2;
+    public static final int THEME_TURQUOISE_WATERMELON = 2;
     public static final int THEME_ORANGE_SUNSET = 3;
 
     public static int getThemeId(int theme) {
@@ -23,8 +23,8 @@ public class ThemeUtil {
             case THEME_SHIMMERING_BLUES:
                 themeId = R.style.AppTheme_ShimmeringBlues;
                 break;
-            case THEME_TURQUOISE_RED:
-                themeId = R.style.AppTheme_TurquoiseAndRed;
+            case THEME_TURQUOISE_WATERMELON:
+                themeId = R.style.AppTheme_TurquoiseWatermelon;
                 break;
             case THEME_ORANGE_SUNSET:
                 themeId = R.style.AppTheme_OrangeSunset;

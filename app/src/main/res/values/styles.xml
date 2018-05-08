@@ -29,7 +29,7 @@
         <item name="colorAccent">@color/colorAccent2</item>
     </style>
 
-    <style name="AppTheme_TurquoiseAndRed" parent="AppTheme.NoActionBar">
+    <style name="AppTheme_TurquoiseWatermelon" parent="AppTheme.NoActionBar">
         <!-- Turquoise and Red theme. -->
         <item name="colorPrimary">@color/colorPrimary3</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark3</item>

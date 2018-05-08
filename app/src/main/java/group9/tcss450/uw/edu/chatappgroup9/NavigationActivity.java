@@ -124,7 +124,7 @@ public class NavigationActivity extends AppCompatActivity
         }
 
         if (id == R.id.action_turquoise_red_theme) {
-            changeTheme(ThemeUtil.THEME_TURQUOISE_RED);
+            changeTheme(ThemeUtil.THEME_TURQUOISE_WATERMELON);
         }
 
         if (id == R.id.action_orange_sunset_theme) {
