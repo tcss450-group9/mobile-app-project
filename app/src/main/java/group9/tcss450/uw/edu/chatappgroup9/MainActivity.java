@@ -1,6 +1,8 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,13 +10,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.regex.Pattern;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.Credentials;
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private final int MIN_LENGTH_USERNAME_PASSWORD = 6;
     private EditText myUsername;
     private EditText myPassword;
+    private CheckBox myStayLogin;
+    private SharedPreferences mySharePrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,19 @@ public class MainActivity extends AppCompatActivity {
         myPassword = findViewById(R.id.mainEditTextPassword);
         Button login = findViewById(R.id.mainButtonLogin);
         login.setOnClickListener(this::loginOnClicked);
+        Button register = findViewById(R.id.mainButtonRegister);
+        register.setOnClickListener(this::toRegistrationActivity);
+        myStayLogin = findViewById(R.id.mainCheckboxStayLogin);
+
+        mySharePrefs = getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+
+        if (mySharePrefs != null) {
+            if (mySharePrefs.getBoolean(getString(R.string.keys_prefs_stay_login), false)) {
+                startActivity(new Intent(getApplicationContext(), NavigationActivity.class));
+            }
+        }
 
     }
 
@@ -86,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             boolean success = resultsJSON.getBoolean(getString(R.string.keys_json_success));
 
             if (success) {
+                saveUserInfoToSharedPreference(resultsJSON);
                 //Login was successful. Switch to the chat page.
                 Intent intent = new Intent(this, NavigationActivity.class);
                 startActivity(intent);
@@ -139,7 +156,50 @@ public class MainActivity extends AppCompatActivity {
 
     public void toRegistrationActivity(View view) {
         Intent intent = new Intent(this, RegistrationActivity.class);
-            startActivity(intent);
+        startActivity(intent);
+    }
+
+
+    /**
+     * This method only call if login success;
+     * it will save the user information in the shared preferences.
+     * @param resultsJSON
+     */
+    private void saveUserInfoToSharedPreference(JSONObject resultsJSON) {
+        SharedPreferences prefs =
+                getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        if (myStayLogin.isChecked()) {
+
+            //save the username for later usage
+            prefs.edit().putString(
+                    getString(R.string.keys_shared_prefs_username),
+                    myUsername.getText().toString())
+                    .apply();
+            //save the users “want” to stay logged in
+            prefs.edit().putBoolean(
+                    getString(R.string.keys_prefs_stay_login),
+                    true)
+                    .apply();
+        }
+        try {
+            String username = resultsJSON.getString(getString(R.string.keys_json_username));
+            String firstname = resultsJSON.getString(getString(R.string.keys_json_firstname));
+            String lastname = resultsJSON.getString(getString(R.string.keys_json_lastname));
+            String email = resultsJSON.getString(getString(R.string.keys_json_email));
+            String memberid = resultsJSON.getString(getString(R.string.keys_json_memberid));
+
+            prefs.edit().putString(getString(R.string.keys_shared_prefs_username), username).apply();
+            prefs.edit().putString(getString(R.string.keys_shared_prefs_firstname), firstname).apply();
+            prefs.edit().putString(getString(R.string.keys_shared_prefs_lastname), lastname).apply();
+            prefs.edit().putString(getString(R.string.keys_shared_prefs_email), email).apply();
+            prefs.edit().putString(getString(R.string.keys_shared_prefs_memberid), memberid).apply();
+
+        } catch (JSONException e) {
+            Log.e("MainActivity", e.getMessage());
+        }
+
 
     }
 

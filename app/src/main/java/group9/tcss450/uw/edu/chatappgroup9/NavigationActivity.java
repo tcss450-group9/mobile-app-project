@@ -1,6 +1,9 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
+import android.app.ListFragment;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -64,12 +67,26 @@ public class NavigationActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        SharedPreferences preferences = getSharedPreferences(
+                getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
+        if (preferences != null) {
+            String username = preferences.getString(getString(R.string.keys_shared_prefs_username),
+                    "unknown user");
+            TextView textView = navigationView.getHeaderView(0).findViewById(R.id.navigationHeaderTextViewUsername);
+
+            Log.e("NavigationActivity", "header username: " + textView);
+            textView.setText(username);
+        }
+
         if(savedInstanceState == null) {
             if(findViewById(R.id.fragmentContainer) != null) {
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragmentContainer, new LandingFragment()).commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer,
+                        new LandingFragment(), getString(R.string.keys_landing_fragment_tag))
+                        .commit();
             }
         }
+
+
 
 
     }
@@ -137,15 +154,15 @@ public class NavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_landing) {
-            loadFragment(new LandingFragment());
+            loadFragment(new LandingFragment(), getString(R.string.keys_landing_fragment_tag));
         } else if (id == R.id.nav_chat) {
-            loadFragment(new ChatFragment());
+            loadFragment(new ChatFragment(), getString(R.string.keys_chat_fragment_tag));
         } else if (id == R.id.nav_connection) {
-            loadFragment(new ConnectionFragment());
+            loadFragment(new ConnectionFragment(), getString(R.string.keys_connection_fragment_tag));
         } else if (id == R.id.nav_search) {
-            loadFragment(new SearchFragment());
+            loadFragment(new SearchFragment(), getString(R.string.keys_search_fragment_tag));
         } else if (id == R.id.nav_weather) {
-            loadFragment(new WeatherFragment());
+            loadFragment(new WeatherFragment(), getString(R.string.keys_weather_fragment_tag));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -157,6 +174,24 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onLogout() {
+        SharedPreferences prefs =
+                getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+
+        prefs.edit().remove(getString(R.string.keys_shared_prefs_username));
+
+        prefs.edit().putBoolean(
+                getString(R.string.keys_prefs_stay_login),
+                false)
+                .apply();
+        //the way to close an app programmaticaly
+//        finishAndRemoveTask();
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
 
@@ -216,13 +251,13 @@ public class NavigationActivity extends AppCompatActivity
         ((Button) findViewById(R.id.searchButtonSendRequest)).setEnabled(false);
     }
 
-    private void loadFragment(Fragment frag) {
+    private void loadFragment(Fragment frag, String theFragmentTag) {
         FragmentTransaction ft = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragmentContainer, frag)
+                .replace(R.id.fragmentContainer, frag, theFragmentTag)
                 .addToBackStack(null);
-
         ft.commit();
+
     }
 
     /**

@@ -1,12 +1,15 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 /**
@@ -17,9 +20,7 @@ import android.view.ViewGroup;
  */
 public class LandingFragment extends Fragment {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String myUsername;
 
     private OnFragmentInteractionListener mListener;
 
@@ -28,22 +29,29 @@ public class LandingFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_landing, container, false);
+        View view = inflater.inflate(R.layout.fragment_landing, container, false);
+        Button logout = view.findViewById(R.id.landingButtonLogout);
+        logout.setOnClickListener(this::onLogoutPressed);
+
+        return view;
     }
+
+    private void onLogoutPressed(View view) {
+        if (mListener != null) {
+            mListener.onLogout();
+        }
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+        getActivity().finishAndRemoveTask();
     }
 
     @Override
@@ -76,5 +84,6 @@ public class LandingFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+        void onLogout();
     }
 }

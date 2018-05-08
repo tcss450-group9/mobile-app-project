@@ -7,5 +7,20 @@
     <string name="keys_json_username">username</string>
     <string name="keys_json_error">error</string>
     <string name="keys_json_detail">detail</string>
+    <string name="keys_json_memberid">memberid</string>
+    <string name="keys_shared_prefs">chat-app.PREFS</string>
+
+    <string name="keys_shared_prefs_username">shard_prefs_username</string>
+    <string name="keys_shared_prefs_email">shard_prefs_email</string>
+    <string name="keys_shared_prefs_memberid">shard_prefs_memberid</string>
+    <string name="keys_shared_prefs_firstname">shard_prefs_firstname</string>
+    <string name="keys_shared_prefs_lastname">shard_prefs_lastname</string>
+    <string name="keys_prefs_stay_login">shard_prefs_stay_login</string>
+
+    <string name="keys_chat_fragment_tag">ChatFragmentTag</string>
+    <string name="keys_connection_fragment_tag">ConnectionFragmentTag</string>
+    <string name="keys_landing_fragment_tag">LandingFragmentTag</string>
+    <string name="keys_search_fragment_tag">SearchFragmentTag</string>
+    <string name="keys_weather_fragment_tag">WeatherFragmentTag</string>
 
 </resources>

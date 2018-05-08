@@ -28,6 +28,7 @@
     <string name="login_button_login_text">Log in</string>
     <string name="login_button_register_text">Register</string>
     <string name="login_textview_invalid_login">Invalid username or password</string>
+    <string name="login_checkbox_stay_login">Stay login</string>
 
     <!-- Registration Page -->
     <string name="register_edittext_email">Email</string>
@@ -41,7 +42,7 @@
     <string name="register_textview_username_requirement">
         Username may only contain alphanumeric characters or _</string>
 
-    <!-- Registration Page -->
+    <!-- search Page -->
     <string name="search_textview_title">Search for friends</string>
     <string name="search_textview_search_email">Search by email</string>
     <string name="search_edittext_email">Email</string>
@@ -60,6 +61,9 @@
     <string name="connections_popupmenu_item1">Name</string>
     <string name="connections_popupmenu_item2">Username</string>
     <string name="connections_popupmenu_item3">Nickname</string>
+
+    <!-- landing Page -->
+    <string name="landing_button_logout">Logout</string>
 
 
 </resources>
