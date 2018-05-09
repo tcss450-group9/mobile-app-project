@@ -1,7 +1,6 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,51 +8,35 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link LandingFragment.OnFragmentInteractionListener} interface
+ * {@link ContactsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class LandingFragment extends Fragment {
-
-    private String myUsername;
+public class ContactsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public LandingFragment() {
+    public ContactsFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("NavigationActivity", "" + "LandingFragmentTag");
+        Log.e("NavigationActivity", "" + "Contact FragmentTag");
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_landing, container, false);
-        Button logout = view.findViewById(R.id.landingButtonLogout);
-        logout.setOnClickListener(this::onLogoutPressed);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_contacts, container, false);
     }
-
-    private void onLogoutPressed(View view) {
-        if (mListener != null) {
-            mListener.onLogout();
-        }
-    }
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
-        getActivity().finishAndRemoveTask();
     }
 
     @Override
@@ -86,6 +69,5 @@ public class LandingFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-        void onLogout();
     }
 }

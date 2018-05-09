@@ -3,12 +3,14 @@ package group9.tcss450.uw.edu.chatappgroup9;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
@@ -21,7 +23,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
  * to handle interaction events.
  * I added this comment just so I could push a change. <3 Cory
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
 
     private OnFragmentInteractionListener myListener;
     private EditText myEmail;
@@ -31,6 +33,7 @@ public class SearchFragment extends Fragment {
     private Button mySendRequest;
     private Button mySearch;
     private TextView mySearchResult;
+    private SearchView mySearchView;
 
 
     public SearchFragment() {
@@ -41,6 +44,7 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.e("NavigationActivity", "" + "SearchFragmentTag");
         // Inflate the layout for this fragment
          View view = inflater.inflate(R.layout.fragment_search, container, false);
          mySendRequest = view.findViewById(R.id.searchButtonSendRequest);
@@ -54,12 +58,45 @@ public class SearchFragment extends Fragment {
          mySearch.setOnClickListener(this::onSearchClicked);
          mySearchResult = view.findViewById(R.id.searchTextViewSearchResult);
          mySearchResult.setOnClickListener(this::onSearchResultClicked);
+
+        mySearchView = view.findViewById(R.id.searchSearchView);
+        mySearchView.setOnQueryTextListener(this);
+        mySearchView.setOnClickListener(this::SearchViewOnClicked);
+
          return view;
     }
+
+    private void SearchViewOnClicked(View view) {
+        mySearchView.setIconified(false);
+    }
+
 
     private void onSendRequestClicked(View view) {
         mySendRequest.setEnabled(false);
         myListener.onSendRequestAttempt();
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (!TextUtils.isEmpty(newText)) {
+            Log.e("searchFragment", "change text: " + newText);
+            if (InputVerificationTool.isEmail(newText)) {
+                myListener.onSearchByEmailAttempt(newText);
+            } else if (InputVerificationTool.isUsername(newText)) {
+                myListener.onSearchByUsernameAttempt(newText);
+            } else  {
+                String[] strings = newText.split("\\s+");
+                myListener.onSearchByNameAttempt(strings[0], strings[1]);
+            }
+        }
+
+        return true;
     }
 
 

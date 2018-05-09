@@ -12,7 +12,9 @@
         android:id="@+id/userInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/nav_menu_textview_landing_title" />
+        android:layout_marginBottom="8dp"
+        android:text="@string/nav_menu_textview_landing_title"
+        app:layout_constraintBottom_toTopOf="@+id/landingButtonLogout" />
 
     <Button
         android:id="@+id/landingButtonLogout"

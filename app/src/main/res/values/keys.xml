@@ -18,7 +18,7 @@
     <string name="keys_prefs_stay_login">shard_prefs_stay_login</string>
 
     <string name="keys_chat_fragment_tag">ChatFragmentTag</string>
-    <string name="keys_connection_fragment_tag">ConnectionFragmentTag</string>
+    <string name="keys_contact_fragment_tag">ConnectionFragmentTag</string>
     <string name="keys_landing_fragment_tag">LandingFragmentTag</string>
     <string name="keys_search_fragment_tag">SearchFragmentTag</string>
     <string name="keys_weather_fragment_tag">WeatherFragmentTag</string>

@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), NavigationActivity.class));
             }
         }
-
     }
 
     public void loginOnClicked(View view){
@@ -100,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             JSONObject resultsJSON = new JSONObject(result);
             boolean success = resultsJSON.getBoolean(getString(R.string.keys_json_success));
+
 
             if (success) {
                 saveUserInfoToSharedPreference(resultsJSON);

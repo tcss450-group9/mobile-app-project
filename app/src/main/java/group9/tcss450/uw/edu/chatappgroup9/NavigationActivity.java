@@ -1,6 +1,5 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
-import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,10 +29,11 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ChatFragment.OnFragmentInteractionListener,
-        ConnectionFragment.OnFragmentInteractionListener,
         LandingFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
-        WeatherFragment.OnFragmentInteractionListener{
+        WeatherFragment.OnFragmentInteractionListener,
+        ContactsFragment.OnFragmentInteractionListener,
+        ConnectionFragment.OnFragmentInteractionListener{
 
     public static int mTheme = ThemeUtil.THEME_MEDITERRANEAN_BLUES;
 
@@ -72,9 +72,11 @@ public class NavigationActivity extends AppCompatActivity
         if (preferences != null) {
             String username = preferences.getString(getString(R.string.keys_shared_prefs_username),
                     "unknown user");
+
+            Log.e("NavigationActivity", "username: " + username);
             TextView textView = navigationView.getHeaderView(0).findViewById(R.id.navigationHeaderTextViewUsername);
 
-            Log.e("NavigationActivity", "header username: " + textView);
+            Log.e("NavigationActivity", "header : " + textView);
             textView.setText(username);
         }
 
@@ -158,7 +160,7 @@ public class NavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_chat) {
             loadFragment(new ChatFragment(), getString(R.string.keys_chat_fragment_tag));
         } else if (id == R.id.nav_connection) {
-            loadFragment(new ConnectionFragment(), getString(R.string.keys_connection_fragment_tag));
+            loadFragment(new ContactsFragment(), getString(R.string.keys_contact_fragment_tag));
         } else if (id == R.id.nav_search) {
             loadFragment(new SearchFragment(), getString(R.string.keys_search_fragment_tag));
         } else if (id == R.id.nav_weather) {
@@ -252,6 +254,7 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     private void loadFragment(Fragment frag, String theFragmentTag) {
+        Log.e("NavigationActivity", "" + theFragmentTag);
         FragmentTransaction ft = getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, frag, theFragmentTag)
@@ -285,6 +288,5 @@ public class NavigationActivity extends AppCompatActivity
         } catch (JSONException theException) {
             Log.e("NavigationActivity", "JSON parse error");
         }
-
     }
 }
