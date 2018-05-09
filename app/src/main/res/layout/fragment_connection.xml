@@ -37,11 +37,10 @@
         android:id="@+id/connections_imagebutton_dropdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/ic_connections_button_dropdown"
         android:onClick="toggleSearchOptionsMenu"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_connections_button_dropdown"
+        app:layout_constraintEnd_toStartOf="@+id/imageButton"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
@@ -58,4 +57,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </ScrollView>
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_connections_button_dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
