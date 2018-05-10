@@ -42,6 +42,10 @@
     <string name="register_textview_username_requirement">
         Username may only contain alphanumeric characters or _</string>
 
+    <!--Verification Page -->
+    <string name="verification_pin_hint">4-Digit Verification Code</string>
+    <string name="verification_button_verify">Verify Account</string>
+
     <!-- search Page -->
     <string name="search_textview_title">Search for friends</string>
     <string name="search_textview_search_email">Search by email</string>
