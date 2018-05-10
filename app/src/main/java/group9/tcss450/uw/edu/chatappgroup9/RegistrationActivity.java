@@ -171,8 +171,10 @@ public class RegistrationActivity extends AppCompatActivity {
 
             if (success) {
                 Toast.makeText(getApplicationContext(),
-                        "Registration success", Toast.LENGTH_LONG).show();
-                backToLogin();
+                        myEmail.getText().toString() + ", Please verify your pin", Toast.LENGTH_LONG).show();
+
+                toVerificationActivity();
+
             } else if (failReason.contains(getString(R.string.keys_json_username))) {
                 myUsername.setError(USERNAME_EXIST);
 
@@ -189,8 +191,8 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
-    private void backToLogin() {
-        Intent intent = new Intent(this, MainActivity.class);
+    public void toVerificationActivity() {
+        Intent intent = new Intent(this, VerificationActivity.class);
         startActivity(intent);
     }
 }
