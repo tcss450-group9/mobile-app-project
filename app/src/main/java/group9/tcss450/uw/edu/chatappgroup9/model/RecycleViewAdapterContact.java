@@ -1,7 +1,6 @@
 package group9.tcss450.uw.edu.chatappgroup9.model;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,7 @@ import android.widget.TextView;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
 
-public class SearchFragRecylerViewAdapter extends RecyclerView.Adapter<SearchFragRecylerViewAdapter.ViewHolder> {
+public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewAdapterContact.ViewHolder> {
     private String[] mDataset;
 
     // Provide a reference to the views for each data item
@@ -18,16 +17,14 @@ public class SearchFragRecylerViewAdapter extends RecyclerView.Adapter<SearchFra
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView myUsername;
-        public TextView myName;
         public ViewHolder(View itemView) {
             super(itemView);
-            myUsername = itemView.findViewById(R.id.recycleViewItemUsername);
-            myName = itemView.findViewById(R.id.recycleViewItemFirstLastName);
+            myUsername = itemView.findViewById(R.id.recycleViewContactItemUsername);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public SearchFragRecylerViewAdapter(String[] theDataset) {
+    public RecycleViewAdapterContact(String[] theDataset) {
         mDataset = theDataset;
     }
 
@@ -45,11 +42,11 @@ public class SearchFragRecylerViewAdapter extends RecyclerView.Adapter<SearchFra
 
     // Create new views (invoked by the layout manager)
     @Override
-    public SearchFragRecylerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+    public RecycleViewAdapterContact.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                        int viewType) {
         // create a new view
         View v =  LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.search_frag_recycle_view_item, parent, false);
+                .inflate(R.layout.recycly_view_item_contact, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -59,11 +56,8 @@ public class SearchFragRecylerViewAdapter extends RecyclerView.Adapter<SearchFra
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        String[] data = mDataset[position].split(":");
-        if (data.length > 0) {
-            holder.myUsername.setText(data[0]);
-            holder.myName.setText(data[1] + " " +data[2]);
-        }
+            holder.myUsername.setText(mDataset[position]);
+
 
     }
 

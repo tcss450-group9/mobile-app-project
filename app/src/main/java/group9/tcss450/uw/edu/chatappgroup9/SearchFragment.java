@@ -10,12 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.TextView;
 
-import group9.tcss450.uw.edu.chatappgroup9.model.SearchFragRecylerViewAdapter;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecylerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 
 
@@ -61,7 +58,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         recyclerView.setLayoutManager(mLayoutManager);
         // specify an adapter (see also next example)
         String[] s = {};
-        SearchFragRecylerViewAdapter mAdapter = new SearchFragRecylerViewAdapter(s);
+        RecylerViewAdapterSearchResult mAdapter = new RecylerViewAdapterSearchResult(s);
         recyclerView.setAdapter(mAdapter);
 
          return view;

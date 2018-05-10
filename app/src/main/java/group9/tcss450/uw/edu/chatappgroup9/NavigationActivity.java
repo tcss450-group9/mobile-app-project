@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
@@ -18,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import group9.tcss450.uw.edu.chatappgroup9.model.SearchFragRecylerViewAdapter;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecylerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 
@@ -40,6 +38,7 @@ public class NavigationActivity extends AppCompatActivity
         ConnectionFragment.OnFragmentInteractionListener{
 
     public static int mTheme = ThemeUtil.THEME_MEDITERRANEAN_BLUES;
+    private String[] myDummyValue = {"Little_dog", "little_cat", "big_turtle", "myDummyValue", "African buffalo", "Meles meles"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +179,7 @@ public class NavigationActivity extends AppCompatActivity
 
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void getAllContacts(Uri uri) {
 
     }
 
@@ -280,7 +279,7 @@ public class NavigationActivity extends AppCompatActivity
             JSONObject responseJSON = new JSONObject(theResponse);
             boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
             RecyclerView recyclerView = findViewById(R.id.searchRecycleViewUserFound);
-            SearchFragRecylerViewAdapter mAdapter;
+            RecylerViewAdapterSearchResult mAdapter;
 
             if (success) {
                 String username = responseJSON.get(getString(R.string.keys_json_username)).toString();
@@ -289,11 +288,11 @@ public class NavigationActivity extends AppCompatActivity
 //                Log.e("NavigationActivity", "handleEndOfSearch success");
 
                 String[] s = {username + ":" + first + ":" + last};
-                mAdapter = (SearchFragRecylerViewAdapter) recyclerView.getAdapter();
+                mAdapter = (RecylerViewAdapterSearchResult) recyclerView.getAdapter();
                 mAdapter.setAdapterDataSet(s);
                 Log.e("NavigationActivity", "User found");
             } else {
-                ((SearchFragRecylerViewAdapter) recyclerView.getAdapter()).setAdapterDataSet(null);
+                ((RecylerViewAdapterSearchResult) recyclerView.getAdapter()).setAdapterDataSet(null);
                 Log.e("NavigationActivity", "User not found");
             }
         } catch (JSONException theException) {
@@ -311,18 +310,18 @@ public class NavigationActivity extends AppCompatActivity
             JSONObject responseJSON = new JSONObject(theResponse);
             boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
             RecyclerView recyclerView = findViewById(R.id.searchRecycleViewUserFound);
-            SearchFragRecylerViewAdapter mAdapter;
+            RecylerViewAdapterSearchResult mAdapter;
 
             if (success) {
                 JSONArray users = responseJSON.getJSONArray(getString(R.string.keys_json_array_users_data));
                 if (users.length() > 0) {
-                    mAdapter = (SearchFragRecylerViewAdapter) recyclerView.getAdapter();
+                    mAdapter = (RecylerViewAdapterSearchResult) recyclerView.getAdapter();
                     mAdapter.setAdapterDataSet(jsonArrayUsersDataToStringArray(users));
                 }
                 Log.e("NavigationActivity", "User found by name");
 
             } else {
-                ((SearchFragRecylerViewAdapter) recyclerView.getAdapter()).setAdapterDataSet(null);
+                ((RecylerViewAdapterSearchResult) recyclerView.getAdapter()).setAdapterDataSet(null);
                 Log.e("NavigationActivity", "User not found");
             }
         } catch (JSONException e) {
@@ -350,6 +349,11 @@ public class NavigationActivity extends AppCompatActivity
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
         }
         return msgs;
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
     }
 }

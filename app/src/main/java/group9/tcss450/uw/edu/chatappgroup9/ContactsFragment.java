@@ -4,10 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import group9.tcss450.uw.edu.chatappgroup9.model.RecycleViewAdapterContact;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +21,9 @@ import android.view.ViewGroup;
 public class ContactsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+    private String[] myDummyValue = {"Little_dog", "little_cat", "big_turtle", "myDummyValue", "African buffalo", "Meles meles"};
+
+
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -27,15 +33,24 @@ public class ContactsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("NavigationActivity", "" + "Contact FragmentTag");
+//        Log.e("NavigationActivity", "" + "Contact FragmentTag");
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contacts, container, false);
+        View v = inflater.inflate(R.layout.fragment_contacts, container, false);
+        RecyclerView recyclerView = v.findViewById(R.id.contactRecycleViewAllContacts);
+
+//        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(new RecycleViewAdapterContact(myDummyValue));
+
+
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.getAllContacts(uri);
         }
     }
 
@@ -68,6 +83,6 @@ public class ContactsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void getAllContacts(Uri uri);
     }
 }
