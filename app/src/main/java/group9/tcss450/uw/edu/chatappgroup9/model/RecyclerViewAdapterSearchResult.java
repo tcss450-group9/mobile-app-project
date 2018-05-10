@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
 
-public class RecylerViewAdapterSearchResult extends RecyclerView.Adapter<RecylerViewAdapterSearchResult.ViewHolder> {
+public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<RecyclerViewAdapterSearchResult.ViewHolder> {
     private String[] mDataset;
 
     // Provide a reference to the views for each data item
@@ -26,26 +26,26 @@ public class RecylerViewAdapterSearchResult extends RecyclerView.Adapter<Recyler
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecylerViewAdapterSearchResult(String[] theDataset) {
+    public RecyclerViewAdapterSearchResult(String[] theDataset) {
         mDataset = theDataset;
     }
 
     public void setAdapterDataSet(String[] myDataset) {
         if (myDataset != null) {
             mDataset = myDataset;
-            notifyDataSetChanged();
+
         } else {
             mDataset = new String[0];
-            notifyDataSetChanged();
         }
+        notifyDataSetChanged();
 
 
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public RecylerViewAdapterSearchResult.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                        int viewType) {
+    public RecyclerViewAdapterSearchResult.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                         int viewType) {
         // create a new view
         View v =  LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycle_view_item_search, parent, false);

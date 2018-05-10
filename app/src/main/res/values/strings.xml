@@ -57,7 +57,7 @@
     <string name="search_textview_username">Username</string>
     <string name="search_button_search">Search</string>
     <string name="search_button_request">Send request</string>
-    <string name="search_textview_user_not_found">User not found</string>
+    <string name="search_searchview_hint">Search username, names or email</string>
 
     <!-- Connections Page -->
     <string name="connections_edittext_searchbar">Search</string>

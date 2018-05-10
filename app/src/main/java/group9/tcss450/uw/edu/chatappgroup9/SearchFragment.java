@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-import group9.tcss450.uw.edu.chatappgroup9.model.RecylerViewAdapterSearchResult;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 
 
@@ -49,6 +49,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
 
         RecyclerView recyclerView = view.findViewById(R.id.searchRecycleViewUserFound);
+        recyclerView.setOnClickListener(this::noneSearchViewAreaClick);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
@@ -58,7 +59,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         recyclerView.setLayoutManager(mLayoutManager);
         // specify an adapter (see also next example)
         String[] s = {};
-        RecylerViewAdapterSearchResult mAdapter = new RecylerViewAdapterSearchResult(s);
+        RecyclerViewAdapterSearchResult mAdapter = new RecyclerViewAdapterSearchResult(s);
         recyclerView.setAdapter(mAdapter);
 
          return view;
@@ -74,6 +75,8 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     }
 
     private void noneSearchViewAreaClick(View view) {
+        Log.e("SearchFragment","noneSearchViewAreaClick");
+        mySearchView.setQuery("", false);
         mySearchView.setIconified(true);
     }
 

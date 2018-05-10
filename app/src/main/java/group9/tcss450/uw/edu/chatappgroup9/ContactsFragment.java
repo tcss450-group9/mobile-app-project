@@ -38,7 +38,7 @@ public class ContactsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_contacts, container, false);
         RecyclerView recyclerView = v.findViewById(R.id.contactRecycleViewAllContacts);
 
-//        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(new RecycleViewAdapterContact(myDummyValue));
 

@@ -24,7 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import group9.tcss450.uw.edu.chatappgroup9.model.RecylerViewAdapterSearchResult;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 
@@ -34,8 +34,7 @@ public class NavigationActivity extends AppCompatActivity
         LandingFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         WeatherFragment.OnFragmentInteractionListener,
-        ContactsFragment.OnFragmentInteractionListener,
-        ConnectionFragment.OnFragmentInteractionListener{
+        ContactsFragment.OnFragmentInteractionListener {
 
     public static int mTheme = ThemeUtil.THEME_MEDITERRANEAN_BLUES;
     private String[] myDummyValue = {"Little_dog", "little_cat", "big_turtle", "myDummyValue", "African buffalo", "Meles meles"};
@@ -279,7 +278,7 @@ public class NavigationActivity extends AppCompatActivity
             JSONObject responseJSON = new JSONObject(theResponse);
             boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
             RecyclerView recyclerView = findViewById(R.id.searchRecycleViewUserFound);
-            RecylerViewAdapterSearchResult mAdapter;
+            RecyclerViewAdapterSearchResult mAdapter;
 
             if (success) {
                 String username = responseJSON.get(getString(R.string.keys_json_username)).toString();
@@ -288,11 +287,11 @@ public class NavigationActivity extends AppCompatActivity
 //                Log.e("NavigationActivity", "handleEndOfSearch success");
 
                 String[] s = {username + ":" + first + ":" + last};
-                mAdapter = (RecylerViewAdapterSearchResult) recyclerView.getAdapter();
+                mAdapter = (RecyclerViewAdapterSearchResult) recyclerView.getAdapter();
                 mAdapter.setAdapterDataSet(s);
                 Log.e("NavigationActivity", "User found");
             } else {
-                ((RecylerViewAdapterSearchResult) recyclerView.getAdapter()).setAdapterDataSet(null);
+                ((RecyclerViewAdapterSearchResult) recyclerView.getAdapter()).setAdapterDataSet(null);
                 Log.e("NavigationActivity", "User not found");
             }
         } catch (JSONException theException) {
@@ -310,18 +309,18 @@ public class NavigationActivity extends AppCompatActivity
             JSONObject responseJSON = new JSONObject(theResponse);
             boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
             RecyclerView recyclerView = findViewById(R.id.searchRecycleViewUserFound);
-            RecylerViewAdapterSearchResult mAdapter;
+            RecyclerViewAdapterSearchResult mAdapter;
 
             if (success) {
                 JSONArray users = responseJSON.getJSONArray(getString(R.string.keys_json_array_users_data));
                 if (users.length() > 0) {
-                    mAdapter = (RecylerViewAdapterSearchResult) recyclerView.getAdapter();
+                    mAdapter = (RecyclerViewAdapterSearchResult) recyclerView.getAdapter();
                     mAdapter.setAdapterDataSet(jsonArrayUsersDataToStringArray(users));
                 }
                 Log.e("NavigationActivity", "User found by name");
 
             } else {
-                ((RecylerViewAdapterSearchResult) recyclerView.getAdapter()).setAdapterDataSet(null);
+                ((RecyclerViewAdapterSearchResult) recyclerView.getAdapter()).setAdapterDataSet(null);
                 Log.e("NavigationActivity", "User not found");
             }
         } catch (JSONException e) {
