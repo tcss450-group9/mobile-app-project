@@ -52,12 +52,17 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
 
         RecyclerView recyclerView = view.findViewById(R.id.searchRecycleViewUserFound);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        recyclerView.setHasFixedSize(true);
+
         // use a linear layout manager
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         // specify an adapter (see also next example)
-//        SearchFragRecylerViewAdapter mAdapter = new SearchFragRecylerViewAdapter(myDataset);
-//        recyclerView.setAdapter(mAdapter);
+        String[] s = {};
+        SearchFragRecylerViewAdapter mAdapter = new SearchFragRecylerViewAdapter(s);
+        recyclerView.setAdapter(mAdapter);
 
          return view;
     }
@@ -84,7 +89,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     @Override
     public boolean onQueryTextChange(String newText) {
         if (!TextUtils.isEmpty(newText)) {
-            Log.e("searchFragment", "change text: " + newText);
+//            Log.e("searchFragment", "change text: " + newText);
             if (InputVerificationTool.isEmail(newText)) {
                 myListener.onSearchByEmailAttempt(newText);
             } else if (InputVerificationTool.isUsername(newText)) {
@@ -94,10 +99,8 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 if (strings.length > 1) {
                     myListener.onSearchByNameAttempt(strings[0], strings[1]);
                 }
-
             }
         }
-
         return true;
     }
 

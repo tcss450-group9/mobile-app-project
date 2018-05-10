@@ -27,13 +27,20 @@ public class SearchFragRecylerViewAdapter extends RecyclerView.Adapter<SearchFra
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public SearchFragRecylerViewAdapter(String[] myDataset) {
-        mDataset = myDataset;
+    public SearchFragRecylerViewAdapter(String[] theDataset) {
+        mDataset = theDataset;
     }
 
     public void setAdapterDataSet(String[] myDataset) {
-        mDataset = myDataset;
-        notifyDataSetChanged();
+        if (myDataset != null) {
+            mDataset = myDataset;
+            notifyDataSetChanged();
+        } else {
+            mDataset = new String[0];
+            notifyDataSetChanged();
+        }
+
+
     }
 
     // Create new views (invoked by the layout manager)
@@ -56,8 +63,6 @@ public class SearchFragRecylerViewAdapter extends RecyclerView.Adapter<SearchFra
         if (data.length > 0) {
             holder.myUsername.setText(data[0]);
             holder.myName.setText(data[1] + " " +data[2]);
-        } else if (mDataset == null) {
-            //TODO clear item
         }
 
     }

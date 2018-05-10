@@ -205,6 +205,7 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     public void onSearchByEmailAttempt(String theEmail) {
+        Log.e("NavigationActivity", "Search by email");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_search)).build();
         JSONObject emailJSON = new JSONObject();
@@ -223,6 +224,7 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     public void onSearchByUsernameAttempt(String theUsername) {
+        Log.e("NavigationActivity", "Search by username");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_search)).build();
         JSONObject usernameJSON = new JSONObject();
@@ -239,7 +241,7 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     public void onSearchByNameAttempt(String theFirstName, String theLastName) {
-//        Log.e("NavigationActivity", "Search by name");
+        Log.e("NavigationActivity", "Search by name");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_search)).build();
         JSONObject nameJSON = new JSONObject();
@@ -278,6 +280,7 @@ public class NavigationActivity extends AppCompatActivity
             JSONObject responseJSON = new JSONObject(theResponse);
             boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
             RecyclerView recyclerView = findViewById(R.id.searchRecycleViewUserFound);
+            SearchFragRecylerViewAdapter mAdapter;
 
             if (success) {
                 String username = responseJSON.get(getString(R.string.keys_json_username)).toString();
@@ -286,18 +289,12 @@ public class NavigationActivity extends AppCompatActivity
 //                Log.e("NavigationActivity", "handleEndOfSearch success");
 
                 String[] s = {username + ":" + first + ":" + last};
-                // use this setting to improve performance if you know that changes
-                // in content do not change the layout size of the RecyclerView
-                recyclerView.setHasFixedSize(true);
-
-                // use a linear layout manager
-                LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-                recyclerView.setLayoutManager(mLayoutManager);
-
-                // specify an adapter (see also next example)
-                SearchFragRecylerViewAdapter mAdapter = new SearchFragRecylerViewAdapter(s);
-                recyclerView.setAdapter(mAdapter);
+                mAdapter = (SearchFragRecylerViewAdapter) recyclerView.getAdapter();
+                mAdapter.setAdapterDataSet(s);
                 Log.e("NavigationActivity", "User found");
+            } else {
+                ((SearchFragRecylerViewAdapter) recyclerView.getAdapter()).setAdapterDataSet(null);
+                Log.e("NavigationActivity", "User not found");
             }
         } catch (JSONException theException) {
             Log.e("NavigationActivity", "JSON parse error");
@@ -315,26 +312,17 @@ public class NavigationActivity extends AppCompatActivity
             boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
             RecyclerView recyclerView = findViewById(R.id.searchRecycleViewUserFound);
             SearchFragRecylerViewAdapter mAdapter;
+
             if (success) {
                 JSONArray users = responseJSON.getJSONArray(getString(R.string.keys_json_array_users_data));
                 if (users.length() > 0) {
-                    // use this setting to improve performance if you know that changes
-                    // in content do not change the layout size of the RecyclerView
-                    recyclerView.setHasFixedSize(true);
-
-                    // use a linear layout manager
-                    LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-                    recyclerView.setLayoutManager(mLayoutManager);
-
-                    // specify an adapter (see also next example)
-                    mAdapter = new SearchFragRecylerViewAdapter(jsonArrayUsersDataToStringArray(users));
-                    recyclerView.setAdapter(mAdapter);
+                    mAdapter = (SearchFragRecylerViewAdapter) recyclerView.getAdapter();
+                    mAdapter.setAdapterDataSet(jsonArrayUsersDataToStringArray(users));
                 }
-
                 Log.e("NavigationActivity", "User found by name");
+
             } else {
-                recyclerView.setAdapter(null);
-                recyclerView.getAdapter().notifyDataSetChanged();
+                ((SearchFragRecylerViewAdapter) recyclerView.getAdapter()).setAdapterDataSet(null);
                 Log.e("NavigationActivity", "User not found");
             }
         } catch (JSONException e) {
