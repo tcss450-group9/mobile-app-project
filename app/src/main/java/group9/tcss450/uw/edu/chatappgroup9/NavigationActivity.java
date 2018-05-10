@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,9 +22,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import group9.tcss450.uw.edu.chatappgroup9.model.SearchFragRecylerViewAdapter;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 
@@ -87,6 +91,8 @@ public class NavigationActivity extends AppCompatActivity
                         .commit();
             }
         }
+
+
 
 
 
@@ -205,6 +211,7 @@ public class NavigationActivity extends AppCompatActivity
 
         try {
             emailJSON.put(getString(R.string.keys_json_email), theEmail);
+            Log.e("NavigationActivity", "Put email to json" );
         } catch (JSONException theException) {
             Log.e("NavigationActivity", "Error creating JSON" + theException.getMessage());
         }
@@ -232,6 +239,7 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     public void onSearchByNameAttempt(String theFirstName, String theLastName) {
+//        Log.e("NavigationActivity", "Search by name");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_search)).build();
         JSONObject nameJSON = new JSONObject();
@@ -244,14 +252,10 @@ public class NavigationActivity extends AppCompatActivity
         }
 
         new SendPostAsyncTask.Builder(uri.toString(), nameJSON)
-                .onPostExecute(this::handleEndOfSearch).build().execute();
+                .onPostExecute(this::handleEndOfSearchByName).build().execute();
 
     }
 
-    @Override
-    public void onSendRequestAttempt() {
-        ((Button) findViewById(R.id.searchButtonSendRequest)).setEnabled(false);
-    }
 
     private void loadFragment(Fragment frag, String theFragmentTag) {
         Log.e("NavigationActivity", "" + theFragmentTag);
@@ -269,24 +273,95 @@ public class NavigationActivity extends AppCompatActivity
      * @param theResponse the response return from the server
      */
     private void handleEndOfSearch(String theResponse) {
+//        Log.e("NavigationActivity", "handleEndOfSearch start");
         try {
             JSONObject responseJSON = new JSONObject(theResponse);
             boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
-            TextView searchResult = findViewById(R.id.searchTextViewSearchResult);
-            Button sendRequest = findViewById(R.id.searchButtonSendRequest);
+            RecyclerView recyclerView = findViewById(R.id.searchRecycleViewUserFound);
 
             if (success) {
-                String firstname = responseJSON.getString(getString(R.string.keys_json_firstname));
-                String lastname = responseJSON.getString(getString(R.string.keys_json_lastname));
-                searchResult.setText(firstname + ", " + lastname);
-                sendRequest.setEnabled(true);
+                String username = responseJSON.get(getString(R.string.keys_json_username)).toString();
+                String first = responseJSON.get(getString(R.string.keys_json_firstname)).toString();
+                String last = responseJSON.get(getString(R.string.keys_json_lastname)).toString();
+//                Log.e("NavigationActivity", "handleEndOfSearch success");
+
+                String[] s = {username + ":" + first + ":" + last};
+                // use this setting to improve performance if you know that changes
+                // in content do not change the layout size of the RecyclerView
+                recyclerView.setHasFixedSize(true);
+
+                // use a linear layout manager
+                LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+                recyclerView.setLayoutManager(mLayoutManager);
+
+                // specify an adapter (see also next example)
+                SearchFragRecylerViewAdapter mAdapter = new SearchFragRecylerViewAdapter(s);
+                recyclerView.setAdapter(mAdapter);
                 Log.e("NavigationActivity", "User found");
-            }else {
-                sendRequest.setEnabled(false);
-                searchResult.setText("User not found");
             }
         } catch (JSONException theException) {
             Log.e("NavigationActivity", "JSON parse error");
         }
+    }
+
+    /**
+     * Handle the search by email response. If found a user, show the user's first name and last name
+     * in the result text view; otherwise show user not found.
+     * @param theResponse the response return from the server
+     */
+    private void handleEndOfSearchByName(String theResponse) {
+        try {
+            JSONObject responseJSON = new JSONObject(theResponse);
+            boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
+            RecyclerView recyclerView = findViewById(R.id.searchRecycleViewUserFound);
+            SearchFragRecylerViewAdapter mAdapter;
+            if (success) {
+                JSONArray users = responseJSON.getJSONArray(getString(R.string.keys_json_array_users_data));
+                if (users.length() > 0) {
+                    // use this setting to improve performance if you know that changes
+                    // in content do not change the layout size of the RecyclerView
+                    recyclerView.setHasFixedSize(true);
+
+                    // use a linear layout manager
+                    LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+                    recyclerView.setLayoutManager(mLayoutManager);
+
+                    // specify an adapter (see also next example)
+                    mAdapter = new SearchFragRecylerViewAdapter(jsonArrayUsersDataToStringArray(users));
+                    recyclerView.setAdapter(mAdapter);
+                }
+
+                Log.e("NavigationActivity", "User found by name");
+            } else {
+                recyclerView.setAdapter(null);
+                recyclerView.getAdapter().notifyDataSetChanged();
+                Log.e("NavigationActivity", "User not found");
+            }
+        } catch (JSONException e) {
+            Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
+        }
+    }
+
+
+    /**
+     *
+     * @param users the users data in Json array format
+     * @return
+     */
+    private String[] jsonArrayUsersDataToStringArray(JSONArray users) {
+        String[] msgs = new String[users.length()];
+        try {
+            for (int i = 0; i < users.length(); i++) {
+                JSONObject msg = users.getJSONObject(i);
+                String username = msg.get(getString(R.string.keys_json_username)).toString();
+                String firstname = msg.get(getString(R.string.keys_json_firstname)).toString();
+                String lastname = msg.get(getString(R.string.keys_json_lastname)).toString();
+                msgs[i] = username + ":" + firstname + ":" + lastname;
+            }
+        } catch (JSONException e) {
+            Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
+        }
+        return msgs;
+
     }
 }
