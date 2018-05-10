@@ -3,6 +3,8 @@ package group9.tcss450.uw.edu.chatappgroup9;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import group9.tcss450.uw.edu.chatappgroup9.model.SearchFragRecylerViewAdapter;
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 
 
@@ -26,13 +29,6 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
 
     private OnFragmentInteractionListener myListener;
-    private EditText myEmail;
-    private EditText myUsername;
-    private EditText myFirstName;
-    private EditText myLastName;
-    private Button mySendRequest;
-    private Button mySearch;
-    private TextView mySearchResult;
     private SearchView mySearchView;
 
 
@@ -47,21 +43,21 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         Log.e("NavigationActivity", "" + "SearchFragmentTag");
         // Inflate the layout for this fragment
          View view = inflater.inflate(R.layout.fragment_search, container, false);
-         mySendRequest = view.findViewById(R.id.searchButtonSendRequest);
-         mySendRequest.setEnabled(false);
-         mySendRequest.setOnClickListener(this::onSendRequestClicked);
-         mySearch = view.findViewById(R.id.searchButtonSearch);
-         myEmail = view.findViewById(R.id.searchEditTextEmail);
-         myUsername = view.findViewById(R.id.searchEditTextUsername);
-         myLastName = view.findViewById(R.id.searchEditTextLastName);
-         myFirstName = view.findViewById(R.id.searchEditTextFirstname);
-         mySearch.setOnClickListener(this::onSearchClicked);
-         mySearchResult = view.findViewById(R.id.searchTextViewSearchResult);
-         mySearchResult.setOnClickListener(this::onSearchResultClicked);
 
         mySearchView = view.findViewById(R.id.searchSearchView);
         mySearchView.setOnQueryTextListener(this);
         mySearchView.setOnClickListener(this::SearchViewOnClicked);
+        View noneSearchView = view.findViewById(R.id.searchNoneSearchArea);
+        noneSearchView.setOnClickListener(this::noneSearchViewAreaClick);
+
+
+        RecyclerView recyclerView = view.findViewById(R.id.searchRecycleViewUserFound);
+        // use a linear layout manager
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        // specify an adapter (see also next example)
+//        SearchFragRecylerViewAdapter mAdapter = new SearchFragRecylerViewAdapter(myDataset);
+//        recyclerView.setAdapter(mAdapter);
 
          return view;
     }
@@ -72,8 +68,11 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
 
     private void onSendRequestClicked(View view) {
-        mySendRequest.setEnabled(false);
-        myListener.onSendRequestAttempt();
+//        myListener.onSendRequestAttempt();
+    }
+
+    private void noneSearchViewAreaClick(View view) {
+        mySearchView.setIconified(true);
     }
 
 
@@ -92,46 +91,14 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 myListener.onSearchByUsernameAttempt(newText);
             } else  {
                 String[] strings = newText.split("\\s+");
-                myListener.onSearchByNameAttempt(strings[0], strings[1]);
+                if (strings.length > 1) {
+                    myListener.onSearchByNameAttempt(strings[0], strings[1]);
+                }
+
             }
         }
 
         return true;
-    }
-
-
-    /**
-     * attempts to search by the email, username, first name and last name provided in order.
-     * only search the first valid field and execute the searching only once.
-     * @param theSearchButton
-     */
-    public void onSearchClicked(View theSearchButton) {
-        if (myListener != null) {
-            if (InputVerificationTool.isEmail(myEmail.getText().toString())) {
-                myListener.onSearchByEmailAttempt(myEmail.getText().toString());
-                Log.e("SearchFragment: Email ", myEmail.getText().toString());
-
-            } else if (InputVerificationTool.isUsername(myUsername.getText().toString())) {
-                myListener.onSearchByUsernameAttempt(myUsername.getText().toString());
-                Log.e("SearchFragment: Username ", myUsername.getText().toString());
-
-            } else if (InputVerificationTool.isName(myFirstName.getText().toString()) &&
-                    InputVerificationTool.isName(myLastName.getText().toString())) {
-                myListener.onSearchByNameAttempt(myFirstName.getText().toString(),
-                        myLastName.getText().toString());
-                Log.e("SearchFragment: name ", myFirstName.getText().toString() +
-                        ", " + myLastName.getText().toString());
-
-            } else {
-                Log.e("SearchFragment", "Search fail: " + myEmail.getText().toString());
-            }
-        }
-    }
-
-    public void onSearchResultClicked(View theSearchResultTextView) {
-        if (!mySearchResult.getText().toString().equals(getString(R.string.search_textview_user_not_found))) {
-            mySendRequest.setEnabled(true);
-        }
     }
 
 
@@ -166,6 +133,5 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         void onSearchByEmailAttempt(String searchInfo);
         void onSearchByUsernameAttempt(String searchInfo);
         void onSearchByNameAttempt(String firstname, String lastname);
-        void onSendRequestAttempt();
     }
 }
