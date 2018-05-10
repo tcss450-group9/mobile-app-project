@@ -164,7 +164,7 @@ public class NavigationActivity extends AppCompatActivity
             loadFragment(new LandingFragment(), getString(R.string.keys_landing_fragment_tag));
         } else if (id == R.id.nav_chat) {
             loadFragment(new ChatFragment(), getString(R.string.keys_chat_fragment_tag));
-        } else if (id == R.id.nav_connection) {
+        } else if (id == R.id.nav_contact) {
             loadFragment(new ContactsFragment(), getString(R.string.keys_contact_fragment_tag));
         } else if (id == R.id.nav_search) {
             loadFragment(new SearchFragment(), getString(R.string.keys_search_fragment_tag));
