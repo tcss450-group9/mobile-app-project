@@ -1,6 +1,7 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.net.URI;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecycleViewAdapterContact;
 
@@ -22,6 +28,7 @@ public class ContactsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private String[] myDummyValue = {"Little_dog", "little_cat", "big_turtle", "myDummyValue", "African buffalo", "Meles meles"};
+    private JSONObject myContacts;
 
 
 
@@ -47,10 +54,17 @@ public class ContactsFragment extends Fragment {
         return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Populate the recyclerView with all existing connections
+        SharedPreferences prefs = getContext().getSharedPreferences(
+                getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
         if (mListener != null) {
-            mListener.getAllContacts(uri);
+            String username = prefs.getString(getString(R.string.keys_shared_prefs_username),null);
+            myContacts = mListener.getAllContacts(getString(R.string.ep_base_url),
+                    getString(R.string.ep_view_connections),
+                    username);
         }
     }
 
@@ -83,6 +97,6 @@ public class ContactsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void getAllContacts(Uri uri);
+        JSONObject getAllContacts(String baseURL, String endPoint, String username);
     }
 }

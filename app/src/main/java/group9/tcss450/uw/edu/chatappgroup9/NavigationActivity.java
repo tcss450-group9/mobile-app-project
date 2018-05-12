@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
+import group9.tcss450.uw.edu.chatappgroup9.utils.SendGetAsyncTask;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 
@@ -178,8 +180,11 @@ public class NavigationActivity extends AppCompatActivity
 
 
     @Override
-    public void getAllContacts(Uri uri) {
-
+    public JSONObject getAllContacts(String baseURL, String endPoint, String username) {
+        JSONObject contacts = new JSONObject();
+        AsyncTask<String, Void, String> task = new SendGetAsyncTask()
+                .execute(baseURL, endPoint, username);
+        return contacts;
     }
 
     @Override
