@@ -69,5 +69,8 @@
     <!-- landing Page -->
     <string name="landing_button_logout">Logout</string>
 
+    <!-- chat Page -->
+    <string name="chat_textview_send_hint">Write a message</string>
+
 
 </resources>

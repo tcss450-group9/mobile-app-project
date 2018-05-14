@@ -32,7 +32,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        ChatFragment.OnFragmentInteractionListener,
+//        ChatFragment.OnFragmentInteractionListener,
         LandingFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         WeatherFragment.OnFragmentInteractionListener,
@@ -77,10 +77,10 @@ public class NavigationActivity extends AppCompatActivity
             String username = preferences.getString(getString(R.string.keys_shared_prefs_username),
                     "unknown user");
 
-            Log.e("NavigationActivity", "username: " + username);
+//            Log.e("NavigationActivity", "username: " + username);
             TextView textView = navigationView.getHeaderView(0).findViewById(R.id.navigationHeaderTextViewUsername);
 
-            Log.e("NavigationActivity", "header : " + textView);
+//            Log.e("NavigationActivity", "header : " + textView);
             textView.setText(username);
         }
 
