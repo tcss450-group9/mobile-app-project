@@ -21,10 +21,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import group9.tcss450.uw.edu.chatappgroup9.model.RecycleViewAdapterContact;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendGetAsyncTask;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
@@ -180,12 +182,31 @@ public class NavigationActivity extends AppCompatActivity
 
 
     @Override
-    public JSONObject getAllContacts(String baseURL, String endPoint, String username) {
-        JSONObject contacts = new JSONObject();
-        AsyncTask<String, Void, String> task = new SendGetAsyncTask()
-                .execute(baseURL, endPoint, username);
-        return contacts;
+    public void getAllContacts(String baseURL, String endPoint, String username) {
+        Log.d("Load Contact Fragment","Top of getAllContacts");
+        JSONArray contacts = new JSONArray(); //This is never populated and is returned empty. Perhaps change this function to void?
+        JSONObject unObject = new JSONObject();
+        try {
+            unObject.put("username", username);
+        }
+        catch(JSONException e) {
+            Log.e("GETALLCONTACTS", "Error building username JSONObject: " + e.getMessage());
+        }
+
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(baseURL)
+                .appendPath(endPoint)
+                .appendQueryParameter("username",username)
+                .build();
+        Log.d("Load Contact Fragment", uri.toString());
+        new SendPostAsyncTask.Builder(uri.toString(), unObject)
+                .onPostExecute(this::handleGetAllContactsOnPost)
+                .build().execute();
+        Log.d("Load Contact Fragment","Bottom of getAllContacts");
     }
+
+
 
     @Override
     public void onLogout() {
@@ -331,6 +352,39 @@ public class NavigationActivity extends AppCompatActivity
         } catch (JSONException e) {
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
         }
+    }
+
+    /**
+     * Sets the recyclerView of the contacts page to the list of existing contacts. Intended to be
+     * set used with the functional interface of AsyncTask in the onPostExecute() function.
+     *
+     * @param theResponse The string returned by the database query containing all the contacts
+     *                    the user has.
+     */
+    private void handleGetAllContactsOnPost(String theResponse) {
+        Log.d("Load Contact Fragment","Top of handleGetAllContactsOnPost");
+        try {
+            JSONObject responseAsJSON = new JSONObject(theResponse);
+            boolean success = responseAsJSON.getBoolean(getString(R.string.keys_json_success));
+            RecyclerView recyclerView = findViewById(R.id.contactRecycleViewAllContacts);
+            RecycleViewAdapterContact mAdapter;
+
+            if(success) {
+                JSONArray contactArray = responseAsJSON
+                        .getJSONArray(getString(R.string.keys_json_contacts));
+
+                mAdapter = new RecycleViewAdapterContact(
+                        jsonArrayUsersDataToStringArray(contactArray));
+                recyclerView.setAdapter(mAdapter);
+            }
+            else {
+                ((RecycleViewAdapterContact) recyclerView.getAdapter()).setAdapterDataSet(null);
+            }
+        }
+        catch (JSONException e) {
+            Log.e("NavigationActivity", "Unable to build JSON: " + e.getMessage());
+        }
+        Log.d("Load Contact Fragment","Bottom of handleGetAllContactsOnPost");
     }
 
 

@@ -28,7 +28,7 @@ public class ContactsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private String[] myDummyValue = {"Little_dog", "little_cat", "big_turtle", "myDummyValue", "African buffalo", "Meles meles"};
-    private JSONObject myContacts;
+    private JSONArray myContacts;
 
 
 
@@ -47,14 +47,24 @@ public class ContactsFragment extends Fragment {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(new RecycleViewAdapterContact(myDummyValue));
+
+
+        SharedPreferences prefs = getContext().getSharedPreferences(
+                getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
+        if (mListener != null) {
+            String username = prefs.getString(getString(R.string.keys_shared_prefs_username),null);
+            mListener.getAllContacts(getString(R.string.ep_base_url),
+                    getString(R.string.ep_view_connections),
+                    username);
+        }
+        //recyclerView.setAdapter(new RecycleViewAdapterContact(myDummyValue));
 
 
 
         return v;
     }
 
-    @Override
+   /* @Override
     public void onStart() {
         super.onStart();
         //Populate the recyclerView with all existing connections
@@ -66,7 +76,7 @@ public class ContactsFragment extends Fragment {
                     getString(R.string.ep_view_connections),
                     username);
         }
-    }
+    }*/
 
     @Override
     public void onAttach(Context context) {
@@ -97,6 +107,6 @@ public class ContactsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        JSONObject getAllContacts(String baseURL, String endPoint, String username);
+        void getAllContacts(String baseURL, String endPoint, String username);
     }
 }
