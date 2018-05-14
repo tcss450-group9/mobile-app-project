@@ -4,6 +4,7 @@
     <string name="ep_login">login</string>
     <string name="ep_register">register</string>
     <string name="ep_verification">verification</string>
+    <string name="ep_verified">verified</string>
     <string name="ep_search">search</string>
     <string name="ep_view_connections">viewConnections</string>
     <string name="ep_send_message">sendMessages</string>

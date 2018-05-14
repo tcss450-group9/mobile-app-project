@@ -19,6 +19,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 public class VerificationActivity extends AppCompatActivity {
 
     private final int MIN_LENGTH_PIN = 4;
+    private final int PIN_VERIFIED = -1;
     private final String PIN_EMPTY = "Validation Pin cannot be empty";
     private final String PIN_TOO_SHORT = "Validation Pin is too short";
     private final String VERIFICATION_ERR = "That is the incorrect Verification Pin!";
@@ -91,7 +92,7 @@ public class VerificationActivity extends AppCompatActivity {
     }
 
     /**
-     * handles the registration response returned from the server.
+     * handles the verification response returned from the server.
      * the response is in JSON format.
      * @param theResult the JSON formatted String response from the web service
      */
@@ -111,10 +112,7 @@ public class VerificationActivity extends AppCompatActivity {
                         .getInt(getString(R.string.keys_json_verification));
 
                 if (myInputPin == retrievedPin) {
-                    Toast.makeText(getApplicationContext(),
-                            "Registration Success!", Toast.LENGTH_LONG).show();
-
-                    backToLogin();
+                    onVerifiedUserAttempt();
                 } else {
                     Toast.makeText(getApplicationContext(),
                             VERIFICATION_ERR, Toast.LENGTH_LONG).show();
@@ -122,6 +120,68 @@ public class VerificationActivity extends AppCompatActivity {
 
             } else {
                 Log.e("Verification Activity","Verification fail reason: " + failReason);
+            }
+        } catch (JSONException e) {
+            Log.e("JSON parse error",theResult + System.lineSeparator()
+                    + e.getMessage()+e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * Attempts to check if user has passed verification test.
+     */
+    private void onVerifiedUserAttempt() {
+        //build the web server URL
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_verified)).build();
+
+        //build the JSON object
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("username", myUsername);
+        } catch (JSONException e) {
+            Log.wtf("CREDENTIALS", "Error creating JSON: " + e.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handleVerifiedUserOnPost)
+                .build().execute();
+    }
+
+    /**
+     * handles the verified response returned from the server.
+     * the response is in JSON format.
+     * @param theResult the JSON formatted String response from the web service
+     */
+    private void handleVerifiedUserOnPost(final String theResult) {
+        try {
+            JSONObject resultJSON = new JSONObject(theResult);
+            boolean success = resultJSON.getBoolean(getString(R.string.keys_json_success));
+            String failReason = null;
+
+            if (!success) {
+                failReason = resultJSON.getJSONObject(getString(R.string.keys_json_error))
+                        .getString(getString(R.string.keys_json_detail));
+            }
+
+            if (success) {
+                int retrievedPin = resultJSON.getJSONObject(getString(R.string.keys_json_messages))
+                        .getInt(getString(R.string.keys_json_verification));
+
+                if (PIN_VERIFIED == retrievedPin) {
+                    Toast.makeText(getApplicationContext(),
+                            "Registration Success!", Toast.LENGTH_LONG).show();
+
+                    backToLogin();
+                } else {
+                    // in case it fals for any reason here
+                    Log.e("Verification Activity","Verified fail reason: "
+                            + failReason);
+                }
+
+            } else {
+                Log.e("Verification Activity","Verified fail reason: " + failReason);
             }
         } catch (JSONException e) {
             Log.e("JSON parse error",theResult + System.lineSeparator()

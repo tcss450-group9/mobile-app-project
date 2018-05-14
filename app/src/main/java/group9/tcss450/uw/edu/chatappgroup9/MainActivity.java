@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final String INVALID_LOGIN_INFO = "Invalid username or password";
     private final int MIN_LENGTH_USERNAME_PASSWORD = 6;
+    private final int PIN_VERIFIED = -1;
     private EditText myUsername;
     private EditText myPassword;
     private CheckBox myStayLogin;
@@ -104,10 +105,32 @@ public class MainActivity extends AppCompatActivity {
 
 
             if (success) {
+                String email = resultsJSON.getString(getString(R.string.keys_json_email));
+                int pin = resultsJSON.getInt(getString(R.string.keys_json_verification));
+
                 saveUserInfoToSharedPreference(resultsJSON);
-                //Login was successful. Switch to the chat page.
-                Intent intent = new Intent(this, NavigationActivity.class);
-                startActivity(intent);
+                if (pin == PIN_VERIFIED) {
+                    //Login was successful. Switch to the chat page.
+                    Intent intent = new Intent(this, NavigationActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), email
+                            + ", Please verify your pin", Toast.LENGTH_LONG).show();
+                    //User not verified. Switch to the verification page.
+                    Intent intent = new Intent(this, VerificationActivity.class);
+
+                    String getUsername = myUsername.getText().toString();
+
+                    //Create the bundle; pass in username so Verification knows how to verify pin
+                    Bundle bundle = new Bundle();
+
+                    //Add your data to bundle
+                    bundle.putString("username", getUsername);
+
+                    //Add the bundle to the intent
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
             } else {
                 //Login was unsuccessful.
                 Log.e("Main activity","Log in unsuccessful");
