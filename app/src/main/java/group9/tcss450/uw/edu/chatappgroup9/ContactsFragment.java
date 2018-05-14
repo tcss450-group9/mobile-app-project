@@ -10,6 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.TextView;
+import android.widget.Switch;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,11 +27,21 @@ import group9.tcss450.uw.edu.chatappgroup9.model.RecycleViewAdapterContact;
  * {@link ContactsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class ContactsFragment extends Fragment {
+public class ContactsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
 
     private OnFragmentInteractionListener mListener;
     private String[] myDummyValue = {"Little_dog", "little_cat", "big_turtle", "myDummyValue", "African buffalo", "Meles meles"};
     private JSONArray myContacts;
+    private TextView myTitle;
+    private RecyclerView myRecyclerView;
+    private Switch mySwitch;
+    private SharedPreferences myPrefs;
+
+    /**
+     * The query parameter to select verified (existing) or unverified (pending request) connections.
+     * 1 = existing; 0 = pending. Must be passed as a string.
+     */
+    private int myContactStatusVerified = 1;
 
 
 
@@ -40,43 +53,25 @@ public class ContactsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        Log.e("NavigationActivity", "" + "Contact FragmentTag");
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_contacts, container, false);
-        RecyclerView recyclerView = v.findViewById(R.id.contactRecycleViewAllContacts);
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
-        SharedPreferences prefs = getContext().getSharedPreferences(
+        myPrefs = getContext().getSharedPreferences(
                 getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
+        View v = inflater.inflate(R.layout.fragment_contacts, container, false);
+        myRecyclerView = v.findViewById(R.id.contactRecycleViewAllContacts);
+        myTitle = v.findViewById(R.id.contactTextViewTitle);
+        mySwitch = v.findViewById(R.id.contactsSwitchExisting);
+        mySwitch.setOnCheckedChangeListener(this);
+
+        myRecyclerView.setHasFixedSize(true);
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         if (mListener != null) {
-            String username = prefs.getString(getString(R.string.keys_shared_prefs_username),null);
+            String username = myPrefs.getString(getString(R.string.keys_shared_prefs_username),null);
             mListener.getAllContacts(getString(R.string.ep_base_url),
-                    getString(R.string.ep_view_connections),
-                    username);
+                    getString(R.string.ep_view_connections), username, Integer.toString(myContactStatusVerified));
         }
         //recyclerView.setAdapter(new RecycleViewAdapterContact(myDummyValue));
-
-
-
         return v;
     }
-
-   /* @Override
-    public void onStart() {
-        super.onStart();
-        //Populate the recyclerView with all existing connections
-        SharedPreferences prefs = getContext().getSharedPreferences(
-                getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
-        if (mListener != null) {
-            String username = prefs.getString(getString(R.string.keys_shared_prefs_username),null);
-            myContacts = mListener.getAllContacts(getString(R.string.ep_base_url),
-                    getString(R.string.ep_view_connections),
-                    username);
-        }
-    }*/
 
     @Override
     public void onAttach(Context context) {
@@ -95,6 +90,23 @@ public class ContactsFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton theSwitch, boolean isChecked) {
+        if(isChecked) {
+            //Client chose to view pending requests
+            myContactStatusVerified = 0;
+            myTitle.setText(getString(R.string.contacts_edittext_title2));
+        }
+        else {
+            //Client chose to view existing connections
+            myContactStatusVerified = 1;
+            myTitle.setText(getString(R.string.contacts_edittext_title1));
+        }
+        String username = myPrefs.getString(getString(R.string.keys_shared_prefs_username),null);
+        mListener.getAllContacts(getString(R.string.ep_base_url),
+                getString(R.string.ep_view_connections), username, Integer.toString(myContactStatusVerified));
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -107,6 +119,6 @@ public class ContactsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void getAllContacts(String baseURL, String endPoint, String username);
+        void getAllContacts(String baseURL, String endPoint, String username, String existing);
     }
 }

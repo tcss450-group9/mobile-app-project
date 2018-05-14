@@ -182,7 +182,7 @@ public class NavigationActivity extends AppCompatActivity
 
 
     @Override
-    public void getAllContacts(String baseURL, String endPoint, String username) {
+    public void getAllContacts(String baseURL, String endPoint, String username, String verifiedStatus) {
         Log.d("Load Contact Fragment","Top of getAllContacts");
         JSONArray contacts = new JSONArray(); //This is never populated and is returned empty. Perhaps change this function to void?
         JSONObject unObject = new JSONObject();
@@ -198,6 +198,7 @@ public class NavigationActivity extends AppCompatActivity
                 .appendPath(baseURL)
                 .appendPath(endPoint)
                 .appendQueryParameter("username",username)
+                .appendQueryParameter("verified",verifiedStatus)
                 .build();
         Log.d("Load Contact Fragment", uri.toString());
         new SendPostAsyncTask.Builder(uri.toString(), unObject)
@@ -378,6 +379,7 @@ public class NavigationActivity extends AppCompatActivity
                 recyclerView.setAdapter(mAdapter);
             }
             else {
+                //TODO This is causing a fatal exception on response success=false. Cannot set adapter to null
                 ((RecycleViewAdapterContact) recyclerView.getAdapter()).setAdapterDataSet(null);
             }
         }

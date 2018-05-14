@@ -59,9 +59,12 @@
     <string name="search_button_request">Send request</string>
     <string name="search_searchview_hint">Search username, names or email</string>
 
-    <!-- Connections Page -->
+    <!-- Contacts Page -->
+    <string name="contacts_edittext_title1">Existing Contacts</string>
+    <string name="contacts_edittext_title2">Connection Requests</string>
+    <string name="contacts_switch_view_pending">View Requests</string>
+    <string name="contacts_switch_view_existing">View Existing</string>
     <string name="connections_edittext_searchbar">Search</string>
-
     <string name="connections_popupmenu_item1">Name</string>
     <string name="connections_popupmenu_item2">Username</string>
     <string name="connections_popupmenu_item3">Nickname</string>

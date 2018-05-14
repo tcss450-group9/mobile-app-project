@@ -9,17 +9,16 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/contactTextViewTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="60dp"
-        android:text="Contact"
+        android:text="@string/contacts_edittext_title1"
         android:textAlignment="center"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@+id/contactsSwitchExisting"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,7 +34,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/contactTextViewTitle"
         app:layout_constraintVertical_bias="0.0" />
+
+    <Switch
+        android:id="@+id/contactsSwitchExisting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="60dp"
+        android:checked="true"
+        android:text="@string/contacts_switch_view_pending"
+        android:textOff="@string/contacts_switch_view_pending"
+        android:textOn="@string/contacts_switch_view_existing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/contactRecycleViewAllContacts"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:checked="true" />
 
 </android.support.constraint.ConstraintLayout>
