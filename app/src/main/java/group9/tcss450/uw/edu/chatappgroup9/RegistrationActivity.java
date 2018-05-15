@@ -59,6 +59,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         Button submit = findViewById(R.id.registrationButtonSubmit);
         submit.setOnClickListener(this::submitOnClicked);
+
     }
 
     public void submitOnClicked(View theSubmitButton){
@@ -194,6 +195,10 @@ public class RegistrationActivity extends AppCompatActivity {
             Log.e("JSON parse error",theResult + System.lineSeparator()
                     + e.getMessage()+e.getLocalizedMessage());
         }
+    }
+    public void onBackPressed() {
+        startActivity(new Intent(this, MainActivity.class));
+        this.finish();
     }
 
     public void toVerificationActivity() {
