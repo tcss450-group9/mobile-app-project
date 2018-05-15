@@ -38,6 +38,7 @@ public class ChatFragment extends Fragment {
     private boolean myNewMessage;
     private int myPreMessageLength;
     private RecyclerViewAdapterChat myAdapterChat;
+    private SharedPreferences prefs;
 
 //    private OnFragmentInteractionListener myListener;
 
@@ -202,11 +203,11 @@ public class ChatFragment extends Fragment {
         JSONObject messageJson = new JSONObject();
         String msg = ((EditText) getView().findViewById(R.id.chatInputEditText))
                 .getText().toString();
-
+        prefs= getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),Context.MODE_PRIVATE);
         try {
             messageJson.put(getString(R.string.keys_json_username), myUsername);
             messageJson.put(getString(R.string.keys_json_message), msg);
-            messageJson.put(getString(R.string.keys_json_chat_id), 1);
+            messageJson.put(getString(R.string.keys_json_chat_id), prefs.getString(getString(R.string.keys_json_chatid),"1"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -2,6 +2,8 @@ package group9.tcss450.uw.edu.chatappgroup9.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +13,10 @@ import android.widget.TextView;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
 
-public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private  String[]items;
-    public Adapter(Context context, String[] items){
+    public Adapter(Context context, String[] items, AppCompatActivity activity){
          this.context = context;
          this.items = items;
     }
@@ -37,10 +39,15 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             @Override
             public void onClick(View view) {
                 prefs.edit().putString(context.getString(R.string.keys_json_chatid), ((Item)holder).textview.getText().toString());
+                    loadChat();
+
 
             }
         });
 
+    }
+    public void loadChat(){
+        //FragmentTransaction ft =
     }
 
     @Override
@@ -54,6 +61,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             super(itemView);
             textview = itemView.findViewById(R.id.item);
           //  message = itemView.findViewById(R.id.Landing_Recycler_message);
+
         }
 
     }
