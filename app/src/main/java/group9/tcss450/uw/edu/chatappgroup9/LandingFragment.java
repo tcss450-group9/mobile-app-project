@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import group9.tcss450.uw.edu.chatappgroup9.utils.Adapter;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterLandingPage;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
-import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 
 /**
@@ -55,7 +53,7 @@ public class LandingFragment extends Fragment {
         recyclerview = (RecyclerView) view.findViewById(R.id.Chats);
         //       Log.d("", "onCreateView: " + recyclerview.toString());
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerview.setAdapter(new Adapter(getActivity(), array));
+        recyclerview.setAdapter(new RecyclerViewAdapterLandingPage(getActivity(), array));
 
         Button logout = view.findViewById(R.id.landingButtonLogout);
         logout.setOnClickListener(this::onLogoutPressed);
@@ -136,7 +134,7 @@ public class LandingFragment extends Fragment {
                 try{
                     chat =  n.getJSONObject(counter);
                     array[counter] = chat.get("chatid").toString();
-                    recyclerview.setAdapter(new Adapter(getActivity(), array));
+                    recyclerview.setAdapter(new RecyclerViewAdapterLandingPage(getActivity(), array));
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -157,7 +155,7 @@ public class LandingFragment extends Fragment {
 //            JSONArray n = chat.getJSONArray("Chats");
 //            array[counter][0] = n.getJSONObject(0).getString("message");
 //
-//            recyclerview.setAdapter(new Adapter(getActivity(), array));
+//            recyclerview.setAdapter(new RecyclerViewAdapterLandingPage(getActivity(), array));
 //        }catch (JSONException e) {
 //            e.printStackTrace();
 //        }

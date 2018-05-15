@@ -1,4 +1,4 @@
-package group9.tcss450.uw.edu.chatappgroup9.utils;
+package group9.tcss450.uw.edu.chatappgroup9.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,10 +13,10 @@ import android.widget.TextView;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
 
-public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RecyclerViewAdapterLandingPage extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private  String[]items;
-    public Adapter(Context context, String[] items){
+    public RecyclerViewAdapterLandingPage(Context context, String[] items){
          this.context = context;
          this.items = items;
     }

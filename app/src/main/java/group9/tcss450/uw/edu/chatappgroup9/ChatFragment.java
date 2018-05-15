@@ -35,8 +35,6 @@ public class ChatFragment extends Fragment {
     private String mySendUrl;
     private ListenManager myListenManager;
     private RecyclerView myRecyclerView;
-    private boolean myNewMessage;
-    private int myPreMessageLength;
     private RecyclerViewAdapterChat myAdapterChat;
     private SharedPreferences prefs;
 
@@ -58,14 +56,11 @@ public class ChatFragment extends Fragment {
 
         v.findViewById(R.id.chatSendButton).setOnClickListener(this::sendMessage);
         myRecyclerView = v.findViewById(R.id.chatRecyclerViewAllMessages);
-        myRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setStackFromEnd(true);
         myRecyclerView.setLayoutManager(linearLayoutManager);
         myAdapterChat = new RecyclerViewAdapterChat(new ArrayList<String>());
         myRecyclerView.setAdapter(myAdapterChat);
-        myNewMessage = false;
-        myPreMessageLength= 0;
 
         return v;
     }

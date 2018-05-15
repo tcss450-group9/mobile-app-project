@@ -1,10 +1,13 @@
 package group9.tcss450.uw.edu.chatappgroup9.model;
 
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Constraints;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -24,12 +27,17 @@ public class RecyclerViewAdapterChat extends RecyclerView.Adapter<RecyclerViewAd
         public ImageView myOtherProfileImage;
         public TextView myMessage;
         public TextView myOtherUserMessage;
+        public ConstraintLayout myLayout;
+        private LinearLayout myLeftLayout;
+        private LinearLayout myRightLayout;
         public ViewHolder(View itemView) {
             super(itemView);
             myProfileImage = itemView.findViewById(R.id.recycleViewItemProfileImage);
             myMessage = itemView.findViewById(R.id.recyclyViewItemUserMessages);
             myOtherProfileImage = itemView.findViewById(R.id.recycleViewOtherUserProfileImage);
             myOtherUserMessage = itemView.findViewById(R.id.recyCleViewItemOtherUserMessage);
+            myLeftLayout = itemView.findViewById(R.id.recycleViewItemChatLeftLayout);
+            myRightLayout = itemView.findViewById(R.id.recycleViewItemChatRightLayout);
         }
     }
 
@@ -42,7 +50,7 @@ public class RecyclerViewAdapterChat extends RecyclerView.Adapter<RecyclerViewAd
 
     public void addData(String newMessage) {
         mDataset.add(newMessage);
-        notifyDataSetChanged();
+        notifyItemInserted(getItemCount() - 1);
     }
 
 
@@ -67,19 +75,23 @@ public class RecyclerViewAdapterChat extends RecyclerView.Adapter<RecyclerViewAd
         if (data.length > 0) {
 
             if (data[0].equals(data[1])) {
+                holder.myLeftLayout.setVisibility(View.VISIBLE);
                 holder.myMessage.setText(data[2]);
-            }
-            if (!data[0].equals(data[1])) {
-                holder.myOtherProfileImage.setVisibility(View.VISIBLE);
-                holder.myOtherUserMessage.setVisibility(View.VISIBLE);
+            } else {
+                holder.myRightLayout.setVisibility(View.VISIBLE);
+
                 holder.myOtherUserMessage.setText(data[2]);
-                holder.myMessage.setVisibility(View.INVISIBLE);
-                holder.myProfileImage.setVisibility(View.INVISIBLE);
+
             }
 
 
         }
 
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     // Return the size of your dataset (invoked by the layout manager)
