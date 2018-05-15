@@ -4,12 +4,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.content.Context;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
 
 public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewAdapterContact.ViewHolder> {
-    private String[] mDataset;
+    private String[][] mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -17,23 +19,27 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView myUsername;
+        public TextView myFullName;
+        public Button myAddDeleteButton;
         public ViewHolder(View itemView) {
             super(itemView);
             myUsername = itemView.findViewById(R.id.recycleViewContactItemUsername);
+            myFullName = itemView.findViewById(R.id.recycleview_item_textview_fullname);
+            myAddDeleteButton = itemView.findViewById(R.id.recycleview_item_button_add_remove);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecycleViewAdapterContact(String[] theDataset) {
+    public RecycleViewAdapterContact(String[][] theDataset) {
         mDataset = theDataset;
     }
 
-    public void setAdapterDataSet(String[] myDataset) {
+    public void setAdapterDataSet(String[][] myDataset) {
         if (myDataset != null) {
             mDataset = myDataset;
             notifyDataSetChanged();
         } else {
-            mDataset = new String[0];
+            mDataset = new String[0][0];
             notifyDataSetChanged();
         }
 
@@ -56,9 +62,10 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-            holder.myUsername.setText(mDataset[position]);
+        holder.myUsername.setText(mDataset[position][0]);
+        holder.myFullName.setText(mDataset[position][1]);
 
-
+        //boolean viewPendingSwitchValue =
     }
 
     // Return the size of your dataset (invoked by the layout manager)

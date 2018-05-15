@@ -64,10 +64,13 @@
     <string name="contacts_edittext_title2">Connection Requests</string>
     <string name="contacts_switch_view_pending">View Requests</string>
     <string name="contacts_switch_view_existing">View Existing</string>
+    <string name="contacts_button_add_friend">Add</string>
+    <string name="contacts_button_delete_friend">Delete</string>
     <string name="connections_edittext_searchbar">Search</string>
     <string name="connections_popupmenu_item1">Name</string>
     <string name="connections_popupmenu_item2">Username</string>
     <string name="connections_popupmenu_item3">Nickname</string>
+
 
     <!-- landing Page -->
     <string name="landing_button_logout">Logout</string>
