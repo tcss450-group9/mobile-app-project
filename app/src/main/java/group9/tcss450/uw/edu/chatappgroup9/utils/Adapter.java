@@ -16,7 +16,7 @@ import group9.tcss450.uw.edu.chatappgroup9.R;
 public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private  String[]items;
-    public Adapter(Context context, String[] items, AppCompatActivity activity){
+    public Adapter(Context context, String[] items){
          this.context = context;
          this.items = items;
     }
