@@ -22,7 +22,8 @@ import java.io.Serializable;
  *
  * @author Charles Bryan
  * @author Minqing Chen
- * @version 14 April 2018
+ * @suthor Jenzel Villanueva
+ * @version 14 April 2018, 11 May 2018
  */
 public class Credentials implements Serializable {
     private static final long serialVersionUID = -1634677417576883013L;
@@ -33,6 +34,8 @@ public class Credentials implements Serializable {
     private String mFirstName;
     private String mLastName;
     private String mEmail;
+
+    private int mVerificationPin;
 
     /**
      * Helper class for building Credentials.
@@ -46,6 +49,8 @@ public class Credentials implements Serializable {
         private String mFirstName = "";
         private String mLastName = "";
         private String mEmail = "";
+
+        private int mVerificationPin;
 
         /**
          * Constructs a new Builder.
@@ -92,6 +97,17 @@ public class Credentials implements Serializable {
             return this;
         }
 
+        /**
+         * Add a randomized verification pin. Ensure that the argument is a
+         * valid pin before adding here if you wish to perform validation.
+         * @param val an optional email
+         * @return
+         */
+        public Builder addVerification(final int val) {
+            mVerificationPin = val;
+            return this;
+        }
+
         public Credentials build() {
             return new Credentials(this);
         }
@@ -108,6 +124,7 @@ public class Credentials implements Serializable {
         mFirstName = builder.mFirstName;
         mLastName = builder.mLastName;
         mEmail = builder.mEmail;
+        mVerificationPin =  builder.mVerificationPin;
     }
 
     /**
@@ -159,6 +176,14 @@ public class Credentials implements Serializable {
     }
 
     /**
+     * Get the pin or the empty string if no first name was provided.
+     * @return the email or the empty string if no first name was provided.
+     */
+    public int getVerificationPin() {
+        return mVerificationPin;
+    }
+
+    /**
      * Get all of the fields in a single JSON object. Note, if no values were provided for the
      * optional fields via the Builder, the JSON object will include the empty string for those
      * fields.
@@ -176,6 +201,7 @@ public class Credentials implements Serializable {
             msg.put("first", getFirstName());
             msg.put("last", getLastName());
             msg.put("email", getEmail());
+            msg.put("verification", getVerificationPin());
         } catch (JSONException e) {
             Log.wtf("CREDENTIALS", "Error creating JSON: " + e.getMessage());
         }

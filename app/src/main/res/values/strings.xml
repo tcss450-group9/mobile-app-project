@@ -44,7 +44,7 @@
 
     <!--Verification Page -->
     <string name="verification_pin_hint">4-Digit Verification Code</string>
-    <string name="verification_button_verify">Verify Account</string>
+    <string name="verification_button_validate">Verify Your Account</string>
 
     <!-- search Page -->
     <string name="search_textview_title">Search for friends</string>

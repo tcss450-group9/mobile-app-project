@@ -42,6 +42,7 @@ public class RecyclerViewAdapterChat extends RecyclerView.Adapter<RecyclerViewAd
 
     public void addData(String newMessage) {
         mDataset.add(newMessage);
+        notifyDataSetChanged();
     }
 
 

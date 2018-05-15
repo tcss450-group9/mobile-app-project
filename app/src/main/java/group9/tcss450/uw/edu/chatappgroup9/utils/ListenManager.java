@@ -52,7 +52,6 @@ public class ListenManager {
      * @author Charles Bryan
      */
     public static class Builder {
-
         //Required Parameters
         private final String mURL;
         private final Consumer<JSONObject> mActionToTake;
@@ -132,7 +131,16 @@ public class ListenManager {
      * Starts the worker thread to ask for updates every delay milliseconds.
      */
     public void startListening() {
+        Log.d("", "startListening: were listening");
         mThread = mPool.scheduleAtFixedRate(new ListenForMessages(),
+                0,
+                mDelay,
+                TimeUnit.MILLISECONDS);
+    }
+
+    public void startListening2() {
+        Log.d("", "startListening: were listening");
+        mThread = mPool.scheduleAtFixedRate(new ListenForMessages2(),
                 0,
                 mDelay,
                 TimeUnit.MILLISECONDS);
@@ -172,19 +180,19 @@ public class ListenManager {
                 while ((s = buffer.readLine()) != null) {
                     response.append(s);
                 }
-
+                //Log.d("we here", "run: we in this bitch " + response.toString());
                 JSONObject messages = new JSONObject(response.toString());
-
+                // Log.d("we in this", "run: "+ messages.toString());
                 //here is where we "publish" the message that we received.
                 mActionToTake.accept(messages);
-
-                //get and store the last date.
+                // get and store the last date.
                 JSONArray msgs = messages.getJSONArray("messages");
                 if (msgs.length() > 0) {
                     JSONObject mostRecent = msgs.getJSONObject(msgs.length() - 1);
                     String timestamp = mostRecent.get("timestamp").toString();
                     mDate = timestamp;
                 }
+
 
             } catch (Exception e) {
                 Log.e("ERROR", e.getMessage());
@@ -196,4 +204,52 @@ public class ListenManager {
             }
         }
     }
+    private class ListenForMessages2 implements Runnable {
+
+        @Override
+        public void run() {
+            StringBuilder response = new StringBuilder();
+            HttpURLConnection urlConnection = null;
+
+            //go out and ask for new messages
+            response = new StringBuilder();
+            try {
+                String getURL = mURL;
+                //add the timestamp to the URL
+                getURL += "&after=" + mDate;
+
+                URL urlObject = new URL(getURL);
+                urlConnection = (HttpURLConnection) urlObject.openConnection();
+                InputStream content = urlConnection.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                String s;
+                while ((s = buffer.readLine()) != null) {
+                    response.append(s);
+                }
+                Log.d("we here", "run: we in this bitch " + response.toString());
+
+                JSONObject messages = new JSONObject(response.toString());
+                Log.d("we in this", "run: "+ messages.toString());
+                //here is where we "publish" the message that we received.
+                mActionToTake.accept(messages);
+                //get and store the last date.
+//                           JSONArray msgs = messages.getJSONArray("messages");
+//                if (msgs.length() > 0) {
+//                    JSONObject mostRecent = msgs.getJSONObject(msgs.length() - 1);
+//                    String timestamp = mostRecent.get("timestamp").toString();
+//                    mDate = timestamp;
+//                }
+
+
+            } catch (Exception e) {
+                Log.e("ERROR", e.getMessage());
+                mActionToTakeOnError.accept(e);
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+        }
+    }
+
 }

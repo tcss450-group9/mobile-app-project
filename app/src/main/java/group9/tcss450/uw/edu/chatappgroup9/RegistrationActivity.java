@@ -14,6 +14,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Random;
+
 import group9.tcss450.uw.edu.chatappgroup9.model.Credentials;
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
@@ -33,13 +35,14 @@ public class RegistrationActivity extends AppCompatActivity {
     private final String USERNAME_EXIST = "Username has already exist";
     private final String EMAIL_EXIST = "Email has already registered";
 
-
     private EditText myUsername;
     private EditText myPassword;
     private EditText myConfirmPassword;
     private EditText myEmail;
     private EditText myFirstName;
     private EditText myLastName;
+
+    private int myVerificationPin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +55,11 @@ public class RegistrationActivity extends AppCompatActivity {
         myEmail = findViewById(R.id.registrationEditTextEmail);
         myFirstName = findViewById(R.id.registrationEditTextFirstName);
         myLastName = findViewById(R.id.registrationEditTextLastName);
+        myVerificationPin = verificationPinGenerator();
 
         Button submit = findViewById(R.id.registrationButtonSubmit);
         submit.setOnClickListener(this::submitOnClicked);
+
     }
 
     public void submitOnClicked(View theSubmitButton){
@@ -63,7 +68,8 @@ public class RegistrationActivity extends AppCompatActivity {
                     myPassword.getEditableText())
                     .addEmail(myEmail.getText().toString())
                     .addFirstName(myFirstName.getText().toString())
-                    .addLastName(myLastName.getText().toString()).build();
+                    .addLastName(myLastName.getText().toString())
+                    .addVerification(myVerificationPin).build();
 
             onRegisterAttempt(info);
         }
@@ -170,8 +176,8 @@ public class RegistrationActivity extends AppCompatActivity {
             }
 
             if (success) {
-                Toast.makeText(getApplicationContext(),
-                        myEmail.getText().toString() + ", Please verify your pin", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), myEmail.getText().toString()
+                        + ", Please verify your pin", Toast.LENGTH_LONG).show();
 
                 toVerificationActivity();
 
@@ -190,10 +196,34 @@ public class RegistrationActivity extends AppCompatActivity {
                     + e.getMessage()+e.getLocalizedMessage());
         }
     }
+    public void onBackPressed() {
+        startActivity(new Intent(this, MainActivity.class));
+        this.finish();
+    }
 
     public void toVerificationActivity() {
         Intent intent = new Intent(this, VerificationActivity.class);
+
+        String getUsername = myUsername.getText().toString();
+
+        //Create the bundle; pass in username so Verification knows how to verify pin
+        Bundle bundle = new Bundle();
+
+        //Add your data to bundle
+        bundle.putString("username", getUsername);
+
+        //Add the bundle to the intent
+        intent.putExtras(bundle);
         startActivity(intent);
+        this.finish();
     }
+
+    public int verificationPinGenerator() {
+        Random random = new Random();
+
+        int value = random.nextInt(10000);
+        return value;
+    }
+
 }
 

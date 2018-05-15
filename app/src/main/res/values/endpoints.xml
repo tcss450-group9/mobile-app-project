@@ -3,9 +3,12 @@
     <string name="ep_base_url">tcss450chat-app.herokuapp.com</string>
     <string name="ep_login">login</string>
     <string name="ep_register">register</string>
+    <string name="ep_verification">verification</string>
+    <string name="ep_verified">verified</string>
     <string name="ep_search">search</string>
     <string name="ep_view_connections">viewConnections</string>
     <string name="ep_send_message">sendMessages</string>
     <string name="ep_get_message">getMessages</string>
-
+    <string name="ep_get_Chats">getChats</string>
+    <string name="ep_get_chatInfo">getChatInfo</string>
 </resources>
