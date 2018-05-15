@@ -375,7 +375,7 @@ public class NavigationActivity extends AppCompatActivity
                         .getJSONArray(getString(R.string.keys_json_contacts));
 
                 mAdapter = new RecycleViewAdapterContact(
-                        jsonArrayUsersDataToStringArray(contactArray));
+                        jsonArrayUsersDataToStringMultiArray(contactArray));
                 recyclerView.setAdapter(mAdapter);
             }
             else {
@@ -404,6 +404,30 @@ public class NavigationActivity extends AppCompatActivity
                 String firstname = msg.get(getString(R.string.keys_json_firstname)).toString();
                 String lastname = msg.get(getString(R.string.keys_json_lastname)).toString();
                 msgs[i] = username + ":" + firstname + ":" + lastname;
+            }
+        } catch (JSONException e) {
+            Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
+        }
+        return msgs;
+
+    }
+
+    /**
+     *
+     * @param users the users data in Json array format
+     * @return 2D array where the first column is the username and the second column is both the
+     * first and last name of the user.
+     */
+    private String[][] jsonArrayUsersDataToStringMultiArray(JSONArray users) {
+        String[][] msgs = new String[users.length()][2];
+        try {
+            for (int i = 0; i < users.length(); i++) {
+                JSONObject msg = users.getJSONObject(i);
+                String username = msg.get(getString(R.string.keys_json_username)).toString();
+                String firstname = msg.get(getString(R.string.keys_json_firstname)).toString();
+                String lastname = msg.get(getString(R.string.keys_json_lastname)).toString();
+                msgs[i][0] = username;
+                msgs[i][1] = firstname + " " + lastname;
             }
         } catch (JSONException e) {
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
