@@ -88,6 +88,7 @@ public class NavigationActivity extends AppCompatActivity
 
 //            Log.e("NavigationActivity", "header : " + textView);
             textView.setText(username);
+            this.setTitle("Husky Mingle");
         }
 
         if(savedInstanceState == null) {

@@ -4,23 +4,24 @@
     tools:showIn="navigation_view">
     <item
         android:id="@+id/nav_landing"
-        android:title="Landing Fragment"
+        android:title="Main Menu"
+
         />
     <item
         android:id="@+id/nav_chat"
-        android:title="Chat Fragment"
+        android:title="Chat"
         />
     <item
         android:id="@+id/nav_contact"
-        android:title="Contact Fragment"
+        android:title="Contacts"
         />
     <item
         android:id="@+id/nav_search"
-        android:title="Search Fragment"
+        android:title="Search"
         />
     <item
         android:id="@+id/nav_weather"
-        android:title="Weather Fragment"
+        android:title="Weather"
         />
 
 </menu>
