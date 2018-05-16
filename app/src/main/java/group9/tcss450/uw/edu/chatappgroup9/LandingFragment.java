@@ -17,7 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterLandingPage;
+import java.util.LinkedList;
+
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterLandingPageChat;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
 
 
@@ -27,8 +29,8 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
  * {@link LandingFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class LandingFragment extends Fragment {
-    private  int counter = 0;
+public class LandingFragment extends Fragment implements RecyclerViewAdapterLandingPageChat.ChatItemListener {
+    private int counter = 0;
     private ListenManager chatsmanager;
     private ListenManager contentmanager;
     private String mSendUrl  = "";
@@ -37,6 +39,7 @@ public class LandingFragment extends Fragment {
     private final String [] array = new String [255];
     private OnFragmentInteractionListener mListener;
     private String mSendUrl2;
+    private final String TAG = "LandingFragment";
 
     public LandingFragment() {
         // Required empty public constructor
@@ -53,7 +56,7 @@ public class LandingFragment extends Fragment {
         recyclerview = (RecyclerView) view.findViewById(R.id.Chats);
         //       Log.d("", "onCreateView: " + recyclerview.toString());
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerview.setAdapter(new RecyclerViewAdapterLandingPage(getActivity(), array));
+        recyclerview.setAdapter(new RecyclerViewAdapterLandingPageChat(new LinkedList<String>()));
 
         Button logout = view.findViewById(R.id.landingButtonLogout);
         logout.setOnClickListener(this::onLogoutPressed);
@@ -81,7 +84,8 @@ public class LandingFragment extends Fragment {
                 .build()
                 .toString();
 
-        //no record of a saved timestamp. must be a first time login
+
+//        Log.e(TAG, "get chat id URL" + retrieve.toString());
         chatsmanager = new ListenManager.Builder(retrieve.toString(),
                 this::endOfSendMsgTask)
                 .setExceptionHandler(this::handleError)
@@ -124,17 +128,20 @@ public class LandingFragment extends Fragment {
     }
 
     private void endOfSendMsgTask(JSONObject g) {
-        Log.d("here", "endOfSendMsgTask: "+ g.toString());
+        Log.d(TAG, "endOfSendMsgTask: "+ g.toString());
 
         try {
             JSONObject chat;
-            JSONObject res = g;
+            JSONObject res = g; //chatids
             JSONArray n = res.getJSONArray("Chats");
+            String[] chatIds = new String[n.length()];
             for(counter = 0; counter < n.length() ; counter++) {
                 try{
                     chat =  n.getJSONObject(counter);
-                    array[counter] = chat.get("chatid").toString();
-                    recyclerview.setAdapter(new RecyclerViewAdapterLandingPage(getActivity(), array));
+                    chatIds[counter] = chat.get("chatid").toString();
+//                    recyclerview.setAdapter(new RecyclerViewAdapterLandingPageChat(chatIds));
+                    //TODO
+//                    ((RecyclerViewAdapterLandingPageChat)recyclerview.getAdapter()).setItemClickedListener(this);
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -155,7 +162,7 @@ public class LandingFragment extends Fragment {
 //            JSONArray n = chat.getJSONArray("Chats");
 //            array[counter][0] = n.getJSONObject(0).getString("message");
 //
-//            recyclerview.setAdapter(new RecyclerViewAdapterLandingPage(getActivity(), array));
+//            recyclerview.setAdapter(new RecyclerViewAdapterLandingPageChat(getActivity(), array));
 //        }catch (JSONException e) {
 //            e.printStackTrace();
 //        }
@@ -189,6 +196,15 @@ public class LandingFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void chatItemOnClicked(String targetChatId) {
+
+        Log.e(TAG, "targetChatId " + targetChatId);
+        Fragment chatFrag = new ChatFragment();
+        Bundle arg = new Bundle();
+        arg.putString("TARGET_CHAT_ID", targetChatId);
     }
 
     /**

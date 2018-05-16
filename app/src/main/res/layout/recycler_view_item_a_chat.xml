@@ -9,7 +9,7 @@
     tools:layout_editor_absoluteY="81dp">
 
     <Button
-        android:id="@+id/item"
+        android:id="@+id/recycleViewItemChat"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="default"

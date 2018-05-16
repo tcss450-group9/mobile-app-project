@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.content.Context;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
 
@@ -52,7 +51,7 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
                                                                         int viewType) {
         // create a new view
         View v =  LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycly_view_item_contact, parent, false);
+                .inflate(R.layout.recycler_view_item_contact, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }

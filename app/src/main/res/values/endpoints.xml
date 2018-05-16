@@ -11,4 +11,5 @@
     <string name="ep_get_message">getMessages</string>
     <string name="ep_get_Chats">getChats</string>
     <string name="ep_get_chatInfo">getChatInfo</string>
+    <string name="ep_send_friend_request">sendFriendRequest</string>
 </resources>

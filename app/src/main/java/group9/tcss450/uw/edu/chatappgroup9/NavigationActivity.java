@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -21,14 +20,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import group9.tcss450.uw.edu.chatappgroup9.model.RecycleViewAdapterContact;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
-import group9.tcss450.uw.edu.chatappgroup9.utils.SendGetAsyncTask;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 
@@ -42,6 +42,8 @@ public class NavigationActivity extends AppCompatActivity
 
     public static int mTheme = ThemeUtil.THEME_MEDITERRANEAN_BLUES;
     private String[] myDummyValue = {"Little_dog", "little_cat", "big_turtle", "myDummyValue", "African buffalo", "Meles meles"};
+    private SharedPreferences mySharedPreference;
+    private String myMemberId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +75,13 @@ public class NavigationActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        SharedPreferences preferences = getSharedPreferences(
+        mySharedPreference = getSharedPreferences(
                 getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
-        if (preferences != null) {
-            String username = preferences.getString(getString(R.string.keys_shared_prefs_username),
+        if (mySharedPreference != null) {
+            String username = mySharedPreference.getString(getString(R.string.keys_shared_prefs_username),
                     "unknown user");
+            myMemberId = mySharedPreference.getString(getString(R.string.keys_shared_prefs_memberid),
+                    "-1");
 
 //            Log.e("NavigationActivity", "username: " + username);
             TextView textView = navigationView.getHeaderView(0).findViewById(R.id.navigationHeaderTextViewUsername);
@@ -93,12 +97,6 @@ public class NavigationActivity extends AppCompatActivity
                         .commit();
             }
         }
-
-
-
-
-
-
     }
 
     @Override
@@ -243,7 +241,7 @@ public class NavigationActivity extends AppCompatActivity
         }
 
         new SendPostAsyncTask.Builder(uri.toString(), emailJSON)
-                .onPostExecute(this::handleEndOfSearch).build().execute();
+                .onPostExecute(this::handleEndOfSearchByName).build().execute();
     }
 
 
@@ -261,7 +259,7 @@ public class NavigationActivity extends AppCompatActivity
         }
 
         new SendPostAsyncTask.Builder(uri.toString(), usernameJSON)
-                .onPostExecute(this::handleEndOfSearch).build().execute();
+                .onPostExecute(this::handleEndOfSearchByName).build().execute();
     }
 
     @Override
@@ -294,37 +292,6 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
-    /**
-     * Handle the search by email response. If found a user, show the user's first name and last name
-     * in the result text view; otherwise show user not found.
-     * @param theResponse the response return from the server
-     */
-    private void handleEndOfSearch(String theResponse) {
-//        Log.e("NavigationActivity", "handleEndOfSearch start");
-        try {
-            JSONObject responseJSON = new JSONObject(theResponse);
-            boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
-            RecyclerView recyclerView = findViewById(R.id.searchRecycleViewUserFound);
-            RecyclerViewAdapterSearchResult mAdapter;
-
-            if (success) {
-                String username = responseJSON.get(getString(R.string.keys_json_username)).toString();
-                String first = responseJSON.get(getString(R.string.keys_json_firstname)).toString();
-                String last = responseJSON.get(getString(R.string.keys_json_lastname)).toString();
-//                Log.e("NavigationActivity", "handleEndOfSearch success");
-
-                String[] s = {username + ":" + first + ":" + last};
-                mAdapter = (RecyclerViewAdapterSearchResult) recyclerView.getAdapter();
-                mAdapter.setAdapterDataSet(s);
-                Log.e("NavigationActivity", "User found");
-            } else {
-                ((RecyclerViewAdapterSearchResult) recyclerView.getAdapter()).setAdapterDataSet(null);
-                Log.e("NavigationActivity", "User not found");
-            }
-        } catch (JSONException theException) {
-            Log.e("NavigationActivity", "JSON parse error");
-        }
-    }
 
     /**
      * Handle the search by email response. If found a user, show the user's first name and last name
@@ -332,6 +299,7 @@ public class NavigationActivity extends AppCompatActivity
      * @param theResponse the response return from the server
      */
     private void handleEndOfSearchByName(String theResponse) {
+
         try {
             JSONObject responseJSON = new JSONObject(theResponse);
             boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
@@ -342,7 +310,7 @@ public class NavigationActivity extends AppCompatActivity
                 JSONArray users = responseJSON.getJSONArray(getString(R.string.keys_json_array_users_data));
                 if (users.length() > 0) {
                     mAdapter = (RecyclerViewAdapterSearchResult) recyclerView.getAdapter();
-                    mAdapter.setAdapterDataSet(jsonArrayUsersDataToStringArray(users));
+                    mAdapter.setAdapterDataSet(searchDataJsonArrayToStringArray(users));
                 }
                 Log.e("NavigationActivity", "User found by name");
 
@@ -395,15 +363,19 @@ public class NavigationActivity extends AppCompatActivity
      * @param users the users data in Json array format
      * @return
      */
-    private String[] jsonArrayUsersDataToStringArray(JSONArray users) {
-        String[] msgs = new String[users.length()];
+    private List<String> searchDataJsonArrayToStringArray(JSONArray users) {
+        List<String> msgs = new ArrayList<String>();
         try {
             for (int i = 0; i < users.length(); i++) {
                 JSONObject msg = users.getJSONObject(i);
-                String username = msg.get(getString(R.string.keys_json_username)).toString();
-                String firstname = msg.get(getString(R.string.keys_json_firstname)).toString();
-                String lastname = msg.get(getString(R.string.keys_json_lastname)).toString();
-                msgs[i] = username + ":" + firstname + ":" + lastname;
+                String returnedUsername = msg.get(getString(R.string.keys_json_username)).toString();
+                String returnedFirstname = msg.get(getString(R.string.keys_json_firstname)).toString();
+                String returnedLastname = msg.get(getString(R.string.keys_json_lastname)).toString();
+                String returnedMemberId = msg.get(getString(R.string.keys_json_memberid)).toString();
+                if (!myMemberId.equals(returnedMemberId)) {
+                    String string = returnedUsername + ":" + returnedFirstname + ":" + returnedLastname + ":" + returnedMemberId + ":" + myMemberId;
+                    msgs.add(string);
+                }
             }
         } catch (JSONException e) {
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());

@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterChat;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterLandingPageChat;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
@@ -30,19 +31,21 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 // * {@link ChatFragment.OnFragmentInteractionListener} interface
 // * to handle interaction events.
 // */
-public class ChatFragment extends Fragment {
+public class ChatFragment extends Fragment  {
     private String myUsername;
     private String mySendUrl;
     private ListenManager myListenManager;
     private RecyclerView myRecyclerView;
     private RecyclerViewAdapterChat myAdapterChat;
     private SharedPreferences prefs;
+    private String myTargetChatId;
 
 //    private OnFragmentInteractionListener myListener;
 
     public ChatFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,7 @@ public class ChatFragment extends Fragment {
         myAdapterChat = new RecyclerViewAdapterChat(new ArrayList<String>());
         myRecyclerView.setAdapter(myAdapterChat);
 
+
         return v;
     }
 
@@ -72,7 +76,7 @@ public class ChatFragment extends Fragment {
 //        }
 //    }
 
-//    @Override
+    //    @Override
 //    public void onAttach(Context context) {
 //        super.onAttach(context);
 //        if (context instanceof OnFragmentInteractionListener) {
@@ -130,6 +134,7 @@ public class ChatFragment extends Fragment {
         }
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -162,7 +167,7 @@ public class ChatFragment extends Fragment {
     private void publishProgress(JSONObject messages) {
         final String[] msgs;
         int currentMsgsLength;
-        if(messages.has(getString(R.string.keys_json_messages))) {
+        if (messages.has(getString(R.string.keys_json_messages))) {
             try {
 
                 JSONArray jMessages = messages.getJSONArray(getString(R.string.keys_json_messages));
@@ -182,7 +187,7 @@ public class ChatFragment extends Fragment {
             }
 
             getActivity().runOnUiThread(() -> {
-                for (String s: msgs) {
+                for (String s : msgs) {
                     myAdapterChat.addData(s);
 //                    Log.e("ChatFragemnt", "ui run");
                     myRecyclerView.scrollToPosition(myAdapterChat.getItemCount() - 1);
@@ -198,11 +203,11 @@ public class ChatFragment extends Fragment {
         JSONObject messageJson = new JSONObject();
         String msg = ((EditText) getView().findViewById(R.id.chatInputEditText))
                 .getText().toString();
-        prefs= getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
         try {
             messageJson.put(getString(R.string.keys_json_username), myUsername);
             messageJson.put(getString(R.string.keys_json_message), msg);
-            messageJson.put(getString(R.string.keys_json_chat_id), prefs.getString(getString(R.string.keys_json_chatid),"1"));
+            messageJson.put(getString(R.string.keys_json_chat_id), prefs.getString(getString(R.string.keys_json_chatid), "1")); //change constructor
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -221,7 +226,7 @@ public class ChatFragment extends Fragment {
         try {
             JSONObject res = new JSONObject(result);
 
-            if(res.get(getString(R.string.keys_json_success)).toString()
+            if (res.get(getString(R.string.keys_json_success)).toString()
                     .equals(getString(R.string.keys_json_success_value_true))) {
 
                 ((EditText) getView().findViewById(R.id.chatInputEditText))
@@ -231,6 +236,8 @@ public class ChatFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+
 
 //    /**
 //     * This interface must be implemented by activities that contain this

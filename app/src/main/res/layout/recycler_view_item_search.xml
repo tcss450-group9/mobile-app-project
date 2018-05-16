@@ -2,9 +2,11 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recycleViewItemSearchLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="@dimen/text_size_activity_main">
+    android:elevation="@dimen/text_size_activity_main"
+    android:visibility="visible">
 
     <TextView
         android:id="@+id/recycleViewItemUsername"
@@ -29,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/recycleViewItemUsername" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/recycleViewItemSendRequest"
         style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

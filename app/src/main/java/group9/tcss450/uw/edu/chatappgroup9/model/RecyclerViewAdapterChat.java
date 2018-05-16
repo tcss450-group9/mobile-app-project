@@ -1,7 +1,5 @@
 package group9.tcss450.uw.edu.chatappgroup9.model;
 
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.Constraints;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +25,6 @@ public class RecyclerViewAdapterChat extends RecyclerView.Adapter<RecyclerViewAd
         public ImageView myOtherProfileImage;
         public TextView myMessage;
         public TextView myOtherUserMessage;
-        public ConstraintLayout myLayout;
         private LinearLayout myLeftLayout;
         private LinearLayout myRightLayout;
         public ViewHolder(View itemView) {
@@ -46,13 +43,14 @@ public class RecyclerViewAdapterChat extends RecyclerView.Adapter<RecyclerViewAd
         mDataset = theDataset;
     }
 
-
-
+    /**
+     * insert a new message to the data set
+     * @param newMessage
+     */
     public void addData(String newMessage) {
         mDataset.add(newMessage);
         notifyItemInserted(getItemCount() - 1);
     }
-
 
     // Create new views (invoked by the layout manager)
     @Override
@@ -60,7 +58,7 @@ public class RecyclerViewAdapterChat extends RecyclerView.Adapter<RecyclerViewAd
                                                                  int viewType) {
         // create a new view
         View v =  LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycle_view_item_chat, parent, false);
+                .inflate(R.layout.recycler_view_item_chat, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -79,14 +77,9 @@ public class RecyclerViewAdapterChat extends RecyclerView.Adapter<RecyclerViewAd
                 holder.myMessage.setText(data[2]);
             } else {
                 holder.myRightLayout.setVisibility(View.VISIBLE);
-
                 holder.myOtherUserMessage.setText(data[2]);
-
             }
-
-
         }
-
     }
 
     @Override

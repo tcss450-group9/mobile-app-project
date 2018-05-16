@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
+import java.util.ArrayList;
+
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 
@@ -58,8 +60,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         // specify an adapter (see also next example)
-        String[] s = {};
-        RecyclerViewAdapterSearchResult mAdapter = new RecyclerViewAdapterSearchResult(s);
+        RecyclerViewAdapterSearchResult mAdapter = new RecyclerViewAdapterSearchResult(new ArrayList<String>());
         recyclerView.setAdapter(mAdapter);
 
          return view;
