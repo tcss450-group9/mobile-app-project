@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
@@ -20,8 +21,10 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
         public TextView myUsername;
         public TextView myFullName;
         public Button myAddDeleteButton;
+        public Switch viewRequestSwitch; //Somehow need to determine switch position from this
         public ViewHolder(View itemView) {
             super(itemView);
+            viewRequestSwitch = itemView.findViewById(R.id.contactsSwitchExisting);
             myUsername = itemView.findViewById(R.id.recycleViewContactItemUsername);
             myFullName = itemView.findViewById(R.id.recycleview_item_textview_fullname);
             myAddDeleteButton = itemView.findViewById(R.id.recycleview_item_button_add_remove);
@@ -61,10 +64,12 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.myUsername.setText(mDataset[position][0]);
-        holder.myFullName.setText(mDataset[position][1]);
+        
+            holder.myUsername.setText(mDataset[position][0]);
+            holder.myFullName.setText(mDataset[position][1]);
 
-        //boolean viewPendingSwitchValue =
+        //This is supposed to change the function of the button between add/delete
+        //boolean viewPendingSwitchValue = holder.myUsername.getContext().getSwitchPosition();
     }
 
     // Return the size of your dataset (invoked by the layout manager)

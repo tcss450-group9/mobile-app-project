@@ -7,6 +7,7 @@
     <string name="ep_verified">verified</string>
     <string name="ep_search">search</string>
     <string name="ep_view_connections">viewConnections</string>
+    <string name="ep_view_requests">viewRequests</string>
     <string name="ep_send_message">sendMessages</string>
     <string name="ep_get_message">getMessages</string>
     <string name="ep_get_Chats">getChats</string>

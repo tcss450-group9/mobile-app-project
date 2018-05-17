@@ -71,6 +71,10 @@
     <string name="connections_popupmenu_item2">Username</string>
     <string name="connections_popupmenu_item3">Nickname</string>
 
+    <!-- Connection Requests RecyclerView Item -->
+    <string name="contacts_recyclerview_request_accept">Accept</string>
+    <string name="contacts_recyclerview_request_reject">Reject</string>
+
 
     <!-- landing Page -->
     <string name="landing_button_logout">Logout</string>
