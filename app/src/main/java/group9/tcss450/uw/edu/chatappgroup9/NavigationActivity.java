@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecycleViewAdapterContact;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterRequest;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
@@ -181,7 +182,7 @@ public class NavigationActivity extends AppCompatActivity
 
 
     @Override
-    public void getAllContacts(String baseURL, String endPoint, String username, String verifiedStatus) {
+    public void getAllContacts(String baseURL, String endPoint, String username) {
         Log.d("Load Contact Fragment","Top of getAllContacts");
         JSONArray contacts = new JSONArray(); //This is never populated and is returned empty. Perhaps change this function to void?
         JSONObject unObject = new JSONObject();
@@ -197,7 +198,6 @@ public class NavigationActivity extends AppCompatActivity
                 .appendPath(baseURL)
                 .appendPath(endPoint)
                 .appendQueryParameter("username",username)
-                .appendQueryParameter("verified",verifiedStatus)
                 .build();
         Log.d("Load Contact Fragment", uri.toString());
         new SendPostAsyncTask.Builder(uri.toString(), unObject)
@@ -206,6 +206,27 @@ public class NavigationActivity extends AppCompatActivity
         Log.d("Load Contact Fragment","Bottom of getAllContacts");
     }
 
+    @Override
+    public void getPendingRequests(String baseURL, String endpoint, String username) {
+        JSONObject unObject = new JSONObject();
+        try {
+            unObject.put("username", username);
+        }
+        catch(JSONException e) {
+            Log.e("GETALLCONTACTS", "Error building username JSONObject: " + e.getMessage());
+        }
+
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(baseURL)
+                .appendPath(endpoint)
+                .appendQueryParameter("username",username)
+                .build();
+        Log.d("Load Contact Fragment", uri.toString());
+        new SendPostAsyncTask.Builder(uri.toString(), unObject)
+                .onPostExecute(this::handleGetPendingRequestsOnPost)
+                .build().execute();
+    }
 
 
     @Override
@@ -358,6 +379,31 @@ public class NavigationActivity extends AppCompatActivity
         Log.d("Load Contact Fragment","Bottom of handleGetAllContactsOnPost");
     }
 
+    private void handleGetPendingRequestsOnPost(String theResponse) {
+        try {
+            JSONObject responseAsJSON = new JSONObject(theResponse);
+            boolean success = responseAsJSON.getBoolean(getString(R.string.keys_json_success));
+            RecyclerView recyclerView = findViewById(R.id.contactsRecyclerViewRequests);
+            RecyclerViewAdapterRequest mAdapter;
+
+            if(success) {
+                JSONArray requestArray = responseAsJSON
+                        .getJSONArray(getString(R.string.keys_json_requests));
+
+                mAdapter = new RecyclerViewAdapterRequest(
+                        jsonArrayUsersDataToStringMultiArray(requestArray));
+                recyclerView.setAdapter(mAdapter);
+            }
+            else {
+                //TODO This is causing a fatal exception on response success=false. Cannot set adapter to null
+                ((RecyclerViewAdapterRequest) recyclerView.getAdapter()).setAdapterDataSet(null);
+            }
+        }
+        catch (JSONException e) {
+            Log.e("NavigationActivity", "Unable to build JSON: " + e.getMessage());
+        }
+    }
+
 
     /**
      *
@@ -396,11 +442,11 @@ public class NavigationActivity extends AppCompatActivity
         try {
             for (int i = 0; i < users.length(); i++) {
                 JSONObject msg = users.getJSONObject(i);
-                String username = msg.get(getString(R.string.keys_json_username)).toString();
-                String firstname = msg.get(getString(R.string.keys_json_firstname)).toString();
-                String lastname = msg.get(getString(R.string.keys_json_lastname)).toString();
-                msgs[i][0] = username;
-                msgs[i][1] = firstname + " " + lastname;
+                String usernameA = msg.get(getString(R.string.keys_json_username)).toString();
+                String firstNameA = msg.get(getString(R.string.keys_json_firstname)).toString();
+                String lastNameA = msg.get(getString(R.string.keys_json_lastname)).toString();
+                msgs[i][0] = usernameA;
+                msgs[i][1] = firstNameA + " " + lastNameA;
             }
         } catch (JSONException e) {
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
