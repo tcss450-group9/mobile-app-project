@@ -64,15 +64,10 @@ public class RecyclerViewAdapterLandingPageChat extends RecyclerView.Adapter<Rec
     }
 
 
-
     @Override
     public int getItemCount() {
         return myChatIds.size();
     }
-
-
-
-
 
 
     public interface ChatItemListener {
