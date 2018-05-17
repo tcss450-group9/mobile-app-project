@@ -140,7 +140,7 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
                     chat =  n.getJSONObject(counter);
                     chatIds[counter] = chat.get("chatid").toString();
 //                    recyclerview.setAdapter(new RecyclerViewAdapterLandingPageChat(chatIds));
-                    //TODO
+                    //TODO change data set to list
 //                    ((RecyclerViewAdapterLandingPageChat)recyclerview.getAdapter()).setItemClickedListener(this);
                 }catch (JSONException e) {
                     e.printStackTrace();

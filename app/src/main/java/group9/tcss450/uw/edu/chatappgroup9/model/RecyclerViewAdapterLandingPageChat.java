@@ -36,7 +36,7 @@ public class RecyclerViewAdapterLandingPageChat extends RecyclerView.Adapter<Rec
         }
 
         private void chatItemOnClicked(View view) {
-            chatItemListener.chatItemOnClicked(targetChatId);
+            chatItemListener.chatItemOnClicked(myChatIds.get(getItemCount()-1));
         }
     }
 

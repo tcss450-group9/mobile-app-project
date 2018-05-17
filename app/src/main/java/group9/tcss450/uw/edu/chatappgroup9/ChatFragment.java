@@ -19,8 +19,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterChat;
-import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterLandingPageChat;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterMessages;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
@@ -36,7 +35,7 @@ public class ChatFragment extends Fragment  {
     private String mySendUrl;
     private ListenManager myListenManager;
     private RecyclerView myRecyclerView;
-    private RecyclerViewAdapterChat myAdapterChat;
+    private RecyclerViewAdapterMessages myAdapterChat;
     private SharedPreferences prefs;
     private String myTargetChatId;
 
@@ -62,7 +61,7 @@ public class ChatFragment extends Fragment  {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setStackFromEnd(true);
         myRecyclerView.setLayoutManager(linearLayoutManager);
-        myAdapterChat = new RecyclerViewAdapterChat(new ArrayList<String>());
+        myAdapterChat = new RecyclerViewAdapterMessages(new ArrayList<String>());
         myRecyclerView.setAdapter(myAdapterChat);
 
 

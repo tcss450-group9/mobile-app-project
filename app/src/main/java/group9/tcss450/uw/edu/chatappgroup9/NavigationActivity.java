@@ -241,13 +241,13 @@ public class NavigationActivity extends AppCompatActivity
         }
 
         new SendPostAsyncTask.Builder(uri.toString(), emailJSON)
-                .onPostExecute(this::handleEndOfSearchByName).build().execute();
+                .onPostExecute(this::handleEndOfSearch).build().execute();
     }
 
 
     @Override
     public void onSearchByUsernameAttempt(String theUsername) {
-        Log.e("NavigationActivity", "Search by username");
+//        Log.e("NavigationActivity", "Search by username");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_search)).build();
         JSONObject usernameJSON = new JSONObject();
@@ -259,12 +259,12 @@ public class NavigationActivity extends AppCompatActivity
         }
 
         new SendPostAsyncTask.Builder(uri.toString(), usernameJSON)
-                .onPostExecute(this::handleEndOfSearchByName).build().execute();
+                .onPostExecute(this::handleEndOfSearch).build().execute();
     }
 
     @Override
     public void onSearchByNameAttempt(String theFirstName, String theLastName) {
-        Log.e("NavigationActivity", "Search by name");
+//        Log.e("NavigationActivity", "Search by name");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_search)).build();
         JSONObject nameJSON = new JSONObject();
@@ -277,7 +277,7 @@ public class NavigationActivity extends AppCompatActivity
         }
 
         new SendPostAsyncTask.Builder(uri.toString(), nameJSON)
-                .onPostExecute(this::handleEndOfSearchByName).build().execute();
+                .onPostExecute(this::handleEndOfSearch).build().execute();
 
     }
 
@@ -294,11 +294,11 @@ public class NavigationActivity extends AppCompatActivity
 
 
     /**
-     * Handle the search by email response. If found a user, show the user's first name and last name
-     * in the result text view; otherwise show user not found.
+     * Handle the search response. The Response data will be send to a recycler view adapter if the response success;
+     * otherwise send null to a recycler view adapter.
      * @param theResponse the response return from the server
      */
-    private void handleEndOfSearchByName(String theResponse) {
+    private void handleEndOfSearch(String theResponse) {
 
         try {
             JSONObject responseJSON = new JSONObject(theResponse);
@@ -310,13 +310,13 @@ public class NavigationActivity extends AppCompatActivity
                 JSONArray users = responseJSON.getJSONArray(getString(R.string.keys_json_array_users_data));
                 if (users.length() > 0) {
                     mAdapter = (RecyclerViewAdapterSearchResult) recyclerView.getAdapter();
-                    mAdapter.setAdapterDataSet(searchDataJsonArrayToStringArray(users));
+                    mAdapter.setAdapterDataSet(searchDataJsonArrayToList(users));
                 }
-                Log.e("NavigationActivity", "User found by name");
+//                Log.e("NavigationActivity", "User found by name");
 
             } else {
                 ((RecyclerViewAdapterSearchResult) recyclerView.getAdapter()).setAdapterDataSet(null);
-                Log.e("NavigationActivity", "User not found");
+//                Log.e("NavigationActivity", "User not found");
             }
         } catch (JSONException e) {
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
@@ -359,12 +359,12 @@ public class NavigationActivity extends AppCompatActivity
 
 
     /**
-     *
+     * converts a jason array returned from search to an string array list.
      * @param users the users data in Json array format
      * @return
      */
-    private List<String> searchDataJsonArrayToStringArray(JSONArray users) {
-        List<String> msgs = new ArrayList<String>();
+    private List<String> searchDataJsonArrayToList(JSONArray users) {
+        List<String> msgs = new ArrayList<>();
         try {
             for (int i = 0; i < users.length(); i++) {
                 JSONObject msg = users.getJSONObject(i);

@@ -12,7 +12,7 @@ import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
 
-public class RecyclerViewAdapterChat extends RecyclerView.Adapter<RecyclerViewAdapterChat.ViewHolder> {
+public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerViewAdapterMessages.ViewHolder> {
 
     private List<String> mDataset;
 
@@ -39,7 +39,7 @@ public class RecyclerViewAdapterChat extends RecyclerView.Adapter<RecyclerViewAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerViewAdapterChat(List<String> theDataset) {
+    public RecyclerViewAdapterMessages(List<String> theDataset) {
         mDataset = theDataset;
     }
 
@@ -54,8 +54,8 @@ public class RecyclerViewAdapterChat extends RecyclerView.Adapter<RecyclerViewAd
 
     // Create new views (invoked by the layout manager)
     @Override
-    public RecyclerViewAdapterChat.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                 int viewType) {
+    public RecyclerViewAdapterMessages.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                     int viewType) {
         // create a new view
         View v =  LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item_chat, parent, false);
