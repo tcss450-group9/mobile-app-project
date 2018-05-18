@@ -141,7 +141,7 @@ public class ListenManager {
     }
 
     public void startListeningChats() {
-        Log.d("", "startListening: were listening");
+        Log.d("", "startListening Landing Page Chats: were listening");
         mThread = mPool.scheduleAtFixedRate(new ListenForLandingPageChat(),
                 0,
                 mDelay,

@@ -58,7 +58,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
                                                                      int viewType) {
         // create a new view
         View v =  LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_view_item_chat, parent, false);
+                .inflate(R.layout.recycler_view_item_a_message, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }

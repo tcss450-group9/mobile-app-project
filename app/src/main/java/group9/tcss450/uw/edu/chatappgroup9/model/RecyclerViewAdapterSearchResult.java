@@ -35,7 +35,6 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
         private String othersMemberId;
         private String myMemberId;
         private Button mySendRequestButton;
-        private ConstraintLayout myLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -43,7 +42,6 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
             othersName = itemView.findViewById(R.id.recycleViewItemFirstLastName);
             mySendRequestButton = itemView.findViewById(R.id.recycleViewItemSendRequest);
             mySendRequestButton.setOnClickListener(this::onSendRequestClicked);
-            myLayout = itemView.findViewById(R.id.recycleViewItemSearchLayout);
         }
 
         private void onSendRequestClicked(View view) {
@@ -114,8 +112,6 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
                 holder.othersMemberId = data[3];
                 holder.myMemberId = data[4];
                 holder.othersUsername.setText(data[0]);
-//                if (data[3].toString().equals(data[4].toString()))
-//                    holder.mySendRequestButton.setVisibility(View.INVISIBLE);
             }
 
 

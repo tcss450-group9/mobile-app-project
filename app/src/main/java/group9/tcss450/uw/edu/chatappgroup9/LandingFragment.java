@@ -33,12 +33,11 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
  */
 public class LandingFragment extends Fragment implements RecyclerViewAdapterLandingPageChat.ChatItemListener {
     private int myChatCount = 0;
-    private ListenManager chatsManager;
+    private ListenManager myChatsManager;
     private RecyclerViewAdapterLandingPageChat myAdapter;
     private OnFragmentInteractionListener mListener;
-    private String mSendUrl2;
     private final String TAG = "LandingFragment";
-    RecyclerView recyclerview;
+    private RecyclerView recyclerview;
 
     public LandingFragment() {
         // Required empty public constructor
@@ -47,12 +46,10 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("error", "onCreateView: we in this bitch ");
         JSONObject user = new JSONObject();
         View view = inflater.inflate(R.layout.fragment_landing, container, false);
-        Log.e("NavigationActivity", "" + "LandingFragmentTag");
         // Inflate the layout for this fragment
-        recyclerview = (RecyclerView) view.findViewById(R.id.Chats);
+        recyclerview = (RecyclerView) view.findViewById(R.id.landingRecyclerViewChats);
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerview.setAdapter(new RecyclerViewAdapterLandingPageChat(new ArrayList<>()));
         myAdapter = (RecyclerViewAdapterLandingPageChat)recyclerview.getAdapter();
@@ -78,51 +75,34 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_get_Chats))
-                .appendQueryParameter("username", prefs.getString(getString(R.string.keys_shared_prefs_username), ""))
+                .appendQueryParameter("username", prefs.getString(getString(R.string.keys_shared_prefs_username), "unknown username"))
                 .build();
-//        mSendUrl2 = new Uri.Builder().scheme("https")
-//                .appendPath(getString(R.string.ep_base_url))
-//                .appendPath(getString(R.string.ep_get_chatInfo)).appendQueryParameter("chatId","1" )
-//                .build()
-//                .toString();
 
 
-//        Log.e(TAG, "get chat id URL" + retrieve.toString());
-        chatsManager = new ListenManager.Builder(retrieve.toString(),
-                this::endOfSendMsgTask)
+        myChatsManager = new ListenManager.Builder(retrieve.toString(),
+                this::endOfGetChatsTask)
                 .setExceptionHandler(this::handleError)
-                .setDelay(1000)
+                .setDelay(5000)
                 .build();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        chatsManager.startListeningChats();
+        myChatsManager.startListeningChats();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-         String latestMessage = chatsManager.stopListening();
-        //  contentmanager.stopListening();
-        SharedPreferences prefs =
-                getActivity().getSharedPreferences(
-                        getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
-        // Save the most recent message timestamp
-//        prefs.edit().putString(
-//                getString(R.string.keys_prefs_time_stamp),
-//                latestMessage)
-//                .apply();
+        myChatsManager.stopListening();
     }
 
     private void handleError(final Exception e) {
-        Log.e("LISTEN ERROR!!!", e.getMessage());
+        Log.e(TAG +" LISTEN ERROR!!!", e.getMessage());
     }
 
-    private void endOfSendMsgTask(JSONObject result) {
-        Log.d(TAG, "endOfSendMsgTask: "+ result.toString());
+    private void endOfGetChatsTask(JSONObject result) {
         List<String> chatIdList = new ArrayList<>();
         try {
             JSONArray chatsJsonArray = result.getJSONArray("Chats");
@@ -130,9 +110,9 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
             for(int i = 0; i < chatsJsonArray.length() ; i++) {
                 try{
                     JSONObject chatJson =  chatsJsonArray.getJSONObject(i);
-                    String oneChatId = chatJson.get("chatid").toString();
+                    String oneChatId = chatJson.get(getString(R.string.keys_json_chat_id)).toString();
                     chatIdList.add(oneChatId);
-                    Log.d(TAG, "endOfSendMsgTask: "+ oneChatId.toString());
+                    Log.d(TAG, "endOfGetChatsTask: "+ oneChatId.toString());
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -142,7 +122,6 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
             e.printStackTrace();
         }
 
-
         getActivity().runOnUiThread(() -> {
             for (String s : chatIdList) {
                 if (myAdapter.getItemCount() != myChatCount) {
@@ -150,8 +129,6 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
                     Log.e(TAG, "chat number count" + myAdapter.getItemCount());
                 }
             }
-
-
         });
 
     }
@@ -187,10 +164,13 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
         mListener = null;
     }
 
+    /**
+     * starts a chats with the target chat id.
+     * @param targetChatId
+     */
     @Override
     public void chatItemOnClicked(String targetChatId) {
-
-        Log.e(TAG, "targetChatId " + targetChatId);
+//        Log.e(TAG, "targetChatId " + targetChatId);
         Fragment chatFrag = new ChatFragment();
         Bundle arg = new Bundle();
         arg.putString("TARGET_CHAT_ID", targetChatId);

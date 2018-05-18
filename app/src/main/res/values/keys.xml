@@ -38,7 +38,7 @@
     <string name="keys_json_messages">messages</string>
     <string name="keys_json_contacts">contacts</string>
     <string name="keys_json_requests">requests</string>
-    <string name="keys_json_chat_id">chatId</string>
+    <string name="keys_json_chat_id">chatid</string>
     <string name="keys_json_success_value_true">true</string>
     <string name="keys_json_success_value_false">false</string>
 
