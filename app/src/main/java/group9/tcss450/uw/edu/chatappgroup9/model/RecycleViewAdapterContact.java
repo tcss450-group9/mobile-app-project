@@ -69,7 +69,7 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
             holder.myFullName.setText(mDataset[position][1]);
 
         //This is supposed to change the function of the button between add/delete
-        //boolean viewPendingSwitchValue = holder.myUsername.getContext().getSwitchPosition();
+        //boolean viewPendingSwitchValue = holder.mySender.getContext().getSwitchPosition();
     }
 
     // Return the size of your dataset (invoked by the layout manager)
