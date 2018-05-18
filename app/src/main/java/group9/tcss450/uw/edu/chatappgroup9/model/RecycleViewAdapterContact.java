@@ -25,7 +25,7 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
         public ViewHolder(View itemView) {
             super(itemView);
             viewRequestSwitch = itemView.findViewById(R.id.contactsSwitchExisting);
-            myUsername = itemView.findViewById(R.id.recycleViewContactItemUsername);
+            myUsername = itemView.findViewById(R.id.recycleViewItemContactUsername);
             myFullName = itemView.findViewById(R.id.recycleview_item_textview_fullname);
             myAddDeleteButton = itemView.findViewById(R.id.recycleview_item_button_add_remove);
         }

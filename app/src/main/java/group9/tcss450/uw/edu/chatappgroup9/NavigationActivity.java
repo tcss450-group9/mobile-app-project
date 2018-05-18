@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecycleViewAdapterContact;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterContactNew;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterRequest;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
@@ -35,14 +36,13 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-//        ChatFragment.OnFragmentInteractionListener,
         LandingFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         WeatherFragment.OnFragmentInteractionListener,
         ContactsFragment.OnFragmentInteractionListener {
 
     public static int mTheme = ThemeUtil.THEME_MEDITERRANEAN_BLUES;
-    private String[] myDummyValue = {"Little_dog", "little_cat", "big_turtle", "myDummyValue", "African buffalo", "Meles meles"};
+//    private String[] myDummyValue = {"Little_dog", "little_cat", "big_turtle", "myDummyValue", "African buffalo", "Meles meles"};
     private SharedPreferences mySharedPreference;
     private String myMemberId;
 
@@ -228,6 +228,14 @@ public class NavigationActivity extends AppCompatActivity
                 .build().execute();
     }
 
+    @Override
+    public void bindContactItemListener(RecyclerViewAdapterContactNew.ContactItemListener listener) {
+        RecyclerView recyclerView = findViewById(R.id.contactRecycleViewAllContacts);
+        recyclerView.setAdapter(new RecyclerViewAdapterContactNew(new ArrayList<>()));
+        RecyclerViewAdapterContactNew adapter = (RecyclerViewAdapterContactNew) recyclerView.getAdapter();
+        adapter.setItemClickedListener(listener);
+    }
+
 
     @Override
     public void onLogout() {
@@ -300,9 +308,7 @@ public class NavigationActivity extends AppCompatActivity
 
         new SendPostAsyncTask.Builder(uri.toString(), nameJSON)
                 .onPostExecute(this::handleEndOfSearch).build().execute();
-
     }
-
 
     private void loadFragment(Fragment frag, String theFragmentTag) {
         Log.e("NavigationActivity", "" + theFragmentTag);
@@ -358,19 +364,20 @@ public class NavigationActivity extends AppCompatActivity
             JSONObject responseAsJSON = new JSONObject(theResponse);
             boolean success = responseAsJSON.getBoolean(getString(R.string.keys_json_success));
             RecyclerView recyclerView = findViewById(R.id.contactRecycleViewAllContacts);
-            RecycleViewAdapterContact mAdapter;
+            RecyclerViewAdapterContactNew mAdapter;
 
             if(success) {
                 JSONArray contactArray = responseAsJSON
                         .getJSONArray(getString(R.string.keys_json_contacts));
 
-                mAdapter = new RecycleViewAdapterContact(
-                        jsonArrayUsersDataToStringMultiArray(contactArray));
+                mAdapter = new RecyclerViewAdapterContactNew(
+                        contactsJsonArrayToList(contactArray));
                 recyclerView.setAdapter(mAdapter);
+                Log.e("NavigationActivity", "get all contact success");
             }
             else {
                 //TODO This is causing a fatal exception on response success=false. Cannot set adapter to null
-                ((RecycleViewAdapterContact) recyclerView.getAdapter()).setAdapterDataSet(null);
+//                ((RecyclerViewAdapterContactNew) recyclerView.getAdapter()).setAdapterDataSet(null);
             }
         }
         catch (JSONException e) {
@@ -428,8 +435,30 @@ public class NavigationActivity extends AppCompatActivity
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
         }
         return msgs;
-
     }
+
+    /**
+     * converts a jason array returned from handleGetAllContactsOnPost to an string array list.
+     * The list include the data specified for memberid_b.
+     * @param allContacts the contacts data in Json array format
+     * @return
+     */
+    private List<String> contactsJsonArrayToList(JSONArray allContacts) {
+        List<String> msgs = new ArrayList<>();
+        try {
+            for (int i = 0; i < allContacts.length(); i++) {
+                JSONObject msg = allContacts.getJSONObject(i);
+                String memberIdB = msg.get(getString(R.string.keys_json_memberid_b)).toString();
+                String username = msg.get(getString(R.string.keys_json_username)).toString();
+                String string = memberIdB + ":" + username;
+                msgs.add(string);
+            }
+        } catch (JSONException e) {
+            Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
+        }
+        return msgs;
+    }
+
 
     /**
      *
@@ -452,7 +481,6 @@ public class NavigationActivity extends AppCompatActivity
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
         }
         return msgs;
-
     }
 
 
