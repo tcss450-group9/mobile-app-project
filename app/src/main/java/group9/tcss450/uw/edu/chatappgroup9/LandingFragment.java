@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,7 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterLandingPageChat;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
@@ -31,15 +32,13 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
  * to handle interaction events.
  */
 public class LandingFragment extends Fragment implements RecyclerViewAdapterLandingPageChat.ChatItemListener {
-    private int counter = 0;
-    private ListenManager chatsmanager;
-    private ListenManager contentmanager;
-    private String mSendUrl  = "";
-    private RecyclerView recyclerview;
-    private String myUsername;
+    private int myChatCount = 0;
+    private ListenManager chatsManager;
+    private RecyclerViewAdapterLandingPageChat myAdapter;
     private OnFragmentInteractionListener mListener;
     private String mSendUrl2;
     private final String TAG = "LandingFragment";
+    RecyclerView recyclerview;
 
     public LandingFragment() {
         // Required empty public constructor
@@ -56,11 +55,15 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
         recyclerview = (RecyclerView) view.findViewById(R.id.Chats);
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerview.setAdapter(new RecyclerViewAdapterLandingPageChat(new ArrayList<>()));
-
+        myAdapter = (RecyclerViewAdapterLandingPageChat)recyclerview.getAdapter();
+        myAdapter.setItemClickedListener(this);
         Button logout = view.findViewById(R.id.landingButtonLogout);
         logout.setOnClickListener(this::onLogoutPressed);
+
         return view;
     }
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -77,15 +80,15 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
                 .appendPath(getString(R.string.ep_get_Chats))
                 .appendQueryParameter("username", prefs.getString(getString(R.string.keys_shared_prefs_username), ""))
                 .build();
-        mSendUrl2 = new Uri.Builder().scheme("https")
-                .appendPath(getString(R.string.ep_base_url))
-                .appendPath(getString(R.string.ep_get_chatInfo)).appendQueryParameter("chatId","1" )
-                .build()
-                .toString();
+//        mSendUrl2 = new Uri.Builder().scheme("https")
+//                .appendPath(getString(R.string.ep_base_url))
+//                .appendPath(getString(R.string.ep_get_chatInfo)).appendQueryParameter("chatId","1" )
+//                .build()
+//                .toString();
 
 
 //        Log.e(TAG, "get chat id URL" + retrieve.toString());
-        chatsmanager = new ListenManager.Builder(retrieve.toString(),
+        chatsManager = new ListenManager.Builder(retrieve.toString(),
                 this::endOfSendMsgTask)
                 .setExceptionHandler(this::handleError)
                 .setDelay(1000)
@@ -95,14 +98,13 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
     @Override
     public void onResume() {
         super.onResume();
-        chatsmanager.startListening2();
-        //  contentmanager.startListening2();
+        chatsManager.startListeningChats();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-         String latestMessage = chatsmanager.stopListening();
+         String latestMessage = chatsManager.stopListening();
         //  contentmanager.stopListening();
         SharedPreferences prefs =
                 getActivity().getSharedPreferences(
@@ -114,36 +116,43 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
 //                latestMessage)
 //                .apply();
     }
+
     private void handleError(final Exception e) {
         Log.e("LISTEN ERROR!!!", e.getMessage());
     }
-    private void handleError2(final Exception e) {
-        Log.e("LISTEN ERROR!!!76", e.getMessage());
-    }
 
-    private void endOfSendMsgTask(JSONObject g) {
-        Log.d(TAG, "endOfSendMsgTask: "+ g.toString());
-
+    private void endOfSendMsgTask(JSONObject result) {
+        Log.d(TAG, "endOfSendMsgTask: "+ result.toString());
+        List<String> chatIdList = new ArrayList<>();
         try {
-            JSONObject chat;
-            JSONObject res = g; //chatids
-            JSONArray n = res.getJSONArray("Chats");
-            String[] chatIds = new String[n.length()];
-            for(counter = 0; counter < n.length() ; counter++) {
+            JSONArray chatsJsonArray = result.getJSONArray("Chats");
+            myChatCount = chatsJsonArray.length();
+            for(int i = 0; i < chatsJsonArray.length() ; i++) {
                 try{
-                    chat =  n.getJSONObject(counter);
-                    chatIds[counter] = chat.get("chatid").toString();
-                    //TODO change data set to list
-                    ((RecyclerViewAdapterLandingPageChat)recyclerview.getAdapter()).setItemClickedListener(this);
+                    JSONObject chatJson =  chatsJsonArray.getJSONObject(i);
+                    String oneChatId = chatJson.get("chatid").toString();
+                    chatIdList.add(oneChatId);
+                    Log.d(TAG, "endOfSendMsgTask: "+ oneChatId.toString());
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            counter= 0;
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
+        getActivity().runOnUiThread(() -> {
+            for (String s : chatIdList) {
+                if (myAdapter.getItemCount() != myChatCount) {
+                    myAdapter.addData(s);
+                    Log.e(TAG, "chat number count" + myAdapter.getItemCount());
+                }
+            }
+
+
+        });
 
     }
 
@@ -185,6 +194,18 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
         Fragment chatFrag = new ChatFragment();
         Bundle arg = new Bundle();
         arg.putString("TARGET_CHAT_ID", targetChatId);
+        chatFrag.setArguments(arg);
+        loadChatFragment(chatFrag, getString(R.string.keys_chat_fragment_tag));
+    }
+
+    private void loadChatFragment(Fragment frag, String theFragmentTag) {
+        Log.e(TAG, "loadChatFragment");
+        FragmentTransaction ft = getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, frag, theFragmentTag)
+                .addToBackStack(null);
+        ft.commit();
+
     }
 
     /**

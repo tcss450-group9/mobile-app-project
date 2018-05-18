@@ -1,6 +1,7 @@
 package group9.tcss450.uw.edu.chatappgroup9.model;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ public class RecyclerViewAdapterLandingPageChat extends RecyclerView.Adapter<Rec
     private List<String> myChatIds;
     private ChatItemListener chatItemListener;
     private String targetChatId;
+    private final String TAG = "RecyclerViewAdapterLandingPageChat";
 
 
 
@@ -36,7 +38,7 @@ public class RecyclerViewAdapterLandingPageChat extends RecyclerView.Adapter<Rec
         }
 
         private void chatItemOnClicked(View view) {
-            chatItemListener.chatItemOnClicked(myChatIds.get(getItemCount()-1));
+            chatItemListener.chatItemOnClicked(myChatIds.get(getAdapterPosition()));
         }
     }
 
@@ -56,7 +58,8 @@ public class RecyclerViewAdapterLandingPageChat extends RecyclerView.Adapter<Rec
 
     public void addData(String newMessage) {
         myChatIds.add(newMessage);
-        notifyItemInserted(getItemCount() - 1);
+
+        notifyDataSetChanged();
     }
 
     public void setItemClickedListener(ChatItemListener listener) {

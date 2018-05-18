@@ -33,6 +33,8 @@ import java.util.function.Consumer;
  *  argument.
  *
  * @author Charles Bryan
+ * @author Minqing Chen
+ * @author Garrett
  * @version 4/15/2018
  */
 public class ListenManager {
@@ -138,9 +140,9 @@ public class ListenManager {
                 TimeUnit.MILLISECONDS);
     }
 
-    public void startListening2() {
+    public void startListeningChats() {
         Log.d("", "startListening: were listening");
-        mThread = mPool.scheduleAtFixedRate(new ListenForMessages2(),
+        mThread = mPool.scheduleAtFixedRate(new ListenForLandingPageChat(),
                 0,
                 mDelay,
                 TimeUnit.MILLISECONDS);
@@ -204,7 +206,8 @@ public class ListenManager {
             }
         }
     }
-    private class ListenForMessages2 implements Runnable {
+
+    private class ListenForLandingPageChat implements Runnable {
 
         @Override
         public void run() {

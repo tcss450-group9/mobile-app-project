@@ -38,6 +38,7 @@ public class ChatFragment extends Fragment  {
     private RecyclerViewAdapterMessages myAdapterChat;
     private SharedPreferences prefs;
     private String myTargetChatId;
+    private final String TAG = "Chat Fragment";
 
 //    private OnFragmentInteractionListener myListener;
 
@@ -64,6 +65,13 @@ public class ChatFragment extends Fragment  {
         myAdapterChat = new RecyclerViewAdapterMessages(new ArrayList<String>());
         myRecyclerView.setAdapter(myAdapterChat);
 
+        if (getArguments().getString("TARGET_CHAT_ID") == null) {
+            myTargetChatId = "1";
+            Log.e(TAG, "TARGET_CHAT_ID not found");
+        } else {
+            myTargetChatId = getArguments().getString("TARGET_CHAT_ID");
+            Log.e(TAG, "current TARGET_CHAT_ID : " + myTargetChatId);
+        }
 
         return v;
     }
@@ -112,7 +120,7 @@ public class ChatFragment extends Fragment  {
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_get_message))
-                .appendQueryParameter("chatId", "1")
+                .appendQueryParameter("chatId", myTargetChatId)
                 .build();
 
         if (prefs.contains(getString(R.string.keys_prefs_time_stamp))) {
@@ -179,7 +187,6 @@ public class ChatFragment extends Fragment  {
                     String userMessage = msg.get(getString(R.string.keys_json_message)).toString();
                     msgs[i] = myUsername + ":" + username + ":" + userMessage;
                 }
-                currentMsgsLength = msgs.length;
             } catch (JSONException e) {
                 e.printStackTrace();
                 return;
@@ -188,10 +195,9 @@ public class ChatFragment extends Fragment  {
             getActivity().runOnUiThread(() -> {
                 for (String s : msgs) {
                     myAdapterChat.addData(s);
-//                    Log.e("ChatFragemnt", "ui run");
                     myRecyclerView.scrollToPosition(myAdapterChat.getItemCount() - 1);
                 }
-                Log.e("ChatFragemnt", myAdapterChat.getItemCount() + "");
+//                Log.e("ChatFragemnt", myAdapterChat.getItemCount() + "");
 //                myRecyclerView.scrollToPosition(myAdapterChat.getItemCount() - 1);
 
             });
@@ -206,7 +212,7 @@ public class ChatFragment extends Fragment  {
         try {
             messageJson.put(getString(R.string.keys_json_username), myUsername);
             messageJson.put(getString(R.string.keys_json_message), msg);
-            messageJson.put(getString(R.string.keys_json_chat_id), prefs.getString(getString(R.string.keys_json_chatid), "1")); //change constructor
+            messageJson.put(getString(R.string.keys_json_chat_id), prefs.getString(getString(R.string.keys_json_chatid), myTargetChatId)); //change constructor
         } catch (JSONException e) {
             e.printStackTrace();
         }

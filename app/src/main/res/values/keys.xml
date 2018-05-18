@@ -12,6 +12,7 @@
     <string name="keys_json_memberid">memberid</string>
     <string name="keys_json_array_users_data">data</string>
     <string name="keys_shared_prefs">chat-app.PREFS</string>
+    <string name="keys_json_memberid_b">memberid_b</string>
 
     <string name="keys_shared_prefs_username">shard_prefs_username</string>
     <string name="keys_shared_prefs_email">shard_prefs_email</string>
