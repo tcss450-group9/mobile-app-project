@@ -1,5 +1,6 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,7 +24,7 @@ import group9.tcss450.uw.edu.chatappgroup9.model.Credentials;
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ForgotPasswordFragment.OnFragmentInteractionListener  {
 
     private final String INVALID_LOGIN_INFO = "Invalid username or password";
     private final int MIN_LENGTH_USERNAME_PASSWORD = 6;
@@ -228,5 +229,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    public void onForgotClick(View view){
+        Intent intent = new Intent(this, PasswordActivity.class);
+        startActivity(intent);
+        this.finish();
+        }
 
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

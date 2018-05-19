@@ -25,7 +25,8 @@
             android:label="@string/title_activity_navigation"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".VerificationActivity"></activity>
+        <activity android:name=".VerificationActivity" />
+        <activity android:name=".PasswordActivity"></activity>
     </application>
 
 </manifest>
