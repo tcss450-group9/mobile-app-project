@@ -165,12 +165,6 @@ public class ChatFragment extends Fragment  {
     }
 
 
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        myListener = null;
-//    }
-
     private void publishProgress(JSONObject messages) {
         final String[] msgs;
         int currentMsgsLength;

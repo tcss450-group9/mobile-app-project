@@ -15,10 +15,14 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterContactNew;
+import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 
 /**
@@ -32,6 +36,9 @@ public class ContactsFragmentNew extends Fragment implements RecyclerViewAdapter
     private OnFragmentInteractionListener mListener;
     private RecyclerView myContactRecyclerView;
     private final String TAG = "ContactsFragmentNew";
+    private String myNewChatId;
+    private String myMemberId;
+    private String myFriendMemberId;
 
     public ContactsFragmentNew() {
         // Required empty public constructor
@@ -52,12 +59,13 @@ public class ContactsFragmentNew extends Fragment implements RecyclerViewAdapter
         }
         myContactRecyclerView = view.findViewById(R.id.newContactsRecyclerViewContacts);
         myContactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        Log.e(TAG, "RecyclerViewAdapterContactNew contactsList = " + contactsList);
+//        Log.e(TAG, "RecyclerViewAdapterContactNew contactsList = " + contactsList);
         RecyclerViewAdapterContactNew adapter = new RecyclerViewAdapterContactNew(contactsList);
-        Log.e(TAG, "RecyclerViewAdapterContactNew = " + adapter);
+//        Log.e(TAG, "RecyclerViewAdapterContactNew = " + adapter);
         myContactRecyclerView.setAdapter(adapter);
         adapter.setItemClickedListener(this);
 
+        myNewChatId = null;
 
         return view;
     }
@@ -87,12 +95,62 @@ public class ContactsFragmentNew extends Fragment implements RecyclerViewAdapter
     }
 
     @Override
-    public void contactItemLayoutOnClicked(String targetMemberId) {
-        TextView username = getActivity().findViewById(R.id.recyclerViewItemContactName);
-        if (!TextUtils.isEmpty(targetMemberId)) {
-            String[] strings = targetMemberId.split(":");
-            username.setText(strings[0]);
+    public void contactItemLayoutOnClicked(String friendMemberIdUsername) {
+
+        if (!TextUtils.isEmpty(friendMemberIdUsername)) {
+            String[] strings = friendMemberIdUsername.split(":");
+            String usernameAsChatName = strings[1];
+            myFriendMemberId = strings[0];
+            //TODO open a new chat when tap
+            getNewChatId(usernameAsChatName);
         }
+    }
+
+    /**
+     * Send a asyncTask to the server to get a new chat id..
+     * @param usernameAsChatName
+     */
+    private void getNewChatId(String usernameAsChatName) {
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_new_chat_id))
+                .build();
+        JSONObject chatName = new JSONObject();
+        try {
+            chatName.put(getString(R.string.keys_json_chat_name), usernameAsChatName);
+        } catch (JSONException e) {
+            Log.e(TAG, "JSON Parse Error" + e.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), chatName)
+                .onPostExecute(this::endOfGetNewChatId)
+                .build().execute();
+    }
+
+    private void endOfGetNewChatId(String result) {
+        try {
+            JSONObject resultJson = new JSONObject(result);
+            boolean success = resultJson.getBoolean(getString(R.string.keys_json_success));
+
+            if (success) {
+                myNewChatId = resultJson.getString(getString(R.string.keys_json_chat_id));
+                createNewChatSession(myNewChatId, myMemberId, myFriendMemberId);
+                //TODO start a new chat with new chat id/ what about if there is a chat id exist and associate with us?
+                //
+
+                Log.e(TAG, "Got new chat id");
+            } else {
+                Log.e(TAG, "Get new chat id fail");
+            }
+
+
+        } catch (JSONException e) {
+            Log.e(TAG, "JSON Parse Error" + e.getMessage());
+        }
+    }
+
+    private void createNewChatSession(String myNewChatId, String myMemberId, String myFriendMemberId) {
 
     }
 
