@@ -2,10 +2,13 @@ package group9.tcss450.uw.edu.chatappgroup9.model;
 
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +38,13 @@ public class RecyclerViewAdapterContactNew extends RecyclerView.Adapter<Recycler
         ConstraintLayout contactItemLayout;
         public ViewHolder(View itemView) {
             super(itemView);
-            contactUsername = itemView.findViewById(R.id.recycleViewItemContactUsername);
+            contactUsername = itemView.findViewById(R.id.recyclerViewItemContactName);
             contactItemLayout = itemView.findViewById(R.id.recyclerViewItemContactLayout);
-            contactItemLayout.setOnClickListener(this::contactItemLayoutOnClicked);
+            contactItemLayout.setOnClickListener(this::contactItemOnClicked);
+
         }
 
-        private void contactItemLayoutOnClicked(View view) {
+        private void contactItemOnClicked(View view) {
             contactItemListener.contactItemLayoutOnClicked(myContactMembers.get(getAdapterPosition()));
         }
     }
@@ -48,7 +52,7 @@ public class RecyclerViewAdapterContactNew extends RecyclerView.Adapter<Recycler
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-       View view = inflater.inflate(R.layout.recycler_view_item_a_chat,parent , false);
+       View view = inflater.inflate(R.layout.recycler_view_item_contact_new,parent , false);
        ViewHolder viewHolder  = new ViewHolder(view);
        return viewHolder;
     }

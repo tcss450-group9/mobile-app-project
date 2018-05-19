@@ -65,7 +65,7 @@ public class ChatFragment extends Fragment  {
         myAdapterChat = new RecyclerViewAdapterMessages(new ArrayList<String>());
         myRecyclerView.setAdapter(myAdapterChat);
 
-        if (getArguments().getString("TARGET_CHAT_ID") == null) {
+        if (getArguments() == null) {
             myTargetChatId = "1";
             Log.e(TAG, "TARGET_CHAT_ID not found");
         } else {
@@ -212,7 +212,7 @@ public class ChatFragment extends Fragment  {
         try {
             messageJson.put(getString(R.string.keys_json_username), myUsername);
             messageJson.put(getString(R.string.keys_json_message), msg);
-            messageJson.put(getString(R.string.keys_json_chat_id), prefs.getString(getString(R.string.keys_json_chatid), myTargetChatId)); //change constructor
+            messageJson.put(getString(R.string.keys_json_chat_id), prefs.getString(getString(R.string.keys_json_chatid), myTargetChatId));
         } catch (JSONException e) {
             e.printStackTrace();
         }

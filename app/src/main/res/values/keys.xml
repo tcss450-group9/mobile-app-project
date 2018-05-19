@@ -22,12 +22,13 @@
     <string name="keys_prefs_stay_login">shard_prefs_stay_login</string>
 
     <string name="keys_chat_fragment_tag">ChatFragmentTag</string>
-    <string name="keys_contact_fragment_tag">ConnectionFragmentTag</string>
+    <string name="keys_contact_fragment_tag">ContactFragmentTag</string>
     <string name="keys_landing_fragment_tag">LandingFragmentTag</string>
     <string name="keys_search_fragment_tag">SearchFragmentTag</string>
     <string name="keys_weather_fragment_tag">WeatherFragmentTag</string>
     <string name="keys_prefs_stay_logged_in">loggedIn</string>
     <string name="keys_prefs_time_stamp">ts key</string>
+    <string name="keys_new_contact_fragment_tag">ContactFragmentNew</string>
 
     <string name="keys_fragment_login">loginFragmentTag</string>
     <string name="keys_fragment_register">registerFragmentTag</string>

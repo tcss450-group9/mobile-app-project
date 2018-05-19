@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
@@ -36,15 +37,20 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
+//        ChatFragment.OnFragmentInteractionListener,
         LandingFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         WeatherFragment.OnFragmentInteractionListener,
-        ContactsFragment.OnFragmentInteractionListener {
+        ContactsFragment.OnFragmentInteractionListener,
+        ContactsFragmentNew.OnFragmentInteractionListener {
 
     public static int mTheme = ThemeUtil.THEME_MEDITERRANEAN_BLUES;
-//    private String[] myDummyValue = {"Little_dog", "little_cat", "big_turtle", "myDummyValue", "African buffalo", "Meles meles"};
+    private String[] myDummyValue = {"Little_dog", "little_cat", "big_turtle", "myDummyValue", "African buffalo", "Meles meles"};
     private SharedPreferences mySharedPreference;
     private String myMemberId;
+    private String TAG = "NavigationActivity";
+
+    private ArrayList<String> myContactList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +179,8 @@ public class NavigationActivity extends AppCompatActivity
             loadFragment(new SearchFragment(), getString(R.string.keys_search_fragment_tag));
         } else if (id == R.id.nav_weather) {
             loadFragment(new WeatherFragment(), getString(R.string.keys_weather_fragment_tag));
+        } else if (id ==R.id.nav_friends) {
+            loadContactsFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -228,14 +236,6 @@ public class NavigationActivity extends AppCompatActivity
                 .build().execute();
     }
 
-    @Override
-    public void bindContactItemListener(RecyclerViewAdapterContactNew.ContactItemListener listener) {
-        RecyclerView recyclerView = findViewById(R.id.contactRecycleViewAllContacts);
-        recyclerView.setAdapter(new RecyclerViewAdapterContactNew(new ArrayList<>()));
-        RecyclerViewAdapterContactNew adapter = (RecyclerViewAdapterContactNew) recyclerView.getAdapter();
-        adapter.setItemClickedListener(listener);
-    }
-
 
     @Override
     public void onLogout() {
@@ -271,13 +271,13 @@ public class NavigationActivity extends AppCompatActivity
         }
 
         new SendPostAsyncTask.Builder(uri.toString(), emailJSON)
-                .onPostExecute(this::handleEndOfSearch).build().execute();
+                .onPostExecute(this::handleEndOfSearchByName).build().execute();
     }
 
 
     @Override
     public void onSearchByUsernameAttempt(String theUsername) {
-//        Log.e("NavigationActivity", "Search by username");
+        Log.e("NavigationActivity", "Search by username");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_search)).build();
         JSONObject usernameJSON = new JSONObject();
@@ -289,12 +289,12 @@ public class NavigationActivity extends AppCompatActivity
         }
 
         new SendPostAsyncTask.Builder(uri.toString(), usernameJSON)
-                .onPostExecute(this::handleEndOfSearch).build().execute();
+                .onPostExecute(this::handleEndOfSearchByName).build().execute();
     }
 
     @Override
     public void onSearchByNameAttempt(String theFirstName, String theLastName) {
-//        Log.e("NavigationActivity", "Search by name");
+        Log.e("NavigationActivity", "Search by name");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_search)).build();
         JSONObject nameJSON = new JSONObject();
@@ -307,8 +307,10 @@ public class NavigationActivity extends AppCompatActivity
         }
 
         new SendPostAsyncTask.Builder(uri.toString(), nameJSON)
-                .onPostExecute(this::handleEndOfSearch).build().execute();
+                .onPostExecute(this::handleEndOfSearchByName).build().execute();
+
     }
+
 
     private void loadFragment(Fragment frag, String theFragmentTag) {
         Log.e("NavigationActivity", "" + theFragmentTag);
@@ -322,11 +324,11 @@ public class NavigationActivity extends AppCompatActivity
 
 
     /**
-     * Handle the search response. The Response data will be send to a recycler view adapter if the response success;
-     * otherwise send null to a recycler view adapter.
+     * Handle the search by email response. If found a user, show the user's first name and last name
+     * in the result text view; otherwise show user not found.
      * @param theResponse the response return from the server
      */
-    private void handleEndOfSearch(String theResponse) {
+    private void handleEndOfSearchByName(String theResponse) {
 
         try {
             JSONObject responseJSON = new JSONObject(theResponse);
@@ -338,13 +340,13 @@ public class NavigationActivity extends AppCompatActivity
                 JSONArray users = responseJSON.getJSONArray(getString(R.string.keys_json_array_users_data));
                 if (users.length() > 0) {
                     mAdapter = (RecyclerViewAdapterSearchResult) recyclerView.getAdapter();
-                    mAdapter.setAdapterDataSet(searchDataJsonArrayToList(users));
+                    mAdapter.setAdapterDataSet(searchDataJsonArrayToStringArray(users));
                 }
-//                Log.e("NavigationActivity", "User found by name");
+                Log.e("NavigationActivity", "User found by name");
 
             } else {
                 ((RecyclerViewAdapterSearchResult) recyclerView.getAdapter()).setAdapterDataSet(null);
-//                Log.e("NavigationActivity", "User not found");
+                Log.e("NavigationActivity", "User not found");
             }
         } catch (JSONException e) {
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
@@ -364,26 +366,74 @@ public class NavigationActivity extends AppCompatActivity
             JSONObject responseAsJSON = new JSONObject(theResponse);
             boolean success = responseAsJSON.getBoolean(getString(R.string.keys_json_success));
             RecyclerView recyclerView = findViewById(R.id.contactRecycleViewAllContacts);
-            RecyclerViewAdapterContactNew mAdapter;
+            RecycleViewAdapterContact mAdapter;
 
             if(success) {
                 JSONArray contactArray = responseAsJSON
                         .getJSONArray(getString(R.string.keys_json_contacts));
 
-                mAdapter = new RecyclerViewAdapterContactNew(
-                        contactsJsonArrayToList(contactArray));
+                mAdapter = new RecycleViewAdapterContact(
+                        jsonArrayUsersDataToStringMultiArray(contactArray));
                 recyclerView.setAdapter(mAdapter);
-                Log.e("NavigationActivity", "get all contact success");
+
+                //------------------------------
+                myContactList = contactsJsonArrayToList(contactArray);
+
+                Log.d("Load Contact Fragment","success " + myContactList.toString());
+
+
             }
             else {
                 //TODO This is causing a fatal exception on response success=false. Cannot set adapter to null
-//                ((RecyclerViewAdapterContactNew) recyclerView.getAdapter()).setAdapterDataSet(null);
+                ((RecycleViewAdapterContact) recyclerView.getAdapter()).setAdapterDataSet(null);
             }
         }
         catch (JSONException e) {
             Log.e("NavigationActivity", "Unable to build JSON: " + e.getMessage());
         }
         Log.d("Load Contact Fragment","Bottom of handleGetAllContactsOnPost");
+    }
+
+    private void loadContactsFragment() {
+        ContactsFragmentNew contactsFragmentNew = new ContactsFragmentNew();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("CONTACTS_ID_USERNAME", myContactList);
+        contactsFragmentNew.setArguments(bundle);
+        Log.e(TAG, "loadContactsFragment bundle = " + bundle);
+
+
+//        RecyclerView contactsRecyclerView = findViewById(R.id.newContactsRecyclerViewContacts);
+//        RecyclerViewAdapterContactNew adapter = new RecyclerViewAdapterContactNew(myContactList);
+//        contactsRecyclerView.setLayoutManager(new LinearLayoutManager(getParent()));
+//        Log.e(TAG, "loadContactsFragment adapter = " + adapter.toString());
+//        contactsRecyclerView.setAdapter(adapter);
+//        adapter.setItemClickedListener(contactsFragmentNew);
+
+
+        loadFragment(contactsFragmentNew, getString(R.string.keys_contact_fragment_tag) + "New");
+
+    }
+
+    /**
+     * converts a jason array returned from handleGetAllContactsOnPost to an string array list.
+     * The list include the data specified for memberid_b.
+     * @param allContacts the contacts data in Json array format
+     * @return
+     */
+    private ArrayList<String> contactsJsonArrayToList(JSONArray allContacts) {
+        ArrayList<String> msgs = new ArrayList<>();
+        try {
+            for (int i = 0; i < allContacts.length(); i++) {
+                JSONObject msg = allContacts.getJSONObject(i);
+                String memberIdB = msg.get(getString(R.string.keys_json_memberid_b)).toString();
+                String username = msg.get(getString(R.string.keys_json_username)).toString();
+                String string = memberIdB + ":" + username;
+                msgs.add(string);
+            }
+        } catch (JSONException e) {
+            Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
+        }
+        return msgs;
     }
 
     private void handleGetPendingRequestsOnPost(String theResponse) {
@@ -413,12 +463,12 @@ public class NavigationActivity extends AppCompatActivity
 
 
     /**
-     * converts a jason array returned from search to an string array list.
+     *
      * @param users the users data in Json array format
      * @return
      */
-    private List<String> searchDataJsonArrayToList(JSONArray users) {
-        List<String> msgs = new ArrayList<>();
+    private List<String> searchDataJsonArrayToStringArray(JSONArray users) {
+        List<String> msgs = new ArrayList<String>();
         try {
             for (int i = 0; i < users.length(); i++) {
                 JSONObject msg = users.getJSONObject(i);
@@ -435,30 +485,8 @@ public class NavigationActivity extends AppCompatActivity
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
         }
         return msgs;
-    }
 
-    /**
-     * converts a jason array returned from handleGetAllContactsOnPost to an string array list.
-     * The list include the data specified for memberid_b.
-     * @param allContacts the contacts data in Json array format
-     * @return
-     */
-    private List<String> contactsJsonArrayToList(JSONArray allContacts) {
-        List<String> msgs = new ArrayList<>();
-        try {
-            for (int i = 0; i < allContacts.length(); i++) {
-                JSONObject msg = allContacts.getJSONObject(i);
-                String memberIdB = msg.get(getString(R.string.keys_json_memberid_b)).toString();
-                String username = msg.get(getString(R.string.keys_json_username)).toString();
-                String string = memberIdB + ":" + username;
-                msgs.add(string);
-            }
-        } catch (JSONException e) {
-            Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
-        }
-        return msgs;
     }
-
 
     /**
      *
@@ -481,6 +509,7 @@ public class NavigationActivity extends AppCompatActivity
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
         }
         return msgs;
+
     }
 
 

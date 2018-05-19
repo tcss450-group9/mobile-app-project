@@ -4,9 +4,21 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterContactNew;
 
 
 /**
@@ -15,9 +27,11 @@ import android.view.ViewGroup;
  * {@link ContactsFragmentNew.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class ContactsFragmentNew extends Fragment {
+public class ContactsFragmentNew extends Fragment implements RecyclerViewAdapterContactNew.ContactItemListener{
 
     private OnFragmentInteractionListener mListener;
+    private RecyclerView myContactRecyclerView;
+    private final String TAG = "ContactsFragmentNew";
 
     public ContactsFragmentNew() {
         // Required empty public constructor
@@ -28,7 +42,24 @@ public class ContactsFragmentNew extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contacts_fragment_new, container, false);
+        View view = inflater.inflate(R.layout.fragment_contacts_fragment_new, container, false);
+
+        ArrayList<String> contactsList = null;
+        Bundle bunbdle = getArguments();
+        Log.e(TAG, "RecyclerViewAdapterContactNew bunbdle = " + bunbdle);
+        if (bunbdle != null) {
+            contactsList = bunbdle.getStringArrayList("CONTACTS_ID_USERNAME");
+        }
+        myContactRecyclerView = view.findViewById(R.id.newContactsRecyclerViewContacts);
+        myContactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        Log.e(TAG, "RecyclerViewAdapterContactNew contactsList = " + contactsList);
+        RecyclerViewAdapterContactNew adapter = new RecyclerViewAdapterContactNew(contactsList);
+        Log.e(TAG, "RecyclerViewAdapterContactNew = " + adapter);
+        myContactRecyclerView.setAdapter(adapter);
+        adapter.setItemClickedListener(this);
+
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -53,6 +84,16 @@ public class ContactsFragmentNew extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void contactItemLayoutOnClicked(String targetMemberId) {
+        TextView username = getActivity().findViewById(R.id.recyclerViewItemContactName);
+        if (!TextUtils.isEmpty(targetMemberId)) {
+            String[] strings = targetMemberId.split(":");
+            username.setText(strings[0]);
+        }
+
     }
 
     /**
