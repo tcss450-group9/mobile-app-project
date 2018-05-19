@@ -42,6 +42,8 @@
     <string name="keys_json_chat_id">chatid</string>
     <string name="keys_json_success_value_true">true</string>
     <string name="keys_json_success_value_false">false</string>
-    <string name="keys_json_chat_name">chatName</string>
+    <string name="keys_json_chat_name">chatName</string>chatMemberA
+    <string name="keys_json_chat_member_a">chatMemberA</string>
+    <string name="keys_json_chat_member_b">chatMemberB</string>
 
 </resources>

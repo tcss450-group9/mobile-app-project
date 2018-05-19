@@ -105,6 +105,8 @@ public class NavigationActivity extends AppCompatActivity
                         .commit();
             }
         }
+
+        attemptToGetFriendList();
     }
 
     @Override
@@ -377,9 +379,9 @@ public class NavigationActivity extends AppCompatActivity
                 recyclerView.setAdapter(mAdapter);
 
                 //------------------------------
-                myContactList = contactsJsonArrayToList(contactArray);
+//                myContactList = contactsJsonArrayToList(contactArray);
 
-                Log.d("Load Contact Fragment","success " + myContactList.toString());
+//                Log.d("Load Contact Fragment","success " + myContactList.toString());
 
 
             }
@@ -516,5 +518,57 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    private void attemptToGetFriendList() {
+        String username = getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE)
+                .getString(getString(R.string.keys_shared_prefs_username),null);
+        getFriendList(getString(R.string.ep_base_url),
+                getString(R.string.ep_view_connections), username);
+    }
+
+    @Override
+    public void getFriendList(String baseURL, String endPoint, String username) {
+        JSONObject unObject = new JSONObject();
+        try {
+            unObject.put("username", username);
+        }
+        catch(JSONException e) {
+            Log.e("GETALLCONTACTS", "Error building username JSONObject: " + e.getMessage());
+        }
+
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(baseURL)
+                .appendPath(endPoint)
+                .appendQueryParameter("username",username)
+                .build();
+        new SendPostAsyncTask.Builder(uri.toString(), unObject)
+                .onPostExecute(this::handleGetFriendListOnPost)
+                .build().execute();
+    }
+
+    /**
+     * extra the friend list from the response.
+     * @param theResponse
+     */
+    private void handleGetFriendListOnPost(String theResponse) {
+        try {
+            JSONObject responseAsJSON = new JSONObject(theResponse);
+            boolean success = responseAsJSON.getBoolean(getString(R.string.keys_json_success));
+
+            if(success) {
+                JSONArray contactArray = responseAsJSON
+                        .getJSONArray(getString(R.string.keys_json_contacts));
+                myContactList = contactsJsonArrayToList(contactArray);
+                Log.d("Load Contact Fragment","handleGetFriendListOnPost success " + myContactList.toString());
+            }
+            else {
+                Log.e("NavigationActivity", "Unable to get friend list: ");
+            }
+        }
+        catch (JSONException e) {
+            Log.e("NavigationActivity", "Unable to build JSON: " + e.getMessage());
+        }
     }
 }

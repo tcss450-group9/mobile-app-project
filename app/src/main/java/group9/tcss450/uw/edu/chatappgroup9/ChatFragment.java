@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,12 +65,14 @@ public class ChatFragment extends Fragment  {
         myRecyclerView.setLayoutManager(linearLayoutManager);
         myAdapterChat = new RecyclerViewAdapterMessages(new ArrayList<String>());
         myRecyclerView.setAdapter(myAdapterChat);
+        TextView chattingWith = v.findViewById(R.id.chatTextViewChattingWith);
 
         if (getArguments() == null) {
             myTargetChatId = "1";
-            Log.e(TAG, "TARGET_CHAT_ID not found");
+            chattingWith.setText("Chatting with ID" + myTargetChatId);
         } else {
             myTargetChatId = getArguments().getString("TARGET_CHAT_ID");
+            chattingWith.setText("Chatting with ID " + myTargetChatId);
             Log.e(TAG, "current TARGET_CHAT_ID : " + myTargetChatId);
         }
 

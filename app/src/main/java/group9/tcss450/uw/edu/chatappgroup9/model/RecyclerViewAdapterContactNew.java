@@ -2,13 +2,10 @@ package group9.tcss450.uw.edu.chatappgroup9.model;
 
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +15,7 @@ import group9.tcss450.uw.edu.chatappgroup9.R;
 public class RecyclerViewAdapterContactNew extends RecyclerView.Adapter<RecyclerViewAdapterContactNew.ViewHolder> {
 
     private List<String> myContactMembers;
-    private ContactItemListener contactItemListener;
+    private FriendItemListener friendItemListener;
     private String myTargetContactMember;
     private final String TAG = "RecyclerViewAdapterContactNew";
 
@@ -45,7 +42,7 @@ public class RecyclerViewAdapterContactNew extends RecyclerView.Adapter<Recycler
         }
 
         private void contactItemOnClicked(View view) {
-            contactItemListener.contactItemLayoutOnClicked(myContactMembers.get(getAdapterPosition()));
+            friendItemListener.friendItemLayoutOnClicked(myContactMembers.get(getAdapterPosition()));
         }
     }
 
@@ -80,8 +77,8 @@ public class RecyclerViewAdapterContactNew extends RecyclerView.Adapter<Recycler
 
     }
 
-    public void setItemClickedListener(ContactItemListener listener) {
-        contactItemListener = listener;
+    public void setItemClickedListener(FriendItemListener listener) {
+        friendItemListener = listener;
     }
 
 
@@ -91,8 +88,8 @@ public class RecyclerViewAdapterContactNew extends RecyclerView.Adapter<Recycler
     }
 
 
-    public interface ContactItemListener {
-        void contactItemLayoutOnClicked(String targetMemberId);
+    public interface FriendItemListener {
+        void friendItemLayoutOnClicked(String targetMemberId);
     }
 
 }
