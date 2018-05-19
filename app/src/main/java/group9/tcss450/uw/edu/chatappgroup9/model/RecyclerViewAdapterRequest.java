@@ -25,6 +25,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
         myDataset = dataset;
     }
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView mySender;
         TextView myFullName;
@@ -41,8 +42,9 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
 
             myAcceptButton = v.findViewById(R.id.recyclerViewItemRequestButtonAccept);
             myAcceptButton.setOnClickListener(this::onAcceptClicked);
-
             myRejectButton = v.findViewById(R.id.recyclerViewItemRequestButtonReject);
+            myRejectButton.setOnClickListener(this::onRejectClicked);
+
             myContext = v.getContext();
             myPrefs = myContext.getSharedPreferences(
                     myContext.getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
@@ -66,28 +68,77 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
                     .appendQueryParameter("username", myUsername)
                     .appendQueryParameter("sender", mySender.getText().toString())
                     .build();
-            Log.d("RecyclerViewAdapterRequest/handleOnPostExecute", uri.toString());
+            Log.d("RecyclerViewAdapterRequest/handleOnPostAccept", uri.toString());
 
             new SendPostAsyncTask.Builder(uri.toString(), request)
-                    .onPostExecute(this::handleOnPostExecute)
+                    .onPostExecute(this::handleOnPostAccept)
                     .build().execute();
-
-
         }
 
-        private void handleOnPostExecute(String theResponse) {
+        /**
+         * Handles errors if the sendPostAsyncTask wasn't successful. Sends a toast if it was successful.
+         * @param theResponse The JSON received from the web service.
+         */
+        private void handleOnPostAccept(String theResponse) {
             try {
                 JSONObject jsonResponse = new JSONObject(theResponse);
                 if(jsonResponse.getBoolean("success")) {
-                    Toast.makeText(myContext,"Added " + mySender.getText().toString(), Toast.LENGTH_SHORT);
+                    Toast.makeText(myContext,"Added " + mySender.getText().toString(),
+                            Toast.LENGTH_SHORT).show();
+
                 }
                 else {
-                    Log.wtf("RecyclerViewAdapterRequest/handleOnPostExecute",
+                    Log.wtf("RecyclerViewAdapterRequest/handleOnPostAccept",
                             "Unable to accept connection request");
                 }
             }
             catch(JSONException e) {
-                Log.e("RecyclerViewAdapterRequest/handleOnPostExecute",
+                Log.e("RecyclerViewAdapterRequest/handleOnPostAccept",
+                        "Error building JSON: " + e.getMessage());
+            }
+        }
+
+        private void onRejectClicked(View v) {
+            JSONObject request = new JSONObject();
+            try {
+                request.put("username", myUsername);
+                request.put("sender", mySender.getText());
+            }
+            catch(JSONException e) {
+                Log.e("RecyclerViewAdapterRequest", "Error creating JSON: " + e.getMessage());
+            }
+            Uri uri = new Uri.Builder().scheme("https")
+                    .appendPath(myContext.getString(R.string.ep_base_url))
+                    .appendPath(myContext.getString(R.string.ep_reject_request))
+                    .appendQueryParameter("username", myUsername)
+                    .appendQueryParameter("sender", mySender.getText().toString())
+                    .build();
+            Log.d("RecyclerViewAdapterRequest/handleOnPostAccept", uri.toString());
+
+            new SendPostAsyncTask.Builder(uri.toString(), request)
+                    .onPostExecute(this::handleOnPostReject)
+                    .build().execute();
+        }
+
+        /**
+         * Handles errors if the sendPostAsyncTask wasn't successful. Sends a toast if it was successful.
+         * @param theResponse The JSON received from the web service.
+         */
+        private void handleOnPostReject(String theResponse) {
+            try {
+                JSONObject jsonResponse = new JSONObject(theResponse);
+                if(jsonResponse.getBoolean("success")) {
+                    Toast.makeText(myContext,"Rejected " + mySender.getText().toString()
+                            + " ._.", Toast.LENGTH_SHORT).show();
+
+                }
+                else {
+                    Log.wtf("RecyclerViewAdapterRequest/handleOnPostReject",
+                            "Unable to reject connection request");
+                }
+            }
+            catch(JSONException e) {
+                Log.e("RecyclerViewAdapterRequest/handleOnPostReject",
                         "Error building JSON: " + e.getMessage());
             }
         }
@@ -98,6 +149,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item_request, parent, false);
         ViewHolder vh = new ViewHolder(v);
+
         return vh;
     }
 
@@ -105,20 +157,6 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
     public void onBindViewHolder(RecyclerViewAdapterRequest.ViewHolder holder, int position) {
         holder.mySender.setText(myDataset[position][0]);
         holder.myFullName.setText(myDataset[position][1]);
-
-        /*holder.myAcceptButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(holder.myContext,"You accepted!", Toast.LENGTH_SHORT).show();
-
-            }
-        });*/
-        holder.myRejectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(holder.myContext,"You rejected ._.", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override

@@ -14,4 +14,5 @@
     <string name="ep_get_chatInfo">getChatInfo</string>
     <string name="ep_send_friend_request">sendFriendRequest</string>
     <string name="ep_accept_request">acceptRequest</string>
+    <string name="ep_reject_request">rejectRequest</string>
 </resources>
