@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecycleViewAdapterContact;
-import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterContactNew;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterRequest;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
@@ -42,7 +40,7 @@ public class NavigationActivity extends AppCompatActivity
         SearchFragment.OnFragmentInteractionListener,
         WeatherFragment.OnFragmentInteractionListener,
         ContactsFragment.OnFragmentInteractionListener,
-        ContactsFragmentNew.OnFragmentInteractionListener {
+        FriendsFragment.OnFragmentInteractionListener {
 
     public static int mTheme = ThemeUtil.THEME_MEDITERRANEAN_BLUES;
     private String[] myDummyValue = {"Little_dog", "little_cat", "big_turtle", "myDummyValue", "African buffalo", "Meles meles"};
@@ -397,10 +395,10 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     private void loadContactsFragment() {
-        ContactsFragmentNew contactsFragmentNew = new ContactsFragmentNew();
+        FriendsFragment friendsFragment = new FriendsFragment();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("CONTACTS_ID_USERNAME", myContactList);
-        contactsFragmentNew.setArguments(bundle);
+        friendsFragment.setArguments(bundle);
         Log.e(TAG, "loadContactsFragment bundle = " + bundle);
 
 
@@ -409,10 +407,10 @@ public class NavigationActivity extends AppCompatActivity
 //        contactsRecyclerView.setLayoutManager(new LinearLayoutManager(getParent()));
 //        Log.e(TAG, "loadContactsFragment adapter = " + adapter.toString());
 //        contactsRecyclerView.setAdapter(adapter);
-//        adapter.setItemClickedListener(contactsFragmentNew);
+//        adapter.setItemClickedListener(friendsFragment);
 
 
-        loadFragment(contactsFragmentNew, getString(R.string.keys_contact_fragment_tag) + "New");
+        loadFragment(friendsFragment, getString(R.string.keys_contact_fragment_tag) + "New");
 
     }
 

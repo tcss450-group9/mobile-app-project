@@ -25,19 +25,19 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ContactsFragmentNew.OnFragmentInteractionListener} interface
+ * {@link FriendsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class ContactsFragmentNew extends Fragment implements RecyclerViewAdapterContactNew.FriendItemListener {
+public class FriendsFragment extends Fragment implements RecyclerViewAdapterContactNew.FriendItemListener {
 
     private OnFragmentInteractionListener myListener;
-    private RecyclerView myContactRecyclerView;
-    private final String TAG = "ContactsFragmentNew";
-    private String myNewChatId;
+    private RecyclerView myFriendsRecyclerView;
+    private final String TAG = "FriendsFragment";
+    private String myChatId;
     private String myMemberId;
     private String myFriendMemberId;
 
-    public ContactsFragmentNew() {
+    public FriendsFragment() {
         // Required empty public constructor
     }
 
@@ -46,7 +46,7 @@ public class ContactsFragmentNew extends Fragment implements RecyclerViewAdapter
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_contacts_fragment_new, container, false);
+        View view = inflater.inflate(R.layout.fragment_friends, container, false);
 
         ArrayList<String> contactsList = null;
         Bundle bunbdle = getArguments();
@@ -54,15 +54,15 @@ public class ContactsFragmentNew extends Fragment implements RecyclerViewAdapter
         if (bunbdle != null) {
             contactsList = bunbdle.getStringArrayList("CONTACTS_ID_USERNAME");
         }
-        myContactRecyclerView = view.findViewById(R.id.newContactsRecyclerViewContacts);
-        myContactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        myFriendsRecyclerView = view.findViewById(R.id.friendsRecyclerViewContacts);
+        myFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 //        Log.e(TAG, "RecyclerViewAdapterContactNew contactsList = " + contactsList);
         RecyclerViewAdapterContactNew adapter = new RecyclerViewAdapterContactNew(contactsList);
 //        Log.e(TAG, "RecyclerViewAdapterContactNew = " + adapter);
-        myContactRecyclerView.setAdapter(adapter);
+        myFriendsRecyclerView.setAdapter(adapter);
         adapter.setItemClickedListener(this);
 
-        myNewChatId = null;
+        myChatId = null;
         return view;
     }
 
@@ -130,13 +130,13 @@ public class ContactsFragmentNew extends Fragment implements RecyclerViewAdapter
             boolean success = resultJson.getBoolean(getString(R.string.keys_json_success));
 
             if (success) {
-                myNewChatId = resultJson.getString(getString(R.string.keys_json_chat_id));
-//                createNewChatSession(myNewChatId, myMemberId, myFriendMemberId);
+                myChatId = resultJson.getString(getString(R.string.keys_json_chatid));
+//                createNewChatSession(myChatId, myMemberId, myFriendMemberId);
                 //TODO start a new chat with new chat id/ what about if a chat id alread exist and associate with us?
                 //
-                loadChatFragment(myNewChatId);
+                loadChatFragment(myChatId);
 
-                Log.e(TAG, "Got new chat id " + myNewChatId);
+                Log.e(TAG, "Got new chat id " + myChatId);
             } else {
                 Log.e(TAG, "Get new chat id fail");
             }
@@ -181,7 +181,7 @@ public class ContactsFragmentNew extends Fragment implements RecyclerViewAdapter
             boolean success = jsonObject.getBoolean(getString(R.string.keys_json_success));
 
             if (success) {
-                String chatid = jsonObject.getString(getString(R.string.keys_json_chat_id));
+                String chatid = jsonObject.getString(getString(R.string.keys_json_chatid));
                 loadChatFragment(chatid);
                 Log.e(TAG, "start chatting with chat id" + chatid);
             } else {

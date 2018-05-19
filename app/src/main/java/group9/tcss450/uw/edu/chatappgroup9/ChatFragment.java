@@ -38,6 +38,9 @@ public class ChatFragment extends Fragment  {
     private RecyclerView myRecyclerView;
     private RecyclerViewAdapterMessages myAdapterChat;
     private SharedPreferences prefs;
+    /**
+     *
+     */
     private String myTargetChatId;
     private final String TAG = "Chat Fragment";
 
@@ -125,7 +128,7 @@ public class ChatFragment extends Fragment  {
                 .appendPath(getString(R.string.ep_get_message))
                 .appendQueryParameter("chatId", myTargetChatId)
                 .build();
-
+        Log.e(TAG, "listen message from " + myTargetChatId);
         if (prefs.contains(getString(R.string.keys_prefs_time_stamp))) {
             //ignore all of the seen messages. You may want to store these messages locally
             myListenManager = new ListenManager.Builder(retrieve.toString(),
@@ -209,7 +212,9 @@ public class ChatFragment extends Fragment  {
         try {
             messageJson.put(getString(R.string.keys_json_username), myUsername);
             messageJson.put(getString(R.string.keys_json_message), msg);
-            messageJson.put(getString(R.string.keys_json_chat_id), prefs.getString(getString(R.string.keys_json_chatid), myTargetChatId));
+            messageJson.put(getString(R.string.keys_json_send_message_chat_id), myTargetChatId);
+
+            Log.e(TAG, "message sent " + msg.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
