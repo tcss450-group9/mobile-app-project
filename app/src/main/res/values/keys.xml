@@ -32,7 +32,7 @@
     <string name="keys_fragment_login">loginFragmentTag</string>
     <string name="keys_fragment_register">registerFragmentTag</string>
 
-
+    <string name="keys_Forgot_password_tag">ForgotPasswordTag</string>
     <string name="keys_json_password">password</string>
     <string name="keys_json_message">message</string>
     <string name="keys_json_messages">messages</string>
