@@ -97,12 +97,11 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
 
         if (!TextUtils.isEmpty(friendMemberIdUsername)) {
             String[] strings = friendMemberIdUsername.split(":");
-            String usernameAsChatName = strings[1];
+
             myFriendMemberId = strings[0];
             myFriendUsername =strings[1];
 
-            //TODO open a new chat when tap
-            getNewChatId(myUsername, usernameAsChatName);
+            getNewChatId(myUsername, myFriendUsername);
         }
     }
 
@@ -129,6 +128,10 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
                 .build().execute();
     }
 
+    /**
+     *
+     * @param result the returned chat id.
+     */
     private void endOfGetNewChatId(String result) {
         try {
             JSONObject resultJson = new JSONObject(result);
@@ -136,10 +139,7 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
 
             if (success) {
                 myChatId = resultJson.getString(getString(R.string.keys_json_chatid));
-                createNewChatSession(myChatId, myMemberId, myFriendMemberId, myUsername, myFriendUsername);
-                //TODO start a new chat with new chat id/ what about if a chat id alread exist and associate with us?
-                //
-//                loadChatFragment(myChatId);
+                createNewChatSession(myChatId, myMemberId, myFriendMemberId);
 
                 Log.e(TAG, "Got new chat id " + myChatId);
             } else {
@@ -153,16 +153,12 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
     }
 
     /**
-     * send a asyntask to the server to create a new chat session with the new chat id, my member id
-     * and my friend member id.
+     * send a async task to the server to create a new chat session.
      * @param chatId
      * @param memberIdA
      * @param memberIdB
-     * @param memberUsernameA
-     * @param memberUsernameB
      */
-    private void createNewChatSession(String chatId, String memberIdA, String memberIdB,
-                                      String memberUsernameA, String memberUsernameB) {
+    private void createNewChatSession(String chatId, String memberIdA, String memberIdB) {
         Log.e(TAG, "createNewChatSession start");
         Uri uri = new Uri.Builder()
                 .scheme("https")
@@ -175,8 +171,6 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
             magsJson.put(getString(R.string.keys_json_chatid), chatId);
             magsJson.put(getString(R.string.keys_json_chat_member_a), memberIdA);
             magsJson.put(getString(R.string.keys_json_chat_member_b), memberIdB);
-            magsJson.put(getString(R.string.keys_json_chat_member_username_a), memberUsernameA);
-            magsJson.put(getString(R.string.keys_json_chat_member_username_b), memberUsernameB);
         } catch (JSONException e) {
             Log.e(TAG, "JSON Parse Error" + e.getMessage());
         }
@@ -186,6 +180,10 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
                 .build().execute();
     }
 
+    /**
+     * user the returned chat id to start a chat if success.
+     * @param result chat id.
+     */
     private void startChatting(String result) {
         Log.e(TAG, "createNewChatSession end");
         try {

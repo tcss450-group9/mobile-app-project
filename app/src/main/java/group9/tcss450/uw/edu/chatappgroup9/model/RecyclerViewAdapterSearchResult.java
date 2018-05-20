@@ -56,17 +56,28 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
                     Log.e("Request Button Clicked", "Error creating JSON" + theException.getMessage());
                 }
 
-            Toast.makeText(itemView.getContext(),
-                    "Request Button Clicked", Toast.LENGTH_LONG).show();
-
                 new SendPostAsyncTask.Builder(uri.toString(), nameJSON)
                         .onPostExecute(this::handleEndOfSendRequest).build().execute();
 
         }
 
-        private void handleEndOfSendRequest(String s) {
-            Toast.makeText(itemView.getContext(),
-                    "Request Sent", Toast.LENGTH_LONG).show();
+        private void handleEndOfSendRequest(String result) {
+
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                boolean success = jsonObject.getBoolean(itemView.getContext().getString(R.string.keys_json_success));
+
+                if (success) {
+                    Toast.makeText(itemView.getContext(),
+                            "Request Sent", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(itemView.getContext(),
+                            jsonObject.getString(itemView.getContext().getString(R.string.keys_json_message)), Toast.LENGTH_LONG).show();
+                }
+
+            } catch (JSONException theException) {
+                Log.e("Request Button Clicked", "Error creating JSON" + theException.getMessage());
+            }
         }
     }
 

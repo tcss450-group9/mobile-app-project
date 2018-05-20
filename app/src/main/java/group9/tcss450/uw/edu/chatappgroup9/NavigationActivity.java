@@ -35,7 +35,6 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-//        ChatFragment.OnFragmentInteractionListener,
         LandingFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         WeatherFragment.OnFragmentInteractionListener,
@@ -376,12 +375,6 @@ public class NavigationActivity extends AppCompatActivity
                         jsonArrayUsersDataToStringMultiArray(contactArray));
                 recyclerView.setAdapter(mAdapter);
 
-                //------------------------------
-//                myContactList = contactsJsonArrayToList(contactArray);
-
-//                Log.d("Load Contact Fragment","success " + myContactList.toString());
-
-
             }
             else {
                 //TODO This is causing a fatal exception on response success=false. Cannot set adapter to null
@@ -400,16 +393,6 @@ public class NavigationActivity extends AppCompatActivity
         bundle.putStringArrayList("CONTACTS_ID_USERNAME", myContactList);
         friendsFragment.setArguments(bundle);
         Log.e(TAG, "loadFriendsFragment bundle = " + bundle);
-
-
-//        RecyclerView contactsRecyclerView = findViewById(R.id.newContactsRecyclerViewContacts);
-//        RecyclerViewAdapterFriends adapter = new RecyclerViewAdapterFriends(myContactList);
-//        contactsRecyclerView.setLayoutManager(new LinearLayoutManager(getParent()));
-//        Log.e(TAG, "loadFriendsFragment adapter = " + adapter.toString());
-//        contactsRecyclerView.setAdapter(adapter);
-//        adapter.setItemClickedListener(friendsFragment);
-
-
         loadFragment(friendsFragment, getString(R.string.keys_contact_fragment_tag) + "New");
 
     }
@@ -497,6 +480,7 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
+
     private void attemptToGetFriendList() {
         String username = getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE)
                 .getString(getString(R.string.keys_shared_prefs_username),null);
@@ -504,6 +488,12 @@ public class NavigationActivity extends AppCompatActivity
                 getString(R.string.ep_view_connections), username);
     }
 
+    /**
+     * send a asynv task to the server to get all the contacts that associate with the username
+     * @param baseURL
+     * @param endPoint
+     * @param username the usernames
+     */
     @Override
     public void getFriendList(String baseURL, String endPoint, String username) {
         JSONObject unObject = new JSONObject();
