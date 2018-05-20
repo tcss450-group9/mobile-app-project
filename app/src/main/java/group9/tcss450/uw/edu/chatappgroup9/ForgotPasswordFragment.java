@@ -34,6 +34,7 @@ public class ForgotPasswordFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private final String TAG = "ForgotPasswordFragment";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -79,7 +80,8 @@ public class ForgotPasswordFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_forgot_password , container, false);
         Button b = v.findViewById(R.id.Password_Reset_Submit);
         b.setOnClickListener(this::onSubmitClickForgot);
-        return v;  }
+        return v;
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -100,7 +102,7 @@ public class ForgotPasswordFragment extends Fragment {
     }
     public void onSubmitClickForgot(View view) {
         int veri = verificationPinGenerator();
-        Log.d("", "onSubmitClickForgot: here");
+        Log.d(TAG, "onSubmitClickForgot: here");
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
         String user = prefs.getString(getString(R.string.keys_shared_prefs_username), "");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
@@ -115,7 +117,7 @@ public class ForgotPasswordFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d("", "onSubmitClickForgot: sending async");
+        Log.d(TAG, "onSubmitClickForgot: sending async");
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handleResetOnPost)
                 .build().execute();
