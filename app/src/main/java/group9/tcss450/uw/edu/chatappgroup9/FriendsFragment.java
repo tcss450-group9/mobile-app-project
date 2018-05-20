@@ -74,12 +74,6 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (myListener != null) {
-            myListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -108,28 +102,29 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
             myFriendUsername =strings[1];
 
             //TODO open a new chat when tap
-            getNewChatId(usernameAsChatName);
+            getNewChatId(myUsername, usernameAsChatName);
         }
     }
 
     /**
      * Send a asyncTask to the server to get a new chat id..
-     * @param usernameAsChatName
+     * @param chatMemberA
      */
-    private void getNewChatId(String usernameAsChatName) {
+    private void getNewChatId(String chatMemberA, String chatMemberB) {
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_new_chat_id))
                 .build();
-        JSONObject chatName = new JSONObject();
+        JSONObject chatNameJson = new JSONObject();
         try {
-            chatName.put(getString(R.string.keys_json_chat_name), usernameAsChatName);
+            chatNameJson.put(getString(R.string.keys_json_chat_member_a), chatMemberB);
+            chatNameJson.put(getString(R.string.keys_json_chat_member_b), chatMemberA);
         } catch (JSONException e) {
             Log.e(TAG, "JSON Parse Error" + e.getMessage());
         }
 
-        new SendPostAsyncTask.Builder(uri.toString(), chatName)
+        new SendPostAsyncTask.Builder(uri.toString(), chatNameJson)
                 .onPostExecute(this::endOfGetNewChatId)
                 .build().execute();
     }
@@ -141,7 +136,7 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
 
             if (success) {
                 myChatId = resultJson.getString(getString(R.string.keys_json_chatid));
-                createNewChatSession(myChatId, myMemberId, myFriendMemberId);
+                createNewChatSession(myChatId, myMemberId, myFriendMemberId, myUsername, myFriendUsername);
                 //TODO start a new chat with new chat id/ what about if a chat id alread exist and associate with us?
                 //
 //                loadChatFragment(myChatId);
@@ -161,22 +156,27 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
      * send a asyntask to the server to create a new chat session with the new chat id, my member id
      * and my friend member id.
      * @param chatId
-     * @param myMemberId
-     * @param friendMemberId
+     * @param memberIdA
+     * @param memberIdB
+     * @param memberUsernameA
+     * @param memberUsernameB
      */
-    private void createNewChatSession(String chatId, String myMemberId, String friendMemberId) {
+    private void createNewChatSession(String chatId, String memberIdA, String memberIdB,
+                                      String memberUsernameA, String memberUsernameB) {
         Log.e(TAG, "createNewChatSession start");
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
-                .appendPath(getString(R.string.ep_new_one_to_one_chat))
+                .appendPath(getString(R.string.ep_create_chat_session))
                 .build();
         JSONObject magsJson = new JSONObject();
-        Log.e(TAG, "createNewChatSession " + uri.toString());
+        Log.e(TAG, "createNewChatSession " + chatId);
         try {
             magsJson.put(getString(R.string.keys_json_chatid), chatId);
-            magsJson.put(getString(R.string.keys_json_chat_member_a), myMemberId);
-            magsJson.put(getString(R.string.keys_json_chat_member_b), friendMemberId);
+            magsJson.put(getString(R.string.keys_json_chat_member_a), memberIdA);
+            magsJson.put(getString(R.string.keys_json_chat_member_b), memberIdB);
+            magsJson.put(getString(R.string.keys_json_chat_member_username_a), memberUsernameA);
+            magsJson.put(getString(R.string.keys_json_chat_member_username_b), memberUsernameB);
         } catch (JSONException e) {
             Log.e(TAG, "JSON Parse Error" + e.getMessage());
         }

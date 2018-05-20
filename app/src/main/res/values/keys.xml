@@ -46,5 +46,7 @@
     <string name="keys_json_chat_member_a">chatMemberA</string>
     <string name="keys_json_chat_member_b">chatMemberB</string>
     <string name="keys_json_send_message_chat_id">chatId</string>
+    <string name="keys_json_chat_member_username_a">chatMemberUserNameA</string>
+    <string name="keys_json_chat_member_username_b">chatMemberUserNameB</string>
 
 </resources>
