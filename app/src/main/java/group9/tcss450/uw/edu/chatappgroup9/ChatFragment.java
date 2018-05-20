@@ -73,7 +73,7 @@ public class ChatFragment extends Fragment  {
 
         if (getArguments() == null) {
             myTargetChatId = "1";
-            chattingWith.setText("Chatting with ID" + myTargetChatId);
+            chattingWith.setText("Chat ID " + myTargetChatId + " global ");
         } else {
             myTargetChatId = getArguments().getString("TARGET_CHAT_ID");
             myTargetUsername = getArguments().getString("TARGET_USERNAME");

@@ -18,7 +18,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterContactNew;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterFriends;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 
@@ -28,7 +28,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
  * {@link FriendsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class FriendsFragment extends Fragment implements RecyclerViewAdapterContactNew.FriendItemListener {
+public class FriendsFragment extends Fragment implements RecyclerViewAdapterFriends.FriendItemListener {
 
     private OnFragmentInteractionListener myListener;
     private RecyclerView myFriendsRecyclerView;
@@ -52,15 +52,15 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterCont
 
         ArrayList<String> contactsList = null;
         Bundle bunbdle = getArguments();
-        Log.e(TAG, "RecyclerViewAdapterContactNew bunbdle = " + bunbdle);
+        Log.e(TAG, "RecyclerViewAdapterFriends bunbdle = " + bunbdle);
         if (bunbdle != null) {
             contactsList = bunbdle.getStringArrayList("CONTACTS_ID_USERNAME");
         }
         myFriendsRecyclerView = view.findViewById(R.id.friendsRecyclerViewContacts);
         myFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        Log.e(TAG, "RecyclerViewAdapterContactNew contactsList = " + contactsList);
-        RecyclerViewAdapterContactNew adapter = new RecyclerViewAdapterContactNew(contactsList);
-//        Log.e(TAG, "RecyclerViewAdapterContactNew = " + adapter);
+//        Log.e(TAG, "RecyclerViewAdapterFriends contactsList = " + contactsList);
+        RecyclerViewAdapterFriends adapter = new RecyclerViewAdapterFriends(contactsList);
+//        Log.e(TAG, "RecyclerViewAdapterFriends = " + adapter);
         myFriendsRecyclerView.setAdapter(adapter);
         adapter.setItemClickedListener(this);
         myChatId = null;

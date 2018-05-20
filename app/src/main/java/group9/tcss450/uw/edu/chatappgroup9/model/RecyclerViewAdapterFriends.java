@@ -12,16 +12,16 @@ import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
 
-public class RecyclerViewAdapterContactNew extends RecyclerView.Adapter<RecyclerViewAdapterContactNew.ViewHolder> {
+public class RecyclerViewAdapterFriends extends RecyclerView.Adapter<RecyclerViewAdapterFriends.ViewHolder> {
 
     private List<String> myContactMembers;
     private FriendItemListener friendItemListener;
     private String myTargetContactMember;
-    private final String TAG = "RecyclerViewAdapterContactNew";
+    private final String TAG = "RecyclerViewAdapterFriends";
 
 
 
-    public RecyclerViewAdapterContactNew(List<String> theChatIds){
+    public RecyclerViewAdapterFriends(List<String> theChatIds){
          this.myContactMembers = theChatIds;
 
     }
