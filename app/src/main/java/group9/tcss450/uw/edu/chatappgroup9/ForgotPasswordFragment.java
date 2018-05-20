@@ -5,9 +5,13 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,14 +70,16 @@ public class ForgotPasswordFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_forgot_password, container, false);
-    }
+        View v = inflater.inflate(R.layout.fragment_forgot_password , container, false);
+        Button b = v.findViewById(R.id.Password_Reset_Submit);
+        b.setOnClickListener(this::onSubmitClickForgot);
+        return v;  }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -92,18 +98,24 @@ public class ForgotPasswordFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
-    public void onSubmitClick(View view) throws JSONException {
+    public void onSubmitClickForgot(View view) {
         int veri = verificationPinGenerator();
-        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),Context.MODE_PRIVATE);
+        Log.d("", "onSubmitClickForgot: here");
+        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
         String user = prefs.getString(getString(R.string.keys_shared_prefs_username), "");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
-                .appendPath(getString(R.string.ep_Password_Reset)).build();
+                .appendPath(getString(R.string.ep_change_pass_initiate)).build();
 
         //build the JSON object
         JSONObject msg = new JSONObject();
-        msg.put("Email", R.id.Forgot_password_Editext);
-        msg.put("verification",veri);
+        try {
+            msg.put("Email", R.id.Forgot_password_Editext);
+            msg.put("verification",veri);
 
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d("", "onSubmitClickForgot: sending async");
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handleResetOnPost)
                 .build().execute();
@@ -115,13 +127,9 @@ public class ForgotPasswordFragment extends Fragment {
                 .replace(R.id.fragmentContainer, frag, "frag")
                 .addToBackStack(null)
                 .commit();
+        ((EditText) getView().findViewById(R.id.Forgot_password_Editext))
+                .setText("");
 
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
     public int verificationPinGenerator() {
         Random random = new Random();
@@ -130,6 +138,26 @@ public class ForgotPasswordFragment extends Fragment {
 
         return value * -1;
     }
+
+
+    public void onClick(View view) {
+        if (mListener != null) {
+            switch (view.getId()) {
+                case R.id.Password_Reset_Submit:
+                    onSubmitClickForgot(view);
+                    break;
+                default:
+                    Log.wtf("TAG", "kill me");
+            }
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

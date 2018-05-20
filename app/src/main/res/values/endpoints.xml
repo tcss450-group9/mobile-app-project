@@ -18,4 +18,6 @@
     <string name="ep_reject_request">rejectRequest</string>
     <string name="ep_Password_Reset">getPassVeriCode</string>
     <string name="ep_create_chat_session">createChatSession</string>
+    <string name="ep_change_password1">postChangePass</string>
+    <string name="ep_change_pass_initiate">postPass</string>
 </resources>

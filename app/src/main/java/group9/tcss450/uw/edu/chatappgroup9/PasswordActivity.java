@@ -1,9 +1,19 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Random;
+
+import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 public class PasswordActivity extends AppCompatActivity implements ForgotPasswordFragment.OnFragmentInteractionListener {
 
