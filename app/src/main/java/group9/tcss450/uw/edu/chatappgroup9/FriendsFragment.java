@@ -68,6 +68,9 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
         myUsername = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
                 Context.MODE_PRIVATE).getString(getString(R.string.keys_shared_prefs_username),
                 "unknown username");
+        myMemberId = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE).getString(getString(R.string.keys_shared_prefs_memberid),
+                null);
         return view;
     }
 
@@ -138,10 +141,10 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
 
             if (success) {
                 myChatId = resultJson.getString(getString(R.string.keys_json_chatid));
-//                createNewChatSession(myChatId, myMemberId, myFriendMemberId);
+                createNewChatSession(myChatId, myMemberId, myFriendMemberId);
                 //TODO start a new chat with new chat id/ what about if a chat id alread exist and associate with us?
                 //
-                loadChatFragment(myChatId);
+//                loadChatFragment(myChatId);
 
                 Log.e(TAG, "Got new chat id " + myChatId);
             } else {
@@ -162,6 +165,7 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
      * @param friendMemberId
      */
     private void createNewChatSession(String chatId, String myMemberId, String friendMemberId) {
+        Log.e(TAG, "createNewChatSession start");
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
@@ -170,7 +174,7 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
         JSONObject magsJson = new JSONObject();
         Log.e(TAG, "createNewChatSession " + uri.toString());
         try {
-            magsJson.put(getString(R.string.keys_json_chat_id), chatId);
+            magsJson.put(getString(R.string.keys_json_chatid), chatId);
             magsJson.put(getString(R.string.keys_json_chat_member_a), myMemberId);
             magsJson.put(getString(R.string.keys_json_chat_member_b), friendMemberId);
         } catch (JSONException e) {
@@ -183,16 +187,17 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
     }
 
     private void startChatting(String result) {
+        Log.e(TAG, "createNewChatSession end");
         try {
             JSONObject jsonObject = new JSONObject(result);
             boolean success = jsonObject.getBoolean(getString(R.string.keys_json_success));
-
+            Log.e(TAG, "startChatting success " + success);
             if (success) {
                 String chatid = jsonObject.getString(getString(R.string.keys_json_chatid));
                 loadChatFragment(chatid);
                 Log.e(TAG, "start chatting with chat id" + chatid);
             } else {
-                Log.e(TAG, "start chatting fail");
+                Log.e(TAG, "start chatting fail" + jsonObject.toString());
             }
 
         } catch (JSONException e) {
