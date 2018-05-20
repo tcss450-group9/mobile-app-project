@@ -180,7 +180,7 @@ public class NavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_weather) {
             loadFragment(new WeatherFragment(), getString(R.string.keys_weather_fragment_tag));
         } else if (id ==R.id.nav_friends) {
-            loadContactsFragment();
+            loadFriendsFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -394,18 +394,18 @@ public class NavigationActivity extends AppCompatActivity
         Log.d("Load Contact Fragment","Bottom of handleGetAllContactsOnPost");
     }
 
-    private void loadContactsFragment() {
+    private void loadFriendsFragment() {
         FriendsFragment friendsFragment = new FriendsFragment();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("CONTACTS_ID_USERNAME", myContactList);
         friendsFragment.setArguments(bundle);
-        Log.e(TAG, "loadContactsFragment bundle = " + bundle);
+        Log.e(TAG, "loadFriendsFragment bundle = " + bundle);
 
 
 //        RecyclerView contactsRecyclerView = findViewById(R.id.newContactsRecyclerViewContacts);
-//        RecyclerViewAdapterContactNew adapter = new RecyclerViewAdapterContactNew(myContactList);
+//        RecyclerViewAdapterFriends adapter = new RecyclerViewAdapterFriends(myContactList);
 //        contactsRecyclerView.setLayoutManager(new LinearLayoutManager(getParent()));
-//        Log.e(TAG, "loadContactsFragment adapter = " + adapter.toString());
+//        Log.e(TAG, "loadFriendsFragment adapter = " + adapter.toString());
 //        contactsRecyclerView.setAdapter(adapter);
 //        adapter.setItemClickedListener(friendsFragment);
 
@@ -414,27 +414,6 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
-    /**
-     * converts a jason array returned from handleGetAllContactsOnPost to an string array list.
-     * The list include the data specified for memberid_b.
-     * @param allContacts the contacts data in Json array format
-     * @return
-     */
-    private ArrayList<String> contactsJsonArrayToList(JSONArray allContacts) {
-        ArrayList<String> msgs = new ArrayList<>();
-        try {
-            for (int i = 0; i < allContacts.length(); i++) {
-                JSONObject msg = allContacts.getJSONObject(i);
-                String memberIdB = msg.get(getString(R.string.keys_json_memberid_b)).toString();
-                String username = msg.get(getString(R.string.keys_json_username)).toString();
-                String string = memberIdB + ":" + username;
-                msgs.add(string);
-            }
-        } catch (JSONException e) {
-            Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
-        }
-        return msgs;
-    }
 
     private void handleGetPendingRequestsOnPost(String theResponse) {
         try {
@@ -568,5 +547,26 @@ public class NavigationActivity extends AppCompatActivity
         catch (JSONException e) {
             Log.e("NavigationActivity", "Unable to build JSON: " + e.getMessage());
         }
+    }
+
+    /**
+     * converts a jason array returned from handleGetFriendListOnPost to an string array list.
+     * @param allContacts the contacts data in Json array format
+     * @return
+     */
+    private ArrayList<String> contactsJsonArrayToList(JSONArray allContacts) {
+        ArrayList<String> msgs = new ArrayList<>();
+        try {
+            for (int i = 0; i < allContacts.length(); i++) {
+                JSONObject msg = allContacts.getJSONObject(i);
+                String memberIdB = msg.get(getString(R.string.keys_json_memberid)).toString();
+                String username = msg.get(getString(R.string.keys_json_username)).toString();
+                String string = memberIdB + ":" + username;
+                msgs.add(string);
+            }
+        } catch (JSONException e) {
+            Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
+        }
+        return msgs;
     }
 }

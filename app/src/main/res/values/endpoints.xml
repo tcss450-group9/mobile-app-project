@@ -14,7 +14,7 @@
     <string name="ep_get_chatInfo">getChatInfo</string>
     <string name="ep_send_friend_request">sendFriendRequest</string>
     <string name="ep_accept_request">acceptRequest</string>
-    <string name="ep_new_chat_id">newChatId</string>
+    <string name="ep_new_chat_id">getChatId</string>
     <string name="ep_reject_request">rejectRequest</string>
     <string name="ep_Password_Reset">getPassVeriCode</string>
     <string name="ep_new_one_to_one_chat">newOneToOneChatSession</string>

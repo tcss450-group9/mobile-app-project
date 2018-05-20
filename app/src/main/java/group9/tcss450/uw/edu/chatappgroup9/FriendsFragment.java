@@ -34,6 +34,8 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterCont
     private RecyclerView myFriendsRecyclerView;
     private final String TAG = "FriendsFragment";
     private String myChatId;
+    private String myUsername;
+    private String myFriendUsername;
     private String myMemberId;
     private String myFriendMemberId;
 
@@ -61,8 +63,11 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterCont
 //        Log.e(TAG, "RecyclerViewAdapterContactNew = " + adapter);
         myFriendsRecyclerView.setAdapter(adapter);
         adapter.setItemClickedListener(this);
-
         myChatId = null;
+        myFriendUsername = null;
+        myUsername = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE).getString(getString(R.string.keys_shared_prefs_username),
+                "unknown username");
         return view;
     }
 
@@ -97,6 +102,8 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterCont
             String[] strings = friendMemberIdUsername.split(":");
             String usernameAsChatName = strings[1];
             myFriendMemberId = strings[0];
+            myFriendUsername =strings[1];
+
             //TODO open a new chat when tap
             getNewChatId(usernameAsChatName);
         }
@@ -197,6 +204,7 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterCont
         Fragment chatFrag = new ChatFragment();
         Bundle arg = new Bundle();
         arg.putString("TARGET_CHAT_ID", targetChatId);
+        arg.putString("TARGET_USERNAME", myFriendUsername);
         chatFrag.setArguments(arg);
 
         Log.e(TAG, "loadChatFragment");

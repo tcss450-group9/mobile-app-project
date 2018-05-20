@@ -42,6 +42,7 @@ public class ChatFragment extends Fragment  {
      *
      */
     private String myTargetChatId;
+    private String myTargetUsername;
     private final String TAG = "Chat Fragment";
 
 //    private OnFragmentInteractionListener myListener;
@@ -75,7 +76,8 @@ public class ChatFragment extends Fragment  {
             chattingWith.setText("Chatting with ID" + myTargetChatId);
         } else {
             myTargetChatId = getArguments().getString("TARGET_CHAT_ID");
-            chattingWith.setText("Chatting with ID " + myTargetChatId);
+            myTargetUsername = getArguments().getString("TARGET_USERNAME");
+            chattingWith.setText("Chatting with " + myTargetUsername + " Chat ID " + myTargetChatId);
             Log.e(TAG, "current TARGET_CHAT_ID : " + myTargetChatId);
         }
 
