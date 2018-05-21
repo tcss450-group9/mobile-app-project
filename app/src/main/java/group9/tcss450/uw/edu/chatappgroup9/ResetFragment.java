@@ -1,12 +1,22 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
+import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 
 /**
@@ -18,6 +28,13 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class ResetFragment extends Fragment {
+    private int MIN_LENGTH_USERNAME_PASSWORD = 6;
+
+    private final String PASSWORD_NOT_MATCH = "Passwords are not match";
+    private final String PASSWORD_TOO_SHORT = "Password is too short";
+
+    private final String PASSWORD_TOO_SIMPLE = "Password is too simple";
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -64,7 +81,11 @@ public class ResetFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reset, container, false);
+        View v = inflater.inflate(R.layout.fragment_forgot_password , container, false);
+        Button b = v.findViewById(R.id.Password_Reset_Submit);
+        b.setOnClickListener(this::onSubmitClickForgot);
+        Log.d("gwrwrw", "onCreateView: here1");
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -72,6 +93,61 @@ public class ResetFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+    public void onSubmitClickForgot(View view) {
+
+        Log.d("gerer", "onSubmitClickForgot: here");
+        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
+        String user = prefs.getString(getString(R.string.keys_shared_prefs_username), "");
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_change_pass_initiate)).build();
+        EditText password3 = getActivity().findViewById(R.id.NewPassword1);
+        EditText password2 = getActivity().findViewById(R.id.NewPassword2);
+        String password = password3.getText().toString();
+        String confirmPassword = password2.getText().toString();
+        Boolean result = true;
+        if (!password.equals(confirmPassword)) {
+            result = false;
+            password2.setError(PASSWORD_NOT_MATCH);
+            password3.setError(PASSWORD_NOT_MATCH);
+        } else if (password.length() < MIN_LENGTH_USERNAME_PASSWORD) {
+            result = false;
+            password2.setError(PASSWORD_TOO_SHORT);
+            password3.setError(PASSWORD_TOO_SHORT);
+        } else if (!InputVerificationTool.isPassword(password)) {
+            result = false;
+            password2.setError(PASSWORD_TOO_SIMPLE);
+            password3.setError(PASSWORD_TOO_SIMPLE);
+        }
+        //build the JSON object
+        if(result) {
+            JSONObject msg = new JSONObject();
+            try {
+                msg.put("Email", R.id.NewPassword1);
+                msg.put("verification", R.id.Verification);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.d("rew", "onSubmitClickForgot: sending async");
+            new SendPostAsyncTask.Builder(uri.toString(), msg)
+                    .onPostExecute(this::handleResetOnPost)
+                    .build().execute();
+        }
+    }
+
+    private void handleResetOnPost(String s) {
+        ResetFragment frag  = new ResetFragment();
+        Log.d("finished", "handleResetOnPost: finished async");
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, frag, "frag")
+                .addToBackStack(null)
+
+                .commit();
+        ((EditText) getView().findViewById(R.id.Forgot_password_Editext))
+                .setText("");
+
+
     }
 
     @Override

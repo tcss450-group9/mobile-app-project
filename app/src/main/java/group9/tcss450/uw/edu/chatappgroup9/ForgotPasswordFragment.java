@@ -79,6 +79,7 @@ public class ForgotPasswordFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_forgot_password , container, false);
         Button b = v.findViewById(R.id.Password_Reset_Submit);
         b.setOnClickListener(this::onSubmitClickForgot);
+        Log.d("gwrwrw", "onCreateView: here1");
         return v;  }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -100,7 +101,7 @@ public class ForgotPasswordFragment extends Fragment {
     }
     public void onSubmitClickForgot(View view) {
         int veri = verificationPinGenerator();
-        Log.d("", "onSubmitClickForgot: here");
+        Log.d("gerer", "onSubmitClickForgot: here");
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
         String user = prefs.getString(getString(R.string.keys_shared_prefs_username), "");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
@@ -109,26 +110,34 @@ public class ForgotPasswordFragment extends Fragment {
         //build the JSON object
         JSONObject msg = new JSONObject();
         try {
-            msg.put("Email", R.id.Forgot_password_Editext);
+            msg.put("email",((EditText)getActivity().findViewById( R.id.Forgot_password_Editext)).getText().toString());
             msg.put("verification",veri);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d("", "onSubmitClickForgot: sending async");
+        Log.d("rew", "onSubmitClickForgot: sending async");
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handleResetOnPost)
+                .onCancelled(this::handleError)
                 .build().execute();
+    }
+
+    private void handleError(final String msg) {
+        Log.e("CHAT ERROR!!!", msg.toString());
     }
 
     private void handleResetOnPost(String s) {
         ResetFragment frag  = new ResetFragment();
+        Log.d("finished", "handleResetOnPost: finished async" + s);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, frag, "frag")
                 .addToBackStack(null)
+
                 .commit();
         ((EditText) getView().findViewById(R.id.Forgot_password_Editext))
                 .setText("");
+
 
     }
     public int verificationPinGenerator() {
@@ -144,7 +153,9 @@ public class ForgotPasswordFragment extends Fragment {
         if (mListener != null) {
             switch (view.getId()) {
                 case R.id.Password_Reset_Submit:
+                    Log.d("here", "onClick: here");
                     onSubmitClickForgot(view);
+
                     break;
                 default:
                     Log.wtf("TAG", "kill me");

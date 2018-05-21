@@ -15,7 +15,7 @@ import java.util.Random;
 
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
-public class PasswordActivity extends AppCompatActivity implements ForgotPasswordFragment.OnFragmentInteractionListener {
+public class PasswordActivity extends AppCompatActivity implements ForgotPasswordFragment.OnFragmentInteractionListener , ResetFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
