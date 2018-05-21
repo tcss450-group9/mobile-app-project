@@ -1,6 +1,7 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -123,7 +124,10 @@ public class ForgotPasswordFragment extends Fragment {
                 .onCancelled(this::handleError)
                 .build().execute();
     }
-
+    public void onBackPressed() {
+        startActivity(new Intent(getContext(), MainActivity.class));
+        getActivity().finish();
+    }
     private void handleError(final String msg) {
         Log.e("CHAT ERROR!!!", msg.toString());
     }
@@ -134,7 +138,6 @@ public class ForgotPasswordFragment extends Fragment {
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, frag, "frag")
                 .addToBackStack(null)
-
                 .commit();
         ((EditText) getView().findViewById(R.id.Forgot_password_Editext))
                 .setText("");

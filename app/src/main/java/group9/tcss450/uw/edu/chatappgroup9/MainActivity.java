@@ -232,7 +232,6 @@ public class MainActivity extends AppCompatActivity implements ForgotPasswordFra
     public void onForgotClick(View view){
         Intent intent = new Intent(this, PasswordActivity.class);
         startActivity(intent);
-        this.finish();
         }
 
 

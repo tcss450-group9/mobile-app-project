@@ -2,6 +2,7 @@ package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -23,11 +24,15 @@ public class PasswordActivity extends AppCompatActivity implements ForgotPasswor
         setContentView(R.layout.activity_password);
         ForgotPasswordFragment fragment = new ForgotPasswordFragment();
         android.support.v4.app.FragmentManager manager  = getSupportFragmentManager();
-        manager.beginTransaction().add(R.id.fragment, fragment, "")
+        manager.beginTransaction().add(R.id.fragmentContainer, fragment, "")
                 .addToBackStack(null)
                 .commit();
-    }
 
+    }
+    public void onBackPressed() {
+        startActivity(new Intent(this, MainActivity.class));
+        this.finish();
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
