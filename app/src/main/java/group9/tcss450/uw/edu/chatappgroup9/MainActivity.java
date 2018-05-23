@@ -110,7 +110,11 @@ public class MainActivity extends AppCompatActivity implements ForgotPasswordFra
                 int pin = resultsJSON.getInt(getString(R.string.keys_json_verification));
 
                 saveUserInfoToSharedPreference(resultsJSON);
-                if (pin == PIN_VERIFIED) {
+                if(pin < PIN_VERIFIED){
+                    Toast.makeText(this, "Please change password", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(this, PasswordActivity.class);
+                    startActivity(intent);
+                } else if (pin == PIN_VERIFIED) {
                     //Login was successful. Switch to the chat page.
                     Intent intent = new Intent(this, NavigationActivity.class);
                     startActivity(intent);

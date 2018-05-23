@@ -81,9 +81,21 @@ public class ForgotPasswordFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_forgot_password , container, false);
         Button b = v.findViewById(R.id.Password_Reset_Submit);
         b.setOnClickListener(this::onSubmitClickForgot);
+        b = v.findViewById(R.id.Forgot_password_Button_already_submit);
+        b.setOnClickListener(this::onAlreadySubmit);
         return v;
     }
+    public void onAlreadySubmit(View view){
+        ResetFragment frag  = new ResetFragment();
 
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, frag, "frag")
+                .addToBackStack(null)
+                .commit();
+        ((EditText) getView().findViewById(R.id.Forgot_password_Editext))
+                .setText("");
+
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
