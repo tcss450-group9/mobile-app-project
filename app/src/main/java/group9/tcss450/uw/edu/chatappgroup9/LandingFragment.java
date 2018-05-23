@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +39,7 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
     private OnFragmentInteractionListener mListener;
     private final String TAG = "LandingFragment";
     private RecyclerView recyclerview;
+    private TextView myCurrentLocationTextView;
 
     public LandingFragment() {
         // Required empty public constructor
@@ -99,7 +101,7 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
     }
 
     private void handleError(final Exception e) {
-        Log.e(TAG +" LISTEN ERROR!!!", e.getMessage());
+        Log.e(" LISTEN ERROR!!!", e.getMessage());
     }
 
     private void endOfGetChatsTask(JSONObject result) {

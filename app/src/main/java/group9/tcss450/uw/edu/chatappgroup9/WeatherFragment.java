@@ -7,6 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 
 /**
@@ -28,7 +32,18 @@ public class WeatherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weather, container, false);
+        View view = inflater.inflate(R.layout.fragment_weather, container, false);
+
+        View hoursWeatherView = inflater.inflate(R.layout.scroll_view_item_hours_weather, container, false);
+        TextView time = hoursWeatherView.findViewById(R.id.scrollViewItemTextViewTime);
+        ImageView weatherIcon = hoursWeatherView.findViewById(R.id.scrollViewItemImageViewWeatherIcon);
+
+        LinearLayout linearLayout = view.findViewById(R.id.weatherScrollViewLayoutHoursWeather);
+        linearLayout.addView(hoursWeatherView);
+
+//        time.setText("7 PM");
+//        linearLayout.addView(hoursWeatherView);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
