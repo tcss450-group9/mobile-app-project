@@ -37,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -777,7 +778,29 @@ public class NavigationActivity extends AppCompatActivity
         return msgs;
     }
 
-
-
-
+    public void displayClockThread(TextView theClock) {
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while(!isInterrupted()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                long date = System.currentTimeMillis();
+                                SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy hh:mm:ss a");
+                                String dateString = sdf.format(date);
+                                theClock.setText(dateString);
+                            }
+                        });
+                    }
+                }
+                catch(InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        t.start();
+    }
 }

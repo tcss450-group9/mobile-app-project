@@ -33,6 +33,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
  * to handle interaction events.
  */
 public class LandingFragment extends Fragment implements RecyclerViewAdapterLandingPageChat.ChatItemListener {
+    private NavigationActivity myActivity;
     private int myChatCount = 0;
     private ListenManager myChatsManager;
     private RecyclerViewAdapterLandingPageChat myAdapter;
@@ -48,6 +49,7 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        myActivity = (NavigationActivity) getActivity();
         JSONObject user = new JSONObject();
         View view = inflater.inflate(R.layout.fragment_landing, container, false);
         // Inflate the layout for this fragment
@@ -58,6 +60,8 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
         myAdapter.setItemClickedListener(this);
         Button logout = view.findViewById(R.id.landingButtonLogout);
         logout.setOnClickListener(this::onLogoutPressed);
+
+        myActivity.displayClockThread(view.findViewById(R.id.landingTextViewDataTime));
 
         return view;
     }

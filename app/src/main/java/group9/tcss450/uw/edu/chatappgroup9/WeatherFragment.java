@@ -87,7 +87,7 @@ public class WeatherFragment extends Fragment{
         LinearLayout linearLayout = view.findViewById(R.id.weatherScrollViewLayoutHoursWeather);
         linearLayout.addView(hoursWeatherView);
 
-        displayClockThread();
+        myActivity.displayClockThread(myTimeDate);
         resetWeatherUI();
 
 //        time.setText("7 PM");
@@ -111,7 +111,8 @@ public class WeatherFragment extends Fragment{
                 .appendPath(getString(R.string.ep_weather_forecast))
                 .appendQueryParameter("lat", myLatitude)
                 .appendQueryParameter("lon", myLongitude)
-                .appendQueryParameter("APPID", "19f74e971c2abcaaaf21f9d675c30cb2")
+                .appendQueryParameter(getString(R.string.ep_weather_appkey_parameter),
+                        getString(R.string.ep_weather_api_key))
                 .build();
         Log.d(TAG,uri.toString());
         new SendGetAsyncTask.Builder(uri.toString())
@@ -153,6 +154,7 @@ public class WeatherFragment extends Fragment{
 
     public void resetWeatherUI() {
         long current = System.currentTimeMillis();
+        Log.d(TAG, String.valueOf(current - myLastAPICallTime));
         boolean okToCall = (current - myLastAPICallTime) > 61000;
         if(okToCall) {
             Log.d(TAG, "Last API call >10 mins ago. Safe to call again.");
@@ -226,31 +228,5 @@ public class WeatherFragment extends Fragment{
         tempKelv = (tempKelv * 9.0 / 5.0) - 459.67;
         int tempFahr = (int) tempKelv;
         return String.valueOf(tempFahr);
-    }
-
-    public void displayClockThread() {
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while(!isInterrupted()) {
-                        Thread.sleep(1000);
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                long date = System.currentTimeMillis();
-                                SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy hh:mm:ss a");
-                                String dateString = sdf.format(date);
-                                myTimeDate.setText(dateString);
-                            }
-                        });
-                    }
-                }
-                catch(InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        t.start();
     }
 }
