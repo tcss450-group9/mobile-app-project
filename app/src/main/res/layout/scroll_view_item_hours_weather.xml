@@ -10,9 +10,9 @@
         android:id="@+id/scrollViewItemImageViewWeatherIcon"
         android:layout_width="50dp"
         android:layout_height="60dp"
-        app:srcCompat="@drawable/ic_sunny"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_sunny" />
 
     <TextView
         android:id="@+id/scrollViewItemTextViewTime"

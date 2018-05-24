@@ -13,16 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendGetAsyncTask;
 
@@ -108,7 +103,7 @@ public class WeatherFragment extends Fragment{
                 .appendPath(getString(R.string.ep_weather_base_url))
                 .appendPath(getString(R.string.ep_weather_data))
                 .appendPath(getString(R.string.ep_weather_version))
-                .appendPath(getString(R.string.ep_weather_forecast))
+                .appendPath(getString(R.string.ep_weather_weather))
                 .appendQueryParameter("lat", myLatitude)
                 .appendQueryParameter("lon", myLongitude)
                 .appendQueryParameter(getString(R.string.ep_weather_appkey_parameter),
@@ -138,6 +133,7 @@ public class WeatherFragment extends Fragment{
             JSONObject weather = (JSONObject) myLastWeatherUpdate.getJSONArray("weather").get(0);
             String temp = convKelvinToFahrenheit(main.getString("temp"));
             String icon = weather.getString("icon");
+            setWeatherIcon(icon, myWeatherIcon);
             //String dt = myLastWeatherUpdate.getString("dt"); //Inaccurate & unnecssary to get date/time from here
             //Date date = new Date(Long.parseLong(dt));
             //SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -167,6 +163,7 @@ public class WeatherFragment extends Fragment{
                 JSONObject weather = (JSONObject) myLastWeatherUpdate.getJSONArray("weather").get(0);
                 String temp = convKelvinToFahrenheit(main.getString("temp"));
                 String icon = weather.getString("icon");
+                setWeatherIcon(icon, myWeatherIcon);
                 //String dt = myLastWeatherUpdate.getString("dt");
                 //Date date = new Date(Long.parseLong(dt));
                 //SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -181,6 +178,49 @@ public class WeatherFragment extends Fragment{
         else {
             Toast.makeText(getContext(),"Weather unavailable. Try again later",
                     Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void setWeatherIcon(String iconCode, ImageView icon) {
+        switch(iconCode) {
+            case "01d": icon.setImageResource(R.drawable.ic_sunny);
+                break;
+            case "01n": icon.setImageResource(R.drawable.moon9);
+                break;
+            case "02d": icon.setImageResource(R.drawable.clouds_1);
+                break;
+            case "02n": icon.setImageResource(R.drawable.cloudy_night);
+                break;
+            case "03d": icon.setImageResource(R.drawable.clouds);
+                break;
+            case "03n": icon.setImageResource(R.drawable.clouds);
+                break;
+            case "04d": icon.setImageResource(R.drawable.clouds);
+                break;
+            case "04n": icon.setImageResource(R.drawable.clouds);
+                break;
+            case "09d": icon.setImageResource(R.drawable.raining);
+                break;
+            case "09n": icon.setImageResource(R.drawable.raining);
+                break;
+            case "10d": icon.setImageResource(R.drawable.summer_rain);
+                break;
+            case "10n": icon.setImageResource(R.drawable.weather);
+                break;
+            case "11d": icon.setImageResource(R.drawable.storm);
+                break;
+            case "11n": icon.setImageResource(R.drawable.storm);
+                break;
+            case "13d": icon.setImageResource(R.drawable.snowing);
+                break;
+            case "13n": icon.setImageResource(R.drawable.snowing);
+                break;
+            case "50d": icon.setImageResource(R.drawable.wind);
+                break;
+            case "50n": icon.setImageResource(R.drawable.wind);
+                break;
+            default: icon.setImageResource(R.drawable.tornado);
+                break;
         }
     }
 

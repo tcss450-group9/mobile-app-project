@@ -21,10 +21,23 @@
     <string name="ep_create_chat_session">createChatSession</string>
     <string name="ep_change_password1">postChangePass</string>
     <string name="ep_change_pass_initiate">postPassss</string>
+
+    <!--Openweathermap API-->
     <string name="ep_weather_base_url">api.openweathermap.org</string>
     <string name="ep_weather_data">data</string>
     <string name="ep_weather_version">2.5</string>
-    <string name="ep_weather_forecast">weather</string>
+    <string name="ep_weather_weather">weather</string>
+    <string name="ep_weather_forecast">forecast</string>
     <string name="ep_weather_appkey_parameter">APPID</string>
     <string name="ep_weather_api_key">19f74e971c2abcaaaf21f9d675c30cb2</string>
+
+    <!--Accuweather API-->
+    <string name="ep_accuweather_base_url">dataservice.accuweather.com</string>
+    <string name="ep_accuweather_locations">locations</string>
+    <string name="ep_accuweather_version">v1</string>
+    <string name="ep_accuweather_cities">cities</string>
+    <string name="ep_accuweather_geoposition">geoposition</string>
+    <string name="ep_accuweather_search">search</string>
+    <string name="ep_accuweather_hourly">hourly</string>
+    <string name="ep_accuweather_12h">12hour</string>
 </resources>
