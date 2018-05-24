@@ -398,6 +398,8 @@ public class NavigationActivity extends AppCompatActivity
             loadFragment(new WeatherFragment(), getString(R.string.keys_weather_fragment_tag));
         } else if (id ==R.id.nav_friends) {
             loadFriendsFragment();
+        } else if (id == R.id.nav_logout) {
+            onLogout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
