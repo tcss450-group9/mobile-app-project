@@ -30,7 +30,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".VerificationActivity" />
-        <activity android:name=".PasswordActivity"></activity>
+        <activity android:name=".PasswordActivity" />
+
+        <service
+            android:name=".WeatherService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

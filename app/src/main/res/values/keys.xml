@@ -19,6 +19,7 @@
     <string name="keys_shared_prefs_memberid">shard_prefs_memberid</string>
     <string name="keys_shared_prefs_firstname">shard_prefs_firstname</string>
     <string name="keys_shared_prefs_lastname">shard_prefs_lastname</string>
+    <string name="keys_shared_prefs_last_weather_api_call_time">last_weather_api_call_time</string>
     <string name="keys_prefs_stay_login">shard_prefs_stay_login</string>
 
     <string name="keys_chat_fragment_tag">ChatFragmentTag</string>

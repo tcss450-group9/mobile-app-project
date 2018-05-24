@@ -1,65 +1,204 @@
 package group9.tcss450.uw.edu.chatappgroup9.utils;
 
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.function.Consumer;
 
-import group9.tcss450.uw.edu.chatappgroup9.R;
+/**
+ * Implemented AsyncTask that sends a JSON string via POST to a web service.  Builds the Task
+ * requiring a fully formed URL.
+ *
+ * Optional parameters include actions for onPreExecute, onProgressUpdate, onPostExecute, and
+ * onCancelled and JSONObject.
+ *
+ * An action for onProgressUpdate is included but a call to publishProgress is never made in
+ * doInBackground rendering onProgressUpdate unused.
+ *
+ * The method cancel() is called in doInBackGround during exception handling. Use the action
+ * onCnCancelled to respond to exceptional situations resulting from doInBackground execution.
+ * Note that external cancellation will cause the same action to execute.
+ *
+ * Created by Charles Bryan on 3/22/2018.
+ *
+ * @author Charles Bryan
+ * @author  Cory Davis
+ * @version 5/23/2018
+ */
+public class SendGetAsyncTask extends AsyncTask<Void, String, String> {
 
-public class SendGetAsyncTask extends AsyncTask<String, Void, String> {
+    private final String mUrl;
+
+    //private final JSONObject mJsonMsg;
+    private Runnable mOnPre;
+    private Consumer<String[]> mOnProgress;
+    private Consumer<String> mOnPost;
+    private Consumer<String> mOnCancel;
+
+    /**
+     * Helper class for building PostAsyncTasks.
+     *
+     * @author Charles Bryan
+     */
+    public static class Builder {
+
+        //Required Parameters
+        private final String mUrl;
+
+        //Optional Parameters
+        //private JSONObject mJsonMsg;
+        private Runnable onPre = () -> {};
+        private Consumer<String[]> onProg = X -> {};
+        private Consumer<String> onPost = x -> {};
+        private Consumer<String> onCancel = x -> {};
+
+        /**
+         * Constructs a new Builder.
+         *
+         * @param url the fully-formed url of the web service this task will connect to
+         */
+        public Builder(final String url) {
+            mUrl = url;
+        }
+
+        /**
+         *Set the JSONobject. This currently has no way of being integrated into the GET request.
+         *
+         * @param json
+         * @return
+         */
+        /*public Builder jsonMessage(final JSONObject json) {
+            mJsonMsg = json;
+            return this;
+        }*/
+
+        /**
+         * Set the action to perform during AsyncTask onPreExecute.
+         *
+         * @param val a action to perform during AsyncTask onPreExecute
+         * @return
+         */
+        public Builder onPreExecute(final Runnable val) {
+            onPre = val;
+            return this;
+        }
+
+        /**
+         * Set the action to perform during AsyncTask onProgressUpdate. An action for
+         * onProgressUpdate is included but a call to publishProgress is never made in
+         * doInBackground rendering onProgressUpdate unused.
+         *
+         * @param val a action to perform during AsyncTask onProgressUpdate
+         * @return
+         */
+        public Builder onProgressUpdate(final Consumer<String[]> val) {
+            onProg = val;
+            return this;
+        }
+
+        /**
+         * Set the action to perform during AsyncTask onPostExecute.
+         *
+         * @param val a action to perform during AsyncTask onPostExecute
+         * @return
+         */
+        public Builder onPostExecute(final Consumer<String> val) {
+            onPost = val;
+            return this;
+        }
+
+        /**
+         * Set the action to perform during AsyncTask onCancelled. The AsyncTask method cancel() is
+         * called in doInBackGround during exception handling. Use this action to respond to
+         * exceptional situations resulting from doInBackground execution. Note that external
+         * cancellation will cause this action to execute.
+         *
+         * @param val a action to perform during AsyncTask onCancelled
+         * @return
+         */
+        public Builder onCancelled(final Consumer<String> val) {
+            onCancel = val;
+            return this;
+        }
+
+        /**
+         * Constructs a SendGetAsyncTask with the current attributes.
+         *
+         * @return a SendPostAsyncTask with the current attributes
+         */
+        public SendGetAsyncTask build() {
+            return new SendGetAsyncTask(this);
+        }
+
+    }
+
+    /**
+     * Construct a SendPostAsyncTask internally from a builder.
+     *
+     * @param builder the builder used to construct this object
+     */
+    private SendGetAsyncTask(final Builder builder) {
+        mUrl = builder.mUrl;
+
+        //mJsonMsg = builder.mJsonMsg;
+        mOnPre = builder.onPre;
+        mOnProgress = builder.onProg;
+        mOnPost = builder.onPost;
+        mOnCancel = builder.onCancel;
+    }
 
     @Override
-    protected String doInBackground(String... strings) {
-        if (strings.length != 3) {
-            throw new IllegalArgumentException("Three String arguments required.");
-        }
-        String response = "";
+    protected void onPreExecute() {
+        super.onPreExecute();
+        mOnPre.run();
+    }
+
+    @Override
+    protected String doInBackground(Void... voids) {
+
+        StringBuilder response = new StringBuilder();
         HttpURLConnection urlConnection = null;
-//instead of using a hard coded (found in end_points.xml) url for our web service
-// address, here we will build the URL from parts. This can be helpful when
-// sending arguments via GET. In this example, we are sending plain text.
-        String url = strings[0];
-        String endPoint = strings[1];
-        String args = strings[2];
-        Log.d("SendGetAsyncTask", url + " " + endPoint + " " + args);
-        Uri uri = new Uri.Builder()
-                .scheme("https")
-                .appendPath(url)
-                .appendPath(endPoint)
-                .appendQueryParameter("username", args)
-                .build();
+
         try {
-            URL urlObject = new URL(uri.toString());
+            URL urlObject = new URL(mUrl.toString());
             urlConnection = (HttpURLConnection) urlObject.openConnection();
             InputStream content = urlConnection.getInputStream();
             BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
             String s = "";
             while ((s = buffer.readLine()) != null) {
-                response += s;
+                response.append(s);
             }
         } catch (Exception e) {
-            response = "Unable to connect, Reason: "
-                    + e.getMessage();
+            response.append("Unable to connect, Reason: " + e.getMessage());
         } finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
-        Log.d("SendGetAsyncTask",response);
-        return response;
+        return response.toString();
     }
+
+    @Override
+    protected void onCancelled(String result) {
+        super.onCancelled(result);
+        mOnCancel.accept(result);
+    }
+
+    @Override
+    protected void onProgressUpdate(String... values) {
+        super.onProgressUpdate(values);
+        mOnProgress.accept(values);
+
+    }
+
     @Override
     protected void onPostExecute(String result) {
-        /*Log.d("SendGetAsyncTask",result);
-        try {
-            JSONObject contactArray = new JSONObject(result);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
+        mOnPost.accept(result);
     }
 }

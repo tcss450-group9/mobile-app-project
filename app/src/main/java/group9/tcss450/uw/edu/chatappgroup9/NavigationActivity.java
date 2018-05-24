@@ -301,6 +301,10 @@ public class NavigationActivity extends AppCompatActivity
         }
     }
 
+    public Location getLocation() {
+        return mCurrentLocation;
+    }
+
     protected void onStop() {
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
@@ -534,6 +538,15 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
+    private void loadFriendsFragment() {
+        FriendsFragment friendsFragment = new FriendsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("CONTACTS_ID_USERNAME", myContactList);
+        friendsFragment.setArguments(bundle);
+        Log.e(TAG, "loadFriendsFragment bundle = " + bundle);
+        loadFragment(friendsFragment, getString(R.string.keys_contact_fragment_tag) + "New");
+
+    }
 
     /**
      * Handle the search by email response. If found a user, show the user's first name and last name
@@ -600,15 +613,6 @@ public class NavigationActivity extends AppCompatActivity
         Log.d("Load Contact Fragment","Bottom of handleGetAllContactsOnPost");
     }
 
-    private void loadFriendsFragment() {
-        FriendsFragment friendsFragment = new FriendsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putStringArrayList("CONTACTS_ID_USERNAME", myContactList);
-        friendsFragment.setArguments(bundle);
-        Log.e(TAG, "loadFriendsFragment bundle = " + bundle);
-        loadFragment(friendsFragment, getString(R.string.keys_contact_fragment_tag) + "New");
-
-    }
 
 
     private void handleGetPendingRequestsOnPost(String theResponse) {

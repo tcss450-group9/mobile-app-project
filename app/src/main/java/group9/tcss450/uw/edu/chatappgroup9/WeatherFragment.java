@@ -1,9 +1,13 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.location.Location;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +15,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import group9.tcss450.uw.edu.chatappgroup9.utils.SendGetAsyncTask;
 
 
 /**
@@ -19,9 +33,24 @@ import android.widget.TextView;
  * {@link WeatherFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends Fragment{
+
+    private final String TAG = "WeatherFragment";
 
     private OnFragmentInteractionListener mListener;
+    private NavigationActivity myActivity;
+    private Location myLocation;
+    private String myLongitude;
+    private String myLatitude;
+    private JSONObject myLastWeatherUpdate;
+    private long myLastAPICallTime;
+    private SharedPreferences myPrefs;
+
+    //Elements from the fragment_weather layout
+    private ImageView myWeatherIcon;
+    private TextView myTimeDate;
+    private TextView myCity;
+    private TextView myCurrentTemp;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -31,8 +60,25 @@ public class WeatherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        myActivity = (NavigationActivity) getActivity();
+        myPrefs = myActivity.getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
+        myLocation = myActivity.getLocation();
+        myLongitude = String.valueOf(myLocation.getLongitude());
+        myLatitude = String.valueOf(myLocation.getLatitude());
+        Log.d(TAG, myLatitude + " " + myLongitude);
+
+        //Set the timer for allowing API calls (>10 minutes ago)
+        if(myPrefs.contains(getString(R.string.keys_shared_prefs_last_weather_api_call_time))) {
+            myLastAPICallTime = myPrefs.getLong(getString(R.string.keys_shared_prefs_last_weather_api_call_time), 0);
+        }
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
+        myWeatherIcon = view.findViewById(R.id.weatherImageViewCurrentWeatherIcon);
+        myTimeDate = view.findViewById(R.id.landingTextViewDataTime);
+        myCity = view.findViewById(R.id.landingTextViewCurrentLocation);
+        myCurrentTemp = view.findViewById(R.id.landingTextViewFahrenheit);
 
         View hoursWeatherView = inflater.inflate(R.layout.scroll_view_item_hours_weather, container, false);
         TextView time = hoursWeatherView.findViewById(R.id.scrollViewItemTextViewTime);
@@ -41,9 +87,99 @@ public class WeatherFragment extends Fragment {
         LinearLayout linearLayout = view.findViewById(R.id.weatherScrollViewLayoutHoursWeather);
         linearLayout.addView(hoursWeatherView);
 
+        displayClockThread();
+        resetWeatherUI();
+
 //        time.setText("7 PM");
 //        linearLayout.addView(hoursWeatherView);
         return view;
+    }
+
+    /**
+     * Queries the weather service for weather conditions based on current GPS coordinates.
+     * Sends a GET request and then calls handleGetWeatherOnPost.
+     * WARNING: The OpenWeatherAPI free service will penalize our access if we send more than one
+     * request every ten minutes. DO NOT use this function somewhere where it can be called unlimited times.
+     * The response containing the most recent weather update is stored in variable myLastWeatherUpdate
+     */
+    public void getWeatherByLocation() {
+        JSONObject response;
+        Uri uri = new Uri.Builder().scheme("https")
+                .appendPath(getString(R.string.ep_weather_base_url))
+                .appendPath(getString(R.string.ep_weather_data))
+                .appendPath(getString(R.string.ep_weather_version))
+                .appendPath(getString(R.string.ep_weather_forecast))
+                .appendQueryParameter("lat", myLatitude)
+                .appendQueryParameter("lon", myLongitude)
+                .appendQueryParameter("APPID", "19f74e971c2abcaaaf21f9d675c30cb2")
+                .build();
+        Log.d(TAG,uri.toString());
+        new SendGetAsyncTask.Builder(uri.toString())
+                .onPostExecute(this::handleGetWeatherOnPost)
+                .build().execute();
+
+        //Mark the time this API call was made. (No more than one call every ten minutes)
+        myLastAPICallTime = System.currentTimeMillis();
+        myPrefs.edit().putLong(getString(R.string.keys_shared_prefs_last_weather_api_call_time),
+                myLastAPICallTime);
+    }
+
+    /**
+     * Parses the JSON response returned by OpenWeatherMap and assigns the current temperature, date
+     * and a descriptive weather icon to the corresponding UI elements.
+     * @param response The JSON response supplied by the AsyncTask DoInBackground call.
+     */
+    public void handleGetWeatherOnPost(String response) {
+        Log.d(TAG, response);
+        try {
+            myLastWeatherUpdate = new JSONObject(response);
+            JSONObject main = myLastWeatherUpdate.getJSONObject("main");
+            JSONObject weather = (JSONObject) myLastWeatherUpdate.getJSONArray("weather").get(0);
+            String temp = convKelvinToFahrenheit(main.getString("temp"));
+            String icon = weather.getString("icon");
+            //String dt = myLastWeatherUpdate.getString("dt"); //Inaccurate & unnecssary to get date/time from here
+            //Date date = new Date(Long.parseLong(dt));
+            //SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            //Log.d(TAG, "Temp: " + temp + " Icon: " + icon + " Time: " + dt);
+
+            //Set the UI elements to the values returned by the API call
+            myCurrentTemp.setText(temp);
+            //myTimeDate.setText(format.format(date));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resetWeatherUI() {
+        long current = System.currentTimeMillis();
+        boolean okToCall = (current - myLastAPICallTime) > 61000;
+        if(okToCall) {
+            Log.d(TAG, "Last API call >10 mins ago. Safe to call again.");
+            getWeatherByLocation();
+        }
+        else if(myLastWeatherUpdate != null ) { //Consider adding additional parameter to check if 10 mins have passed
+            try {
+                Log.d(TAG, "Loading weather from previous API call");
+                JSONObject main = myLastWeatherUpdate.getJSONObject("main");
+                JSONObject weather = (JSONObject) myLastWeatherUpdate.getJSONArray("weather").get(0);
+                String temp = convKelvinToFahrenheit(main.getString("temp"));
+                String icon = weather.getString("icon");
+                //String dt = myLastWeatherUpdate.getString("dt");
+                //Date date = new Date(Long.parseLong(dt));
+                //SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+                //Set the UI elements to the values returned by the API call
+                myCurrentTemp.setText(temp);
+                //myTimeDate.setText(format.format(date));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            Toast.makeText(getContext(),"Weather unavailable. Try again later",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -83,5 +219,38 @@ public class WeatherFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public String convKelvinToFahrenheit(String tempIn) {
+        double tempKelv = Double.parseDouble(tempIn);
+        tempKelv = (tempKelv * 9.0 / 5.0) - 459.67;
+        int tempFahr = (int) tempKelv;
+        return String.valueOf(tempFahr);
+    }
+
+    public void displayClockThread() {
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while(!isInterrupted()) {
+                        Thread.sleep(1000);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                long date = System.currentTimeMillis();
+                                SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy hh:mm:ss a");
+                                String dateString = sdf.format(date);
+                                myTimeDate.setText(dateString);
+                            }
+                        });
+                    }
+                }
+                catch(InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        t.start();
     }
 }

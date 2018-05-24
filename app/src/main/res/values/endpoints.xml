@@ -21,4 +21,8 @@
     <string name="ep_create_chat_session">createChatSession</string>
     <string name="ep_change_password1">postChangePass</string>
     <string name="ep_change_pass_initiate">postPassss</string>
+    <string name="ep_weather_base_url">api.openweathermap.org</string>
+    <string name="ep_weather_data">data</string>
+    <string name="ep_weather_version">2.5</string>
+    <string name="ep_weather_forecast">weather</string>
 </resources>
