@@ -1,7 +1,6 @@
 package group9.tcss450.uw.edu.chatappgroup9.model;
 
 import android.net.Uri;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,7 +37,7 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
 
         public ViewHolder(View itemView) {
             super(itemView);
-            othersUsername = itemView.findViewById(R.id.recycleViewItemUsername);
+            othersUsername = itemView.findViewById(R.id.recycleViewItemchatUsername);
             othersName = itemView.findViewById(R.id.recycleViewItemFirstLastName);
             mySendRequestButton = itemView.findViewById(R.id.recycleViewItemSendRequest);
             mySendRequestButton.setOnClickListener(this::onSendRequestClicked);

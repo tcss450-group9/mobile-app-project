@@ -9,12 +9,10 @@
         android:id="@+id/recycleViewItemchatUsername"
         android:layout_width="0dp"
         android:layout_height="27dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Little_Dog"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/recycleview_item_button_add_remove"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,18 +28,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
-    <Button
-        android:id="@+id/recycleview_item_button_add_remove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="@string/contacts_button_delete_friend"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
-        android:id="@+id/recycleview_item_textview_fullname"
+        android:id="@+id/recycleview_item_textview_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

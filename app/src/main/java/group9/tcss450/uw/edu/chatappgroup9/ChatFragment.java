@@ -11,14 +11,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterMessages;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
@@ -31,13 +36,14 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 // * {@link ChatFragment.OnFragmentInteractionListener} interface
 // * to handle interaction events.
 // */
-public class ChatFragment extends Fragment  {
+public class ChatFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private String myUsername;
     private String mySendUrl;
     private ListenManager myListenManager;
     private RecyclerView myRecyclerView;
     private RecyclerViewAdapterMessages myAdapterChat;
     private SharedPreferences prefs;
+    private List<String> contacts = new ArrayList<>();
     /**
      *
      */
@@ -80,6 +86,16 @@ public class ChatFragment extends Fragment  {
             chattingWith.setText("Chatting with " + myTargetUsername + " Chat ID " + myTargetChatId);
             Log.e(TAG, "current TARGET_CHAT_ID : " + myTargetChatId);
         }
+        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
+        getAllContacts(getString(R.string.ep_base_url), getString(R.string.ep_view_connections), prefs.getString(getString(R.string.keys_shared_prefs_username), "") );
+        Log.d("Contacts", "onCreateView: " + contacts.size());
+
+        Spinner spinner = (Spinner)v.findViewById(R.id.chat_Fragment_Contacts_spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(),R.layout.recycler_view_item_chat_contacts,R.id.recycleview_item_textview_chat, contacts);
+        adapter.setDropDownViewResource(R.layout.recycler_view_item_chat_contacts);
+
+        spinner.setOnItemSelectedListener(this);
+        spinner.setAdapter(adapter);
 
         return v;
     }
@@ -246,6 +262,40 @@ public class ChatFragment extends Fragment  {
         }
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        Log.d("gerer", "onSubmitClickForgot: here");
+        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
+        String user = prefs.getString(getString(R.string.keys_shared_prefs_username), "");
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_addToChat)).build();
+
+        //build the JSON object
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("chatID",(prefs.getString("chatId","" )));
+            msg.put("memberID", ((TextView)view.findViewById(R.id.recycleViewItemchatUsername)).getText().toString());
+
+        } catch (JSONException e) {
+            Log.d("hello", "hello");
+            e.printStackTrace();
+        }
+        Log.d("whathehellarewesending", "onSubmitClickForgot: sending async"+ msg.toString());
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handleResetOnPost)
+                .onCancelled(this::handleError)
+                .build().execute();
+
+    }
+
+    private void handleResetOnPost(String s) {
+        Toast.makeText(getActivity(), "we Added a user", Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 
 
 //    /**
@@ -262,5 +312,53 @@ public class ChatFragment extends Fragment  {
 //        // TODO: Update argument type and name
 //        void onFragmentInteraction(Uri uri);
 //    }
+public void getAllContacts(String baseURL, String endPoint, String username) {
+    Log.d("Load Contact Fragment","Top of getAllContacts");
+    JSONArray contacts = new JSONArray(); //This is never populated and is returned empty. Perhaps change this function to void?
+    JSONObject unObject = new JSONObject();
+    try {
+        unObject.put("username", username);
+    }
+    catch(JSONException e) {
+        Log.e("GETALLCONTACTS", "Error building username JSONObject: " + e.getMessage());
+    }
+
+    Uri uri = new Uri.Builder()
+            .scheme("https")
+            .appendPath(baseURL)
+            .appendPath(endPoint)
+            .appendQueryParameter("username",username)
+            .build();
+    Log.d("Load Contact Fragment", uri.toString());
+    new SendPostAsyncTask.Builder(uri.toString(), unObject)
+            .onPostExecute(this::handleGetAllContactsOnPost)
+            .build().execute();
+    Log.d("Load Contact Fragment","Bottom of getAllContacts");
+}
+
+    private void handleGetAllContactsOnPost(String s) {
+        JSONObject n = new JSONObject();
+
+        JSONArray g = new JSONArray();
+
+        try {
+             n = new JSONObject(s);
+           g = n.getJSONArray("contacts");
+            Log.d("JSON return", "handleGetAllContactsOnPost: " + g.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for (int i =0; i < g.length(); i++){
+            try {
+                Log.d("adding", "handleGetAllContactsOnPost: " + g.getString(i).toString());
+                contacts.add(((JSONObject)g.get(i)).getString("username"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
 
 }
