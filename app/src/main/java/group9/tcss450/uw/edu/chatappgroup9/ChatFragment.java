@@ -176,22 +176,22 @@ public class ChatFragment extends Fragment implements AdapterView.OnItemSelected
                 .appendQueryParameter("chatId", myTargetChatId)
                 .build();
         Log.e(TAG, "listen message from " + myTargetChatId);
-        if (prefs.contains(getString(R.string.keys_prefs_time_stamp))) {
-            //ignore all of the seen messages. You may want to store these messages locally
-            myListenManager = new ListenManager.Builder(retrieve.toString(),
-                    this::publishProgress)
-                    .setTimeStamp(prefs.getString(getString(R.string.keys_prefs_time_stamp), "0"))
-                    .setExceptionHandler(this::handleError)
-                    .setDelay(1000)
-                    .build();
-        } else {
+//        if (prefs.contains(getString(R.string.keys_prefs_time_stamp))) {
+//            //ignore all of the seen messages. You may want to store these messages locally
+//            myListenManager = new ListenManager.Builder(retrieve.toString(),
+//                    this::publishProgress)
+//                    .setTimeStamp(prefs.getString(getString(R.string.keys_prefs_time_stamp), "0"))
+//                    .setExceptionHandler(this::handleError)
+//                    .setDelay(1000)
+//                    .build();
+
             //no record of a saved timestamp. must be a first time login
             myListenManager = new ListenManager.Builder(retrieve.toString(),
                     this::publishProgress)
                     .setExceptionHandler(this::handleError)
                     .setDelay(1000)
                     .build();
-        }
+
 
     }
 
