@@ -34,7 +34,7 @@ public class RecyclerViewAdapter24HForecast extends RecyclerView.Adapter<Recycle
     @Override
     public RecyclerViewAdapter24HForecast.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v =  LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.scroll_view_item_hours_weather, parent, false);
+                .inflate(R.layout.recycler_view_item_hours_weather, parent, false);
         RecyclerViewAdapter24HForecast.ViewHolder vh = new RecyclerViewAdapter24HForecast.ViewHolder(v);
         return vh;
     }
@@ -42,7 +42,7 @@ public class RecyclerViewAdapter24HForecast extends RecyclerView.Adapter<Recycle
     @Override
     public void onBindViewHolder(RecyclerViewAdapter24HForecast.ViewHolder holder, int position) {
         holder.myTemp.setText(mDataset[position][0]);
-        holder.myTime.setText(mDataset[position][1]);
+        //holder.myTime.setText(mDataset[position][1]);
         setWeatherIcon(mDataset[position][2], holder.myIcon);
     }
 

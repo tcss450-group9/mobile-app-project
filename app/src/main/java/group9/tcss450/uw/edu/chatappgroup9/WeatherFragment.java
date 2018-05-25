@@ -1,11 +1,13 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +52,7 @@ public class WeatherFragment extends Fragment{
     private long myLastAPICallTime;
     private SharedPreferences myPrefs;
     private RecyclerView my24HForecast;
+    private LinearLayout my5DayForecast;
 
     //Elements from the fragment_weather layout
     private ImageView myWeatherIcon;
@@ -85,6 +88,16 @@ public class WeatherFragment extends Fragment{
         myTimeDate = view.findViewById(R.id.landingTextViewDataTime);
         myCity = view.findViewById(R.id.landingTextViewCurrentLocation);
         myCurrentTemp = view.findViewById(R.id.landingTextViewFahrenheit);
+        FloatingActionButton fab = view.findViewById(R.id.weatherFloatingActionButtonMap);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(view.getContext(), MapActivity.class);
+                i.putExtra(MapActivity.LATITUDE, myLocation.getLatitude());
+                i.putExtra(MapActivity.LONGITUDE, myLocation.getLongitude());
+                startActivity(i);
+            }});
+
 
         my24HForecast = view.findViewById(R.id.recyclerViewWeather24HForecast);
 

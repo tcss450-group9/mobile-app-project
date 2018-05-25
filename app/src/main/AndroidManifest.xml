@@ -13,6 +13,10 @@
         android:roundIcon="@drawable/ic_project_icon_husky"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <activity
             android:name=".MainActivity"
             android:noHistory="true">
@@ -35,7 +39,9 @@
             android:exported="false" />
         <service
             android:name=".NotificationIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity android:name=".MapActivity"></activity>
     </application>
 
 </manifest>
