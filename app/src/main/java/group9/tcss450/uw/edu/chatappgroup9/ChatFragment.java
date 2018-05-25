@@ -44,6 +44,8 @@ public class ChatFragment extends Fragment implements AdapterView.OnItemSelected
     private RecyclerViewAdapterMessages myAdapterChat;
     private SharedPreferences prefs;
     private List<String> contacts = new ArrayList<>();
+    Spinner spinner;
+    private int check =0;
     /**
      *
      */
@@ -90,12 +92,8 @@ public class ChatFragment extends Fragment implements AdapterView.OnItemSelected
         getAllContacts(getString(R.string.ep_base_url), getString(R.string.ep_view_connections), prefs.getString(getString(R.string.keys_shared_prefs_username), "") );
         Log.d("Contacts", "onCreateView: " + contacts.size());
 
-        Spinner spinner = (Spinner)v.findViewById(R.id.chat_Fragment_Contacts_spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(),R.layout.recycler_view_item_chat_contacts,R.id.recycleview_item_textview_chat, contacts);
-        adapter.setDropDownViewResource(R.layout.recycler_view_item_chat_contacts);
+       spinner = (Spinner)v.findViewById(R.id.chat_Fragment_Contacts_spinner);
 
-        spinner.setOnItemSelectedListener(this);
-        spinner.setAdapter(adapter);
 
         return v;
     }
@@ -264,6 +262,9 @@ public class ChatFragment extends Fragment implements AdapterView.OnItemSelected
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        if(check++  <1) {
+            return;
+        }
         Log.d("gerer", "onSubmitClickForgot: here");
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
         String user = prefs.getString(getString(R.string.keys_shared_prefs_username), "");
@@ -273,14 +274,14 @@ public class ChatFragment extends Fragment implements AdapterView.OnItemSelected
         //build the JSON object
         JSONObject msg = new JSONObject();
         try {
-            msg.put("chatID",(prefs.getString("chatId","" )));
-            msg.put("memberID", ((TextView)view.findViewById(R.id.recycleViewItemchatUsername)).getText().toString());
+            msg.put("chatID",(prefs.getString(getString(R.string.keys_json_chat_id),"" )));
+            msg.put("username", ((TextView)view.findViewById(R.id.recycleview_item_textview_chat)).getText().toString());
 
         } catch (JSONException e) {
             Log.d("hello", "hello");
             e.printStackTrace();
         }
-        Log.d("whathehellarewesending", "onSubmitClickForgot: sending async"+ msg.toString());
+        Log.d("whathehellarewesending", "onSubmitClickForgot: sending async"+ msg.toString() + uri.toString());
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handleResetOnPost)
                 .onCancelled(this::handleError)
@@ -338,7 +339,7 @@ public void getAllContacts(String baseURL, String endPoint, String username) {
 
     private void handleGetAllContactsOnPost(String s) {
         JSONObject n = new JSONObject();
-
+        String temp = "here";
         JSONArray g = new JSONArray();
 
         try {
@@ -350,12 +351,22 @@ public void getAllContacts(String baseURL, String endPoint, String username) {
         }
         for (int i =0; i < g.length(); i++){
             try {
-                Log.d("adding", "handleGetAllContactsOnPost: " + g.getString(i).toString());
-                contacts.add(((JSONObject)g.get(i)).getString("username"));
+                temp = ((JSONObject)g.get(i)).getString("username");
+                Log.d("adding", "handleGetAllContactsOnPost: " + ((JSONObject)g.get(i)).getString("username")+ temp);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+                    contacts.add(temp);
         }
+        Log.d("Contacts", "onCreateView: " + contacts.size());
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(),R.layout.recycler_view_item_chat_contacts,R.id.recycleview_item_textview_chat, contacts);
+        adapter.setDropDownViewResource(R.layout.recycler_view_item_chat_contacts);
+
+        spinner.setOnItemSelectedListener(this);
+        spinner.setAdapter(adapter);
+        Log.d("hello", "onCreateView: " + adapter.getCount());
 
 
     }

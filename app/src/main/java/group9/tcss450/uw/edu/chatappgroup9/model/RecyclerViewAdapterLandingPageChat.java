@@ -1,5 +1,6 @@
 package group9.tcss450.uw.edu.chatappgroup9.model;
 
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,6 +55,8 @@ public class RecyclerViewAdapterLandingPageChat extends RecyclerView.Adapter<Rec
     public void onBindViewHolder(ViewHolder holder, int position) {
         targetChatId = myChatIds.get(position);
         holder.oneChatItem.setText("Chat ID " + targetChatId);
+
+
     }
 
     public void addData(String newMessage) {
