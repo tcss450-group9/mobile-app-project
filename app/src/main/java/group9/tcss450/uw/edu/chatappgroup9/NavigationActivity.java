@@ -196,15 +196,13 @@ public class NavigationActivity extends AppCompatActivity
         SharedPreferences sharedPreferences =
                 getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
-        sharedPreferences.edit().putBoolean(getString(R.string.keys_sp_on), false);
         // Check to see if the service should aleardy be running
-        if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
             //stop the service from the background
             NotificationIntentService.stopServiceAlarm(this);
             //restart but in the foreground
             NotificationIntentService.startServiceAlarm(this, true);
 
-        }
+
             Log.e(TAG, "NotificationIntentService stop");
         if (mDataUpdateReceiver == null) {
             mDataUpdateReceiver = new DataUpdateReciever();
@@ -219,16 +217,11 @@ public class NavigationActivity extends AppCompatActivity
         super.onPause();
         Log.e(TAG, "NotificationIntentService start");
 
-        SharedPreferences sharedPreferences =
-                getSharedPreferences(getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
-        sharedPreferences.edit().putBoolean(getString(R.string.keys_sp_on), true);
-        if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
             //stop the service from the foreground
             NotificationIntentService.stopServiceAlarm(this);
             //restart but in the background
             NotificationIntentService.startServiceAlarm(this, false);
-        }
+
 
 
         if (mDataUpdateReceiver != null){

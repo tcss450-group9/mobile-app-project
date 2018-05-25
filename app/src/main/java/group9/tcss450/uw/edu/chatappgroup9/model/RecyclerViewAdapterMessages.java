@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
@@ -25,6 +26,8 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
         public ImageView myOtherProfileImage;
         public TextView myMessage;
         public TextView myOtherUserMessage;
+        private TextView myMessageTime;
+        private TextView myOtherMessageTime;
         private LinearLayout myLeftLayout;
         private LinearLayout myRightLayout;
         public ViewHolder(View itemView) {
@@ -35,6 +38,8 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
             myOtherUserMessage = itemView.findViewById(R.id.recyCleViewItemOtherUserMessage);
             myLeftLayout = itemView.findViewById(R.id.recycleViewItemChatLeftLayout);
             myRightLayout = itemView.findViewById(R.id.recycleViewItemChatRightLayout);
+            myMessageTime = itemView.findViewById(R.id.recyclyViewItemUserMessagesTime);
+            myOtherMessageTime = itemView.findViewById(R.id.recycleViewItemOtherUserMessageTime);
         }
     }
 
@@ -75,6 +80,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
             if (data[0].equals(data[1])) {
                 holder.myLeftLayout.setVisibility(View.VISIBLE);
                 holder.myMessage.setText(data[2]);
+
             } else {
                 holder.myRightLayout.setVisibility(View.VISIBLE);
                 holder.myOtherUserMessage.setText(data[2]);

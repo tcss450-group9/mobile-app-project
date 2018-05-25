@@ -103,7 +103,7 @@ public class NotificationIntentService extends IntentService {
             }
             builder = new NotificationCompat.Builder(this, id);
 
-            intent = new Intent(this, MainActivity.class);
+            intent = new Intent(this, NavigationActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
@@ -127,7 +127,7 @@ public class NotificationIntentService extends IntentService {
 
             // Creates an Intent for the Activity
             Intent notifyIntent =
-                    new Intent(this, MainActivity.class);
+                    new Intent(this, NavigationActivity.class);
             Bundle bundle = new Bundle();
             notifyIntent.putExtra(getString(R.string.keys_extra_results), aMessage);
 
@@ -152,14 +152,13 @@ public class NotificationIntentService extends IntentService {
             // mId allows you to update the notification later on.
             mNotificationManager.notify(NOTIFY_ID, builder.build());
         }
-
-
     }
 
 
 
     /**
      * methods to handle the call to the webservice */
+    @SuppressLint("LongLogTag")
     private boolean checkWebservice(boolean isInForeground) {
         SharedPreferences pref = getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE );
         String memberId = pref.getString(getString(R.string.keys_shared_prefs_memberid), "-1");
@@ -177,11 +176,11 @@ public class NotificationIntentService extends IntentService {
         //go out and ask for new messages
         StringBuilder response = new StringBuilder();
 
-        String url = retrieve.toString() + "&after=" + pref.getString(getString(R.string.keys_prefs_time_stamp), "0");
-        Log.e(TAG, url);
+        String completeUrl = retrieve.toString() + "&after=" + pref.getString(getString(R.string.keys_prefs_time_stamp), "0");
+        Log.e(TAG, completeUrl);
         try {
 
-            URL urlObject = new URL(url);
+            URL urlObject = new URL(completeUrl);
             urlConnection = (HttpURLConnection) urlObject.openConnection();
             InputStream content = urlConnection.getInputStream();
             BufferedReader buffer = new BufferedReader(new InputStreamReader(content));

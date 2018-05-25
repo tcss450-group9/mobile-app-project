@@ -37,6 +37,15 @@
             android:background="@drawable/rouned_rect_shape"
             android:text="TextView" />
 
+        <TextView
+            android:id="@+id/recyclyViewItemUserMessagesTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="0"
+            android:text="TextView"
+            android:visibility="gone" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -46,6 +55,15 @@
         android:gravity="right"
         android:orientation="horizontal"
         android:visibility="gone">
+
+        <TextView
+            android:id="@+id/recycleViewItemOtherUserMessageTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="0"
+            android:text="TextView"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/recyCleViewItemOtherUserMessage"
@@ -68,6 +86,7 @@
             android:layout_weight="0"
             android:scaleX="-1"
             app:srcCompat="@drawable/ic_project_icon_husky" />
+
     </LinearLayout>
 
 

@@ -126,7 +126,7 @@ public class ChatFragment extends Fragment implements AdapterView.OnItemSelected
     private void handlechatOnPost(String s) {
         LandingFragment frag = new LandingFragment();
         prefs.edit().putString(getString(R.string.keys_json_chat_id), "1");
-        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, frag,getString( R.string.keys_landing_fragment_tag)).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, frag,getString( R.string.keys_landing_fragment_tag)).commit();
     }
 
 //    // TODO: Rename method, update argument and hook method into UI event
