@@ -176,11 +176,13 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
      */
     @Override
     public void chatItemOnClicked(String targetChatId) {
-//        Log.e(TAG, "targetChatId " + targetChatId);
+         Log.e(TAG, "targetChatId " + targetChatId);
         Fragment chatFrag = new ChatFragment();
         Bundle arg = new Bundle();
         arg.putString("TARGET_CHAT_ID", targetChatId);
         chatFrag.setArguments(arg);
+        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
+        prefs.edit().putString(getString(R.string.keys_json_chat_id), targetChatId).commit();
         loadChatFragment(chatFrag, getString(R.string.keys_chat_fragment_tag));
     }
 
