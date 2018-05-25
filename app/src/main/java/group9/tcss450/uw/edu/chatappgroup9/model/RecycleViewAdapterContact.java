@@ -34,6 +34,7 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
         public Switch viewRequestSwitch;
         public Context myContext;
         public SharedPreferences myPrefs;
+
         public ViewHolder(View itemView) {
             super(itemView);
             viewRequestSwitch = itemView.findViewById(R.id.contactsSwitchExisting);
@@ -61,7 +62,7 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
                     .appendQueryParameter("myUsername", myUsername)
                     .appendQueryParameter("friendUsername", myFriendUsername.getText().toString())
                     .build();
-            Log.d("RecyclerViewAdapterContact", uri.toString());
+            Log.d("RVAdapterContact", uri.toString());
 
             JSONObject request = new JSONObject();
             try {
@@ -70,7 +71,7 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
 
             }
             catch(JSONException e) {
-                Log.e("RecyclerViewAdapterContact", "Error building JSON: " + e.getMessage());
+                Log.e("RVAdapterContact", "Error building JSON: " + e.getMessage());
             }
 
             new SendPostAsyncTask.Builder(uri.toString(),request)
@@ -96,7 +97,7 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
                 }
             }
             catch(JSONException e) {
-                Log.e("RecyclerViewAdapterRequest/handleOnPostAccept",
+                Log.e("RVAdapterRequest",
                         "Error building JSON: " + e.getMessage());
             }
         }

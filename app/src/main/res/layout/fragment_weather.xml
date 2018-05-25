@@ -15,8 +15,8 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:background="@drawable/bottom_stroke_shape">
+        android:layout_marginTop="60dp">
+        <!--android:background="@drawable/bottom_stroke_shape"-->
 
         <TextView
             android:id="@+id/landingTextViewCurrentLocation"
@@ -70,22 +70,13 @@
             app:layout_constraintHorizontal_bias="0.252"
             app:layout_constraintStart_toEndOf="@+id/weatherImageViewCurrentWeatherIcon"
             app:layout_constraintTop_toTopOf="parent" />
+
     </android.support.constraint.ConstraintLayout>
 
-    <HorizontalScrollView
-        android:id="@+id/weatherScrollViewHoursWeather"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewWeather24HForecast"
         android:layout_width="match_parent"
-        android:layout_height="113dp"
-        android:background="@drawable/bottom_stroke_shape">
-
-        <LinearLayout
-            android:id="@+id/weatherScrollViewLayoutHoursWeather"
-            android:layout_width="wrap_content"
-            android:layout_height="185dp"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="164dp"
-            tools:layout_editor_absoluteY="0dp" />
-    </HorizontalScrollView>
+        android:layout_height="match_parent" />
 
     <ScrollView
         android:id="@+id/weatherScrollViewDaysWeather"
@@ -95,7 +86,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical">
+
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

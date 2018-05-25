@@ -7,6 +7,8 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +18,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapter24HForecast;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendGetAsyncTask;
 
 
@@ -38,8 +46,10 @@ public class WeatherFragment extends Fragment{
     private String myLongitude;
     private String myLatitude;
     private JSONObject myLastWeatherUpdate;
+    private JSONObject myLastWeather24HForecast;
     private long myLastAPICallTime;
     private SharedPreferences myPrefs;
+    private RecyclerView my24HForecast;
 
     //Elements from the fragment_weather layout
     private ImageView myWeatherIcon;
@@ -70,24 +80,27 @@ public class WeatherFragment extends Fragment{
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
+
         myWeatherIcon = view.findViewById(R.id.weatherImageViewCurrentWeatherIcon);
         myTimeDate = view.findViewById(R.id.landingTextViewDataTime);
         myCity = view.findViewById(R.id.landingTextViewCurrentLocation);
         myCurrentTemp = view.findViewById(R.id.landingTextViewFahrenheit);
 
-        View hoursWeatherView = inflater.inflate(R.layout.scroll_view_item_hours_weather, container, false);
-        TextView time = hoursWeatherView.findViewById(R.id.scrollViewItemTextViewTime);
-        ImageView weatherIcon = hoursWeatherView.findViewById(R.id.scrollViewItemImageViewWeatherIcon);
-
-        LinearLayout linearLayout = view.findViewById(R.id.weatherScrollViewLayoutHoursWeather);
-        linearLayout.addView(hoursWeatherView);
+        my24HForecast = view.findViewById(R.id.recyclerViewWeather24HForecast);
 
         myActivity.displayClockThread(myTimeDate);
         resetWeatherUI();
-
-//        time.setText("7 PM");
-//        linearLayout.addView(hoursWeatherView);
+        get24HourForecast();
         return view;
+    }
+
+    private void init24HForecastRecyclerView(String[][] dataSet) {
+        LinearLayoutManager lm = new LinearLayoutManager(myActivity,
+                LinearLayoutManager.HORIZONTAL, false);
+        RecyclerViewAdapter24HForecast adapter = new RecyclerViewAdapter24HForecast(dataSet);
+        my24HForecast.setLayoutManager(lm);
+        my24HForecast.setHasFixedSize(true);
+        my24HForecast.setAdapter(adapter);
     }
 
     /**
@@ -98,7 +111,6 @@ public class WeatherFragment extends Fragment{
      * The response containing the most recent weather update is stored in variable myLastWeatherUpdate
      */
     public void getWeatherByLocation() {
-        JSONObject response;
         Uri uri = new Uri.Builder().scheme("https")
                 .appendPath(getString(R.string.ep_weather_base_url))
                 .appendPath(getString(R.string.ep_weather_data))
@@ -151,7 +163,7 @@ public class WeatherFragment extends Fragment{
     public void resetWeatherUI() {
         long current = System.currentTimeMillis();
         Log.d(TAG, String.valueOf(current - myLastAPICallTime));
-        boolean okToCall = (current - myLastAPICallTime) > 61000;
+        boolean okToCall = (current - myLastAPICallTime) > 601000;
         if(okToCall) {
             Log.d(TAG, "Last API call >10 mins ago. Safe to call again.");
             getWeatherByLocation();
@@ -267,6 +279,63 @@ public class WeatherFragment extends Fragment{
         double tempKelv = Double.parseDouble(tempIn);
         tempKelv = (tempKelv * 9.0 / 5.0) - 459.67;
         int tempFahr = (int) tempKelv;
-        return String.valueOf(tempFahr);
+        return String.valueOf(tempFahr) + " F";
+    }
+
+    private void populateHourlyForecast(LinearLayout holder) {
+
+    }
+
+    private void get24HourForecast() {
+        Uri uri = new Uri.Builder().scheme("https")
+                .appendPath(getString(R.string.ep_weather_base_url))
+                .appendPath(getString(R.string.ep_weather_data))
+                .appendPath(getString(R.string.ep_weather_version))
+                .appendPath(getString(R.string.ep_weather_forecast))
+                .appendQueryParameter("lat", myLatitude)
+                .appendQueryParameter("lon", myLongitude)
+                .appendQueryParameter(getString(R.string.ep_weather_appkey_parameter),
+                        getString(R.string.ep_weather_api_key))
+                .build();
+        Log.d(TAG,uri.toString());
+        new SendGetAsyncTask.Builder(uri.toString())
+                .onPostExecute(this::handleGet24HForecastOnPost)
+                .build().execute();
+    }
+
+    public void handleGet24HForecastOnPost(String response) {
+        Log.d(TAG, response);
+        try {
+            myLastWeather24HForecast = new JSONObject(response);
+            Log.d(TAG, myLastWeather24HForecast.toString());
+            JSONArray list = myLastWeather24HForecast.getJSONArray("list");
+            JSONObject curr;
+            JSONObject currMember;
+            Log.d("List Length", String.valueOf(list.length()));
+            String[][] adapterData = new String[list.length()][3];
+            for(int i = 0; i < list.length(); i++) {
+                //format the forecast data for the recyclerView adapter
+                curr = (JSONObject) list.get(i);
+                currMember = curr.getJSONObject("main");
+                //Get temperature
+                adapterData[i][0] = convKelvinToFahrenheit(currMember.getString("temp"));
+                //Get time
+                Log.d(TAG, String.valueOf(curr.getLong("dt")));
+                adapterData[i][1] = getDateTime(curr.getLong("dt"));
+                //Get icon
+                currMember = (JSONObject) curr.getJSONArray("weather").get(0);
+                adapterData[i][2] = currMember.getString("icon");
+            }
+            init24HForecastRecyclerView(adapterData);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getDateTime(long millis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("hha");
+        return sdf.format(millis);
     }
 }

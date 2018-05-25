@@ -44,4 +44,5 @@
     <string name="ep_accuweather_search">search</string>
     <string name="ep_accuweather_hourly">hourly</string>
     <string name="ep_accuweather_12h">12hour</string>
+    <string name="ep_accuweather_api_key">4bPgGxvtmA2xe711Zf8BGTRlpm6glwwU</string>
 </resources>

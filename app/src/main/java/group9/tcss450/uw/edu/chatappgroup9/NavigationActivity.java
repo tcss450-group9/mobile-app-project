@@ -42,6 +42,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecycleViewAdapterContact;
@@ -651,7 +652,7 @@ public class NavigationActivity extends AppCompatActivity
 
             }
             else {
-                //TODO This is causing a fatal exception on response success=false. Cannot set adapter to null
+                //This is causing a fatal exception on response success=false. Cannot set adapter to null
                 ((RecycleViewAdapterContact) recyclerView.getAdapter()).setAdapterDataSet(null);
             }
         }
