@@ -197,11 +197,11 @@ public class NavigationActivity extends AppCompatActivity
         SharedPreferences sharedPreferences =
                 getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
-        // Check to see if the service should aleardy be running
-            //stop the service from the background
-            NotificationIntentService.stopServiceAlarm(this);
-            //restart but in the foreground
-            NotificationIntentService.startServiceAlarm(this, true);
+//        // Check to see if the service should aleardy be running
+//            //stop the service from the background
+//            NotificationIntentService.stopServiceAlarm(this);
+//            //restart but in the foreground
+//            NotificationIntentService.startServiceAlarm(this, true);
 
 
             Log.e(TAG, "NotificationIntentService stop");
@@ -216,13 +216,13 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e(TAG, "NotificationIntentService start");
-
-            //stop the service from the foreground
-            NotificationIntentService.stopServiceAlarm(this);
-            //restart but in the background
-            NotificationIntentService.startServiceAlarm(this, false);
-
+//        Log.e(TAG, "NotificationIntentService start");
+//
+//            //stop the service from the foreground
+//            NotificationIntentService.stopServiceAlarm(this);
+//            //restart but in the background
+//            NotificationIntentService.startServiceAlarm(this, false);
+//
 
 
         if (mDataUpdateReceiver != null){
