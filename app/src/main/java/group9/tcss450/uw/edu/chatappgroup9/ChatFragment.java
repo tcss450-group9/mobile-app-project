@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -93,9 +94,39 @@ public class ChatFragment extends Fragment implements AdapterView.OnItemSelected
         Log.d("Contacts", "onCreateView: " + contacts.size());
 
        spinner = (Spinner)v.findViewById(R.id.chat_Fragment_Contacts_spinner);
-
+       Button b = (Button) v.findViewById(R.id.Chat_Frag_leaveChat);
+       b.setOnClickListener(this::onClick);
 
         return v;
+    }
+    public void onClick(View view){
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_leaveChat)).build();
+
+        //build the JSON object
+        JSONObject msg = new JSONObject();
+        prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),Context.MODE_PRIVATE );
+
+        try {
+            msg.put("chatID",(prefs.getString(getString(R.string.keys_json_chat_id),"" )));
+            msg.put("username", prefs.getString(getString(R.string.keys_shared_prefs_username), ""));
+
+        } catch (JSONException e) {
+            Log.d("hello", "hello");
+            e.printStackTrace();
+        }
+        Log.d("whathehellarewesending", "onSubmitClickForgot: sending async"+ msg.toString() + uri.toString());
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handlechatOnPost)
+                .onCancelled(this::handleError)
+                .build().execute();
+
+    }
+
+    private void handlechatOnPost(String s) {
+        LandingFragment frag = new LandingFragment();
+        prefs.edit().putString(getString(R.string.keys_json_chat_id), "1");
+        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, frag,getString( R.string.keys_landing_fragment_tag)).commit();
     }
 
 //    // TODO: Rename method, update argument and hook method into UI event
