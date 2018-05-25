@@ -29,7 +29,7 @@
     <string name="keys_weather_fragment_tag">WeatherFragmentTag</string>
     <string name="keys_prefs_stay_logged_in">loggedIn</string>
     <string name="keys_prefs_time_stamp">ts key</string>
-    <string name="keys_new_contact_fragment_tag">ContactFragmentNew</string>
+    <string name="keys_new_contact_fragment_tag">FriendsFragment</string>
 
     <string name="keys_fragment_login">loginFragmentTag</string>
     <string name="keys_fragment_register">registerFragmentTag</string>
@@ -49,5 +49,10 @@
     <string name="keys_json_send_message_chat_id">chatId</string>
     <string name="keys_json_chat_member_username_a">chatMemberUserNameA</string>
     <string name="keys_json_chat_member_username_b">chatMemberUserNameB</string>
+
+    <string name="keys_sp_on">true</string>
+    <string name="keys_extra_results">results</string>
+    <string name="keys_is_foreground">FOREGROUND</string>
+
 
 </resources>

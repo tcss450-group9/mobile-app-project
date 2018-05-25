@@ -173,7 +173,7 @@ public class ListenManager {
                 String getURL = mURL;
                 //add the timestamp to the URL
                 getURL += "&after=" + mDate;
-
+                Log.e("Listener manager", getURL);
                 URL urlObject = new URL(getURL);
                 urlConnection = (HttpURLConnection) urlObject.openConnection();
                 InputStream content = urlConnection.getInputStream();

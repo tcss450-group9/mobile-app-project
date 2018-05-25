@@ -264,7 +264,7 @@ public class ChatFragment extends Fragment implements AdapterView.OnItemSelected
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        Log.d("gerer", "onSubmitClickForgot: here");
+        Log.e("gerer", "onSubmitClickForgot: here");
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
         String user = prefs.getString(getString(R.string.keys_shared_prefs_username), "");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
@@ -359,6 +359,12 @@ public void getAllContacts(String baseURL, String endPoint, String username) {
 
 
     }
+
+
+
+
+
+
 
 
 }

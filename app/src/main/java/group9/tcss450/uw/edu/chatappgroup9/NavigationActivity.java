@@ -2,8 +2,10 @@ package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -24,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,6 +83,8 @@ public class NavigationActivity extends AppCompatActivity
     private static final int MY_PERMISSIONS_LOCATIONS = 814;
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
+
+    private DataUpdateReciever mDataUpdateReceiver;
 
 
     @SuppressLint("RestrictedApi")
@@ -159,20 +164,20 @@ public class NavigationActivity extends AppCompatActivity
 
         mLocationRequest = new LocationRequest();
 
-// Sets the desired interval for active location updates. This interval is
-// inexact. You may not receive updates at all if no location sources are available, or
-// you may receive them slower than requested. You may also receive updates faster than
-// requested if other applications are requesting location at a faster interval.
+        // Sets the desired interval for active location updates. This interval is
+        // inexact. You may not receive updates at all if no location sources are available, or
+        // you may receive them slower than requested. You may also receive updates faster than
+        // requested if other applications are requesting location at a faster interval.
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
 
-// Sets the fastest rate for active location updates. This interval is exact, and your
-// application will never receive updates faster than this value.
+        // Sets the fastest rate for active location updates. This interval is exact, and your
+        // application will never receive updates faster than this value.
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
 
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
 
-
+        startService(new Intent(this, NotificationIntentService.class));
 
     }
 
@@ -182,7 +187,53 @@ public class NavigationActivity extends AppCompatActivity
             mGoogleApiClient.connect();
         }
         super.onStart();
-        attemptToGetFriendList();
+    }
+
+    /**, edit onPause and onResume to start and stop the service in the “background” or “foreground”:**/
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(getString(R.string.keys_sp_on), false);
+        // Check to see if the service should aleardy be running
+        if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
+            //stop the service from the background
+            NotificationIntentService.stopServiceAlarm(this);
+            //restart but in the foreground
+            NotificationIntentService.startServiceAlarm(this, true);
+
+        }
+            Log.e(TAG, "NotificationIntentService stop");
+        if (mDataUpdateReceiver == null) {
+            mDataUpdateReceiver = new DataUpdateReciever();
+        }
+        IntentFilter iFilter = new IntentFilter(NotificationIntentService.RECEIVED_UPDATE);
+        registerReceiver(mDataUpdateReceiver, iFilter);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e(TAG, "NotificationIntentService start");
+
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(getString(R.string.keys_sp_on), true);
+        if (sharedPreferences.getBoolean(getString(R.string.keys_sp_on), false)) {
+            //stop the service from the foreground
+            NotificationIntentService.stopServiceAlarm(this);
+            //restart but in the background
+            NotificationIntentService.startServiceAlarm(this, false);
+        }
+
+
+        if (mDataUpdateReceiver != null){
+            unregisterReceiver(mDataUpdateReceiver);
+        }
     }
 
     @Override
@@ -397,7 +448,8 @@ public class NavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_weather) {
             loadFragment(new WeatherFragment(), getString(R.string.keys_weather_fragment_tag));
         } else if (id ==R.id.nav_friends) {
-            loadFriendsFragment();
+            attemptToGetFriendList();
+//            loadFriendsFragment();
         } else if (id == R.id.nav_logout) {
             onLogout();
         }
@@ -748,14 +800,15 @@ public class NavigationActivity extends AppCompatActivity
                 JSONArray contactArray = responseAsJSON
                         .getJSONArray(getString(R.string.keys_json_contacts));
                 myContactList = contactsJsonArrayToList(contactArray);
-                Log.d("Load Contact Fragment","handleGetFriendListOnPost success " + myContactList.toString());
+                Log.d(TAG,"handleGetFriendListOnPost success " + myContactList.toString());
+                loadFriendsFragment();
             }
             else {
-                Log.e("NavigationActivity", "Unable to get friend list: ");
+                Log.e(TAG, "Unable to get friend list: ");
             }
         }
         catch (JSONException e) {
-            Log.e("NavigationActivity", "Unable to build JSON: " + e.getMessage());
+            Log.e(TAG, "Unable to build JSON: " + e.getMessage());
         }
     }
 
@@ -804,5 +857,17 @@ public class NavigationActivity extends AppCompatActivity
             }
         };
         t.start();
+    }
+    /**-----------------------------------------------------------------------------------------**/
+    /**
+     * an inner class that will be a Broadcast Receiver for messages from the service
+     */
+    private class DataUpdateReciever extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(NotificationIntentService.RECEIVED_UPDATE)) {
+                Log.d(TAG, "hey I just got your broadcast!");
+            }
+        }
     }
 }
