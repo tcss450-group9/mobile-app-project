@@ -102,7 +102,7 @@ public class NavigationActivity extends AppCompatActivity
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View view) {
+//            public void leaveButtonOnClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
 //            }
@@ -202,12 +202,12 @@ public class NavigationActivity extends AppCompatActivity
 //            NotificationIntentService.startServiceAlarm(this, true);
 
 
-            Log.e(TAG, "NotificationIntentService stop");
-        if (mDataUpdateReceiver == null) {
-            mDataUpdateReceiver = new DataUpdateReciever();
-        }
-        IntentFilter iFilter = new IntentFilter(NotificationIntentService.RECEIVED_UPDATE);
-        registerReceiver(mDataUpdateReceiver, iFilter);
+//            Log.e(TAG, "NotificationIntentService stop");
+//        if (mDataUpdateReceiver == null) {
+//            mDataUpdateReceiver = new DataUpdateReciever();
+//        }
+//        IntentFilter iFilter = new IntentFilter(NotificationIntentService.RECEIVED_UPDATE);
+//        registerReceiver(mDataUpdateReceiver, iFilter);
 
     }
 
@@ -223,9 +223,9 @@ public class NavigationActivity extends AppCompatActivity
 //
 
 
-        if (mDataUpdateReceiver != null){
-            unregisterReceiver(mDataUpdateReceiver);
-        }
+//        if (mDataUpdateReceiver != null){
+//            unregisterReceiver(mDataUpdateReceiver);
+//        }
     }
 
     @Override

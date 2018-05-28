@@ -89,7 +89,7 @@ public class ForgotPasswordFragment extends Fragment {
         ResetFragment frag  = new ResetFragment();
 
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, frag, "frag")
+                .replace(R.id.fragmentContainer, frag, null)
                 .addToBackStack(null)
                 .commit();
         ((EditText) getView().findViewById(R.id.Forgot_password_Editext))
@@ -164,7 +164,7 @@ public class ForgotPasswordFragment extends Fragment {
         if (mListener != null) {
             switch (view.getId()) {
                 case R.id.Password_Reset_Submit:
-                    Log.d("here", "onClick: here");
+                    Log.d("here", "leaveButtonOnClick: here");
                     onSubmitClickForgot(view);
 
                     break;

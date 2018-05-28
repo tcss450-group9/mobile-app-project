@@ -38,6 +38,7 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
     private String myFriendUsername;
     private String myMemberId;
     private String myFriendMemberId;
+    private ArrayList<String> myContactsList;
 
     public FriendsFragment() {
         // Required empty public constructor
@@ -50,16 +51,15 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
 
-        ArrayList<String> contactsList = null;
         Bundle bunbdle = getArguments();
         Log.e(TAG, "RecyclerViewAdapterFriends bunbdle = " + bunbdle);
         if (bunbdle != null) {
-            contactsList = bunbdle.getStringArrayList("CONTACTS_ID_USERNAME");
+            myContactsList = bunbdle.getStringArrayList("CONTACTS_ID_USERNAME");
         }
         myFriendsRecyclerView = view.findViewById(R.id.friendsRecyclerViewContacts);
         myFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        Log.e(TAG, "RecyclerViewAdapterFriends contactsList = " + contactsList);
-        RecyclerViewAdapterFriends adapter = new RecyclerViewAdapterFriends(contactsList);
+//        Log.e(TAG, "RecyclerViewAdapterFriends myContactsList = " + myContactsList);
+        RecyclerViewAdapterFriends adapter = new RecyclerViewAdapterFriends(myContactsList);
 //        Log.e(TAG, "RecyclerViewAdapterFriends = " + adapter);
         myFriendsRecyclerView.setAdapter(adapter);
         adapter.setItemClickedListener(this);
@@ -146,7 +146,6 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
                 Log.e(TAG, "Get new chat id fail");
             }
 
-
         } catch (JSONException e) {
             Log.e(TAG, "JSON Parse Error" + e.getMessage());
         }
@@ -203,11 +202,16 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
         }
     }
 
+    /**
+     * load a new chat fragment using the targetChatId.
+     * @param targetChatId
+     */
     private void loadChatFragment(String targetChatId) {
-        Fragment chatFrag = new ChatFragment();
+        Fragment chatFrag = new ChatFragmentV2();
         Bundle arg = new Bundle();
         arg.putString("TARGET_CHAT_ID", targetChatId);
         arg.putString("TARGET_USERNAME", myFriendUsername);
+        arg.putStringArrayList("CONTACTS_ID_USERNAME", myContactsList);
         chatFrag.setArguments(arg);
 
         Log.e(TAG, "loadChatFragment");

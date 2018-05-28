@@ -103,23 +103,25 @@ public class ResetFragment extends Fragment {
         String user = prefs.getString(getString(R.string.keys_shared_prefs_username), "");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_change_password1)).build();
-        EditText password3 = getActivity().findViewById(R.id.Reset_Password_NewPassword1);
+        EditText password1 = getActivity().findViewById(R.id.Reset_Password_NewPassword1);
         EditText password2 = getActivity().findViewById(R.id.Reset_Password_NewPassword2);
-        String password = password3.getText().toString();
+        String password = password1.getText().toString();
         String confirmPassword = password2.getText().toString();
         Boolean result = true;
+
+        //TODO match password requirement!
         if (!password.equals(confirmPassword)) {
             result = false;
             password2.setError(PASSWORD_NOT_MATCH);
-            password3.setError(PASSWORD_NOT_MATCH);
+            password1.setError(PASSWORD_NOT_MATCH);
         } else if (password.length() < MIN_LENGTH_USERNAME_PASSWORD) {
             result = false;
             password2.setError(PASSWORD_TOO_SHORT);
-            password3.setError(PASSWORD_TOO_SHORT);
+            password1.setError(PASSWORD_TOO_SHORT);
         } else if (!InputVerificationTool.isPassword(password)) {
             result = false;
             password2.setError(PASSWORD_TOO_SIMPLE);
-            password3.setError(PASSWORD_TOO_SIMPLE);
+            password1.setError(PASSWORD_TOO_SIMPLE);
         }
         //build the JSON object
         if(result) {

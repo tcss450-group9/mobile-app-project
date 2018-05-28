@@ -208,6 +208,7 @@ public class ListenManager {
     }
 
     private class ListenForLandingPageChat implements Runnable {
+        private String TAG = "ListenForLandingPageChat";
 
         @Override
         public void run() {
@@ -229,7 +230,7 @@ public class ListenManager {
                 while ((s = buffer.readLine()) != null) {
                     response.append(s);
                 }
-                Log.d("we here", "run: we in this bitch " + response.toString());
+                Log.d(TAG, "run " + response.toString());
 
                 JSONObject messages = new JSONObject(response.toString());
                 Log.d("we in this", "run: "+ messages.toString());

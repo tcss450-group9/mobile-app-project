@@ -24,7 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterMessages;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
@@ -37,26 +36,26 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 // * {@link ChatFragment.OnFragmentInteractionListener} interface
 // * to handle interaction events.
 // */
-public class ChatFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelectedListener {
     private String myUsername;
     private String mySendUrl;
     private ListenManager myListenManager;
     private RecyclerView myRecyclerView;
     private RecyclerViewAdapterMessages myAdapterChat;
     private SharedPreferences prefs;
-    private List<String> contacts = new ArrayList<>();
-    Spinner spinner;
-    private int check = 0;
+    private ArrayList<String> myContactsList;
+    private ArrayList<String> myContactsUserNameList;
+    private Spinner mySpinner;
     /**
      *
      */
     private String myTargetChatId;
     private String myTargetUsername;
-    private final String TAG = "Chat Fragment";
+    private final String TAG = "Chat FragmentV2";
 
 //    private OnFragmentInteractionListener myListener;
 
-    public ChatFragment() {
+    public ChatFragmentV2() {
         // Required empty public constructor
     }
 
@@ -86,18 +85,45 @@ public class ChatFragment extends Fragment implements AdapterView.OnItemSelected
         } else {
             myTargetChatId = getArguments().getString("TARGET_CHAT_ID");
             myTargetUsername = getArguments().getString("TARGET_USERNAME");
+            myContactsList = getArguments().getStringArrayList("CONTACTS_ID_USERNAME");
             chattingWith.setText("Chatting with " + myTargetUsername + " Chat ID " + myTargetChatId);
             Log.e(TAG, "current TARGET_CHAT_ID : " + myTargetChatId);
         }
-        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
-        getAllContacts(getString(R.string.ep_base_url), getString(R.string.ep_view_connections), prefs.getString(getString(R.string.keys_shared_prefs_username), ""));
-        Log.d("Contacts", "onCreateView: " + contacts.size());
 
-        spinner = (Spinner) v.findViewById(R.id.chatSpinnerFriends);
-        Button b = (Button) v.findViewById(R.id.chatButtonLeave);
+        Log.d("Contacts", "onCreateView: ");
+
+        mySpinner = v.findViewById(R.id.chatSpinnerFriends);
+        setUpSpinner();
+        Button b =  v.findViewById(R.id.chatButtonLeave);
         b.setOnClickListener(this::leaveButtonOnClick);
 
         return v;
+    }
+
+
+    private void setUpSpinner() {
+        ArrayList<String> usernameList = splitContactList(myContactsList);
+        ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_item_contact,
+                R.id.spinnerItemTextViewUsername, usernameList);
+        adapter.setDropDownViewResource(R.layout.spinner_item_contact);
+
+        mySpinner.setOnItemSelectedListener(this);
+        mySpinner.setAdapter(adapter);
+    }
+    /**
+     * Extras the all the user names from the list and return.
+     * @param theList
+     * @return
+     */
+    private ArrayList<String> splitContactList(ArrayList<String> theList) {
+        ArrayList<String> usernameList = new ArrayList<>();
+        if (theList != null) {
+            for (int i = 0; i < theList.size(); i++) {
+                String[] idUsername = theList.get(i).split(":");
+                usernameList.add(idUsername[1]);
+            }
+        }
+        return usernameList;
     }
 
     public void leaveButtonOnClick(View view) {
@@ -109,14 +135,14 @@ public class ChatFragment extends Fragment implements AdapterView.OnItemSelected
         prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
 
         try {
-            msg.put("chatID", (prefs.getString(getString(R.string.keys_json_chat_id), "")));
-            msg.put("username", prefs.getString(getString(R.string.keys_shared_prefs_username), ""));
+            msg.put("chatID", myTargetChatId);
+            msg.put("username", myUsername);
 
         } catch (JSONException e) {
             Log.d("hello", "hello");
             e.printStackTrace();
         }
-        Log.d("whathehellarewesending", "onSubmitClickForgot: sending async" + msg.toString() + uri.toString());
+        Log.d(TAG, "leaveButtonOnClick: sending async" + msg.toString() + uri.toString());
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handlechatOnPost)
                 .onCancelled(this::handleError)
@@ -271,26 +297,27 @@ public class ChatFragment extends Fragment implements AdapterView.OnItemSelected
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        if (check++ < 1) {
+        if (adapterView.getCount() < 1) {
             return;
         }
-        Log.d("gerer", "onSubmitClickForgot: here");
-        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
-        String user = prefs.getString(getString(R.string.keys_shared_prefs_username), "");
+        Log.e(TAG, "onItemSelected");
+        //get the corresponding username in i index.
+        String contactUsername = (String)adapterView.getAdapter().getItem(i);
+        Log.e(TAG, "contactUsername = " + contactUsername);
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_addToChat)).build();
 
         //build the JSON object
         JSONObject msg = new JSONObject();
         try {
-            msg.put("chatID", (prefs.getString(getString(R.string.keys_json_chat_id), "")));
-            msg.put("username", ((TextView) view.findViewById(R.id.recycleview_item_textview_chat)).getText().toString());
+            msg.put("chatID", myTargetChatId);
+            msg.put("username", contactUsername);
 
         } catch (JSONException e) {
-            Log.d("hello", "hello");
+            Log.e(TAG, "JSON parse error " + e.getMessage());
             e.printStackTrace();
         }
-        Log.d("whathehellarewesending", "onSubmitClickForgot: sending async" + msg.toString() + uri.toString());
+        Log.e(TAG, "onItemSelected: sending async " + msg.toString() + uri.toString());
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handleResetOnPost)
                 .onCancelled(this::handleError)
@@ -306,63 +333,4 @@ public class ChatFragment extends Fragment implements AdapterView.OnItemSelected
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
-
-
-    public void getAllContacts(String baseURL, String endPoint, String username) {
-        Log.d("Load Contact Fragment", "Top of getAllContacts");
-        JSONArray contacts = new JSONArray(); //This is never populated and is returned empty. Perhaps change this function to void?
-        JSONObject unObject = new JSONObject();
-        try {
-            unObject.put("username", username);
-        } catch (JSONException e) {
-            Log.e("GETALLCONTACTS", "Error building username JSONObject: " + e.getMessage());
-        }
-
-        Uri uri = new Uri.Builder()
-                .scheme("https")
-                .appendPath(baseURL)
-                .appendPath(endPoint)
-                .appendQueryParameter("username", username)
-                .build();
-        Log.d("Load Contact Fragment", uri.toString());
-        new SendPostAsyncTask.Builder(uri.toString(), unObject)
-                .onPostExecute(this::handleGetAllContactsOnPost)
-                .build().execute();
-        Log.d("Load Contact Fragment", "Bottom of getAllContacts");
-    }
-
-    private void handleGetAllContactsOnPost(String result) {
-        String temp = "";
-        JSONArray resultArray = new JSONArray();
-
-        try {
-            JSONObject resultJson = new JSONObject(result);
-            resultArray = resultJson.getJSONArray("contacts");
-            Log.d("JSON return", "handleGetAllContactsOnPost: " + resultArray.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < resultArray.length(); i++) {
-            try {
-                temp = ((JSONObject) resultArray.get(i)).getString("username");
-                Log.d("adding", "handleGetAllContactsOnPost: " + ((JSONObject) resultArray.get(i)).getString("username") + temp);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            contacts.add(temp);
-        }
-        Log.d("Contacts", "onCreateView: " + contacts.size());
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), R.layout.recycler_view_item_chat_contacts, R.id.recycleview_item_textview_chat, contacts);
-        adapter.setDropDownViewResource(R.layout.recycler_view_item_chat_contacts);
-
-        spinner.setOnItemSelectedListener(this);
-        spinner.setAdapter(adapter);
-        Log.d("hello", "onCreateView: " + adapter.getCount());
-
-
-    }
-
-
 }
