@@ -68,7 +68,7 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_chat, container, false);
+        View v = inflater.inflate(R.layout.fragment_chat_v2, container, false);
 
         v.findViewById(R.id.chatSendButton).setOnClickListener(this::sendMessage);
         myRecyclerView = v.findViewById(R.id.chatRecyclerViewAllMessages);
@@ -90,8 +90,6 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
             Log.e(TAG, "current TARGET_CHAT_ID : " + myTargetChatId);
         }
 
-        Log.d("Contacts", "onCreateView: ");
-
         mySpinner = v.findViewById(R.id.chatSpinnerFriends);
         setUpSpinner();
         Button b =  v.findViewById(R.id.chatButtonLeave);
@@ -110,6 +108,7 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         mySpinner.setOnItemSelectedListener(this);
         mySpinner.setAdapter(adapter);
     }
+
     /**
      * Extras the all the user names from the list and return.
      * @param theList
@@ -152,7 +151,6 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
 
     private void handlechatOnPost(String s) {
         LandingFragment frag = new LandingFragment();
-        prefs.edit().putString(getString(R.string.keys_json_chat_id), "1");
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, frag, getString(R.string.keys_landing_fragment_tag)).commit();
     }
 
@@ -222,9 +220,12 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
     }
 
 
+    /**
+     * getting messages from server
+     * @param messages
+     */
     private void publishProgress(JSONObject messages) {
         final String[] msgs;
-        int currentMsgsLength;
         if (messages.has(getString(R.string.keys_json_messages))) {
             try {
 

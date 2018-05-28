@@ -177,7 +177,7 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
     @Override
     public void chatItemOnClicked(String targetChatId) {
          Log.e(TAG, "targetChatId " + targetChatId);
-        Fragment chatFrag = new ChatFragment();
+        Fragment chatFrag = new ChatFragmentV2();
         Bundle arg = new Bundle();
         arg.putString("TARGET_CHAT_ID", targetChatId);
         chatFrag.setArguments(arg);

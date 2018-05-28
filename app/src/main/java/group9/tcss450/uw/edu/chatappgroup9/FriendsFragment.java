@@ -101,6 +101,8 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
             myFriendMemberId = strings[0];
             myFriendUsername =strings[1];
 
+            Log.e(TAG, "friendItemLayoutOnClicked: myFriendMemberId = " + myFriendMemberId +
+                     " myFriendUsername: "+ myFriendUsername );
             getNewChatId(myUsername, myFriendUsername);
         }
     }
@@ -117,8 +119,8 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
                 .build();
         JSONObject chatNameJson = new JSONObject();
         try {
-            chatNameJson.put(getString(R.string.keys_json_chat_member_a), chatMemberB);
-            chatNameJson.put(getString(R.string.keys_json_chat_member_b), chatMemberA);
+            chatNameJson.put(getString(R.string.keys_json_chat_member_a), chatMemberA);
+            chatNameJson.put(getString(R.string.keys_json_chat_member_b), chatMemberB);
         } catch (JSONException e) {
             Log.e(TAG, "JSON Parse Error" + e.getMessage());
         }
@@ -140,8 +142,6 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
             if (success) {
                 myChatId = resultJson.getString(getString(R.string.keys_json_chatid));
                 createNewChatSession(myChatId, myMemberId, myFriendMemberId);
-
-                Log.e(TAG, "Got new chat id " + myChatId);
             } else {
                 Log.e(TAG, "Get new chat id fail");
             }
@@ -165,7 +165,7 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
                 .appendPath(getString(R.string.ep_create_chat_session))
                 .build();
         JSONObject magsJson = new JSONObject();
-        Log.e(TAG, "createNewChatSession " + chatId);
+        Log.e(TAG, "createNewChatSession " + chatId + " URL: " + uri.toString());
         try {
             magsJson.put(getString(R.string.keys_json_chatid), chatId);
             magsJson.put(getString(R.string.keys_json_chat_member_a), memberIdA);
@@ -174,6 +174,8 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
             Log.e(TAG, "JSON Parse Error" + e.getMessage());
         }
 
+        //TODO return exist chat id but still insert memberIdB to the database
+        Log.e(TAG, "createNewChatSession " + chatId + " magsJson: " + magsJson.toString());
         new SendPostAsyncTask.Builder(uri.toString(), magsJson)
                 .onPostExecute(this::startChatting)
                 .build().execute();
@@ -193,6 +195,7 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
                 String chatid = jsonObject.getString(getString(R.string.keys_json_chatid));
                 loadChatFragment(chatid);
                 Log.e(TAG, "start chatting with chat id" + chatid);
+                Log.e(TAG, "start chatting success" + jsonObject.toString());
             } else {
                 Log.e(TAG, "start chatting fail" + jsonObject.toString());
             }
