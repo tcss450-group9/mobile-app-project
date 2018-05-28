@@ -71,10 +71,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     }
 
 
-    private void onSendRequestClicked(View view) {
-//        myListener.onSendRequestAttempt();
-    }
-
     private void noneSearchViewAreaClick(View view) {
         Log.e("SearchFragment","noneSearchViewAreaClick");
         mySearchView.setQuery("", false);

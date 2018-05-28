@@ -433,8 +433,6 @@ public class NavigationActivity extends AppCompatActivity
             loadFragment(new LandingFragment(), getString(R.string.keys_landing_fragment_tag));
         } else if (id == R.id.nav_contact) {
             loadFragment(new ContactsFragment(), getString(R.string.keys_contact_fragment_tag));
-        } else if (id == R.id.nav_search) {
-            loadFragment(new SearchFragment(), getString(R.string.keys_search_fragment_tag));
         } else if (id == R.id.nav_weather) {
             loadFragment(new WeatherFragment(), getString(R.string.keys_weather_fragment_tag));
         } else if (id ==R.id.nav_friends) {
@@ -602,7 +600,7 @@ public class NavigationActivity extends AppCompatActivity
         try {
             JSONObject responseJSON = new JSONObject(theResponse);
             boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
-            RecyclerView recyclerView = findViewById(R.id.searchRecycleViewUserFound);
+            RecyclerView recyclerView = findViewById(R.id.contactRecyclerViewUserFound);
             RecyclerViewAdapterSearchResult mAdapter;
 
             if (success) {
