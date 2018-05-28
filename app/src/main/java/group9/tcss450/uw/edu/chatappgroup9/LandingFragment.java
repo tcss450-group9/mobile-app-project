@@ -85,6 +85,7 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
                 .build();
 
 
+        Log.e(TAG, "URL: " + retrieve.toString());
         myChatsManager = new ListenManager.Builder(retrieve.toString(),
                 this::endOfGetChatsTask)
                 .setExceptionHandler(this::handleError)

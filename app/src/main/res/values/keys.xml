@@ -53,6 +53,8 @@
     <string name="keys_sp_on">true</string>
     <string name="keys_extra_results">results</string>
     <string name="keys_is_foreground">FOREGROUND</string>
+    <string name="keys_saved_friend_list">com.tcss450.chatapp.friend.list</string>
+
 
 
 </resources>

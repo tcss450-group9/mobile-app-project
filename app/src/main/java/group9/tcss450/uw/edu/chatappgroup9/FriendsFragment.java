@@ -190,14 +190,13 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
         try {
             JSONObject jsonObject = new JSONObject(result);
             boolean success = jsonObject.getBoolean(getString(R.string.keys_json_success));
-            Log.e(TAG, "startChatting success " + success);
             if (success) {
                 String chatid = jsonObject.getString(getString(R.string.keys_json_chatid));
                 loadChatFragment(chatid);
-                Log.e(TAG, "start chatting with chat id" + chatid);
-                Log.e(TAG, "start chatting success" + jsonObject.toString());
+                Log.e(TAG, "start chatting with chat id " + chatid);
+                Log.e(TAG, "start chatting success " + jsonObject.toString());
             } else {
-                Log.e(TAG, "start chatting fail" + jsonObject.toString());
+                Log.e(TAG, "start chatting fail " + jsonObject.toString());
             }
 
         } catch (JSONException e) {

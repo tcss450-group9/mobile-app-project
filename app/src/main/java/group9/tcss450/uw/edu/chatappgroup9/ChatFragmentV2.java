@@ -25,35 +25,38 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import group9.tcss450.uw.edu.chatappgroup9.model.NothingSelectedSpinnerAdapter;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterMessages;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
-
-///**
-// * A simple {@link Fragment} subclass.
-// * Activities that contain this fragment must implement the
-// * {@link ChatFragment.OnFragmentInteractionListener} interface
-// * to handle interaction events.
-// */
+/**
+ * Chat class listens and sends message. You can add a friends to a chat through selecting
+ * your friends from the spinner on the top. You can also leave a chat. leaving a chat will not
+ * accept any new message.
+ */
 public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelectedListener {
     private String myUsername;
     private String mySendUrl;
+
+    /** listens messages **/
     private ListenManager myListenManager;
+
+    /** all messages inside this recycler view **/
     private RecyclerView myRecyclerView;
-    private RecyclerViewAdapterMessages myAdapterChat;
-    private SharedPreferences prefs;
+    private RecyclerViewAdapterMessages myAdapterMessages;
+
+    /** all contacts' member id and username, must be initialized and != null**/
     private ArrayList<String> myContactsList;
-    private ArrayList<String> myContactsUserNameList;
+    private ArrayList<String> myCopiedContactsList;
+    /** all contacts **/
     private Spinner mySpinner;
-    /**
-     *
-     */
+
+    /** all messages will send to this chat id**/
     private String myTargetChatId;
     private String myTargetUsername;
     private final String TAG = "Chat FragmentV2";
 
-//    private OnFragmentInteractionListener myListener;
 
     public ChatFragmentV2() {
         // Required empty public constructor
@@ -75,8 +78,9 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setStackFromEnd(true);
         myRecyclerView.setLayoutManager(linearLayoutManager);
-        myAdapterChat = new RecyclerViewAdapterMessages(new ArrayList<String>());
-        myRecyclerView.setAdapter(myAdapterChat);
+        //initialized with dummy value
+        myAdapterMessages = new RecyclerViewAdapterMessages(new ArrayList<String>());
+        myRecyclerView.setAdapter(myAdapterMessages);
         TextView chattingWith = v.findViewById(R.id.chatTextViewChattingWith);
 
         if (getArguments() == null) {
@@ -86,7 +90,7 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
             myTargetChatId = getArguments().getString("TARGET_CHAT_ID");
             myTargetUsername = getArguments().getString("TARGET_USERNAME");
             myContactsList = getArguments().getStringArrayList("CONTACTS_ID_USERNAME");
-            chattingWith.setText("Chatting with " + myTargetUsername + " Chat ID " + myTargetChatId);
+            chattingWith.setText("Chatting with " + myTargetUsername);
             Log.e(TAG, "current TARGET_CHAT_ID : " + myTargetChatId);
         }
 
@@ -100,22 +104,35 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
 
 
     private void setUpSpinner() {
-        ArrayList<String> usernameList = splitContactList(myContactsList);
-        ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_item_contact,
-                R.id.spinnerItemTextViewUsername, usernameList);
-        adapter.setDropDownViewResource(R.layout.spinner_item_contact);
 
-        mySpinner.setOnItemSelectedListener(this);
-        mySpinner.setAdapter(adapter);
+        if (myContactsList != null) {
+            myCopiedContactsList = (ArrayList<String>) myContactsList.clone();
+            ArrayList<String> usernameList = splitContactList(myCopiedContactsList);
+            //dummy value
+            myCopiedContactsList.add(0, "-1");
+            ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_item_contact,
+                    R.id.spinnerItemTextViewUsername, usernameList);
+
+            adapter.setDropDownViewResource(R.layout.spinner_item_contact);
+            NothingSelectedSpinnerAdapter spinnerAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_item_contact, getContext());
+            mySpinner.setOnItemSelectedListener(this);
+            mySpinner.setAdapter(adapter);
+
+        } else {
+            //TODO get a new contact list
+
+        }
+
     }
 
     /**
      * Extras the all the user names from the list and return.
      * @param theList
-     * @return
+     * @return a list of username
      */
     private ArrayList<String> splitContactList(ArrayList<String> theList) {
         ArrayList<String> usernameList = new ArrayList<>();
+        usernameList.add("Add another friend to chat");
         if (theList != null) {
             for (int i = 0; i < theList.size(); i++) {
                 String[] idUsername = theList.get(i).split(":");
@@ -125,13 +142,17 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         return usernameList;
     }
 
+
+    /**
+     * listener for the leave button, leave this chat.
+     * @param view
+     */
     public void leaveButtonOnClick(View view) {
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_leaveChat)).build();
 
         //build the JSON object
         JSONObject msg = new JSONObject();
-        prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
 
         try {
             msg.put("chatID", myTargetChatId);
@@ -246,11 +267,11 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
 
             getActivity().runOnUiThread(() -> {
                 for (String s : msgs) {
-                    myAdapterChat.addData(s);
-                    myRecyclerView.scrollToPosition(myAdapterChat.getItemCount() - 1);
+                    myAdapterMessages.addData(s);
+                    myRecyclerView.scrollToPosition(myAdapterMessages.getItemCount() - 1);
                 }
-//                Log.e("ChatFragemnt", myAdapterChat.getItemCount() + "");
-//                myRecyclerView.scrollToPosition(myAdapterChat.getItemCount() - 1);
+//                Log.e("ChatFragemnt", myAdapterMessages.getItemCount() + "");
+//                myRecyclerView.scrollToPosition(myAdapterMessages.getItemCount() - 1);
 
             });
         }
@@ -260,7 +281,6 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         JSONObject messageJson = new JSONObject();
         String msg = ((EditText) getView().findViewById(R.id.chatInputEditText))
                 .getText().toString();
-        prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
         try {
             messageJson.put(getString(R.string.keys_json_username), myUsername);
             messageJson.put(getString(R.string.keys_json_message), msg);
@@ -302,17 +322,20 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
             return;
         }
         Log.e(TAG, "onItemSelected");
-        //get the corresponding username in i index.
-        String contactUsername = (String)adapterView.getAdapter().getItem(i);
-        Log.e(TAG, "contactUsername = " + contactUsername);
-        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+        //get the corresponding id in index i -1.
+        String idUsername = myCopiedContactsList.get(i);
+        String id = idUsername.split(":")[0];
+
+        Log.e(TAG, "memberId = " + id);
+        Uri uri = new Uri.Builder().scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_addToChat)).build();
 
         //build the JSON object
         JSONObject msg = new JSONObject();
         try {
-            msg.put("chatID", myTargetChatId);
-            msg.put("username", contactUsername);
+            msg.put(getString(R.string.keys_json_chat_id), myTargetChatId);
+            msg.put(getString(R.string.keys_json_memberid), id);
 
         } catch (JSONException e) {
             Log.e(TAG, "JSON parse error " + e.getMessage());
