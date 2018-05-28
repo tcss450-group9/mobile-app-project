@@ -16,24 +16,29 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import group9.tcss450.uw.edu.chatappgroup9.R;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
-public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewAdapterContact.ViewHolder> {
-    private String[][] mDataset;
+public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerViewAdapterContact.ViewHolder> {
+    private List<String> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView myFriendUsername;
-        public TextView myFriendFullName;
-        public String myUsername;
-        public Button myDeleteButton;
-        public Switch viewRequestSwitch;
-        public Context myContext;
-        public SharedPreferences myPrefs;
+        private TextView myFriendUsername;
+        private TextView myFriendFullName;
+        private String myUsername;
+        private Button myDeleteButton;
+        private Switch viewRequestSwitch;
+        private RecyclerView myContactRecyclerView;
+        private Context myContext;
+        private SharedPreferences myPrefs;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -48,14 +53,18 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
                     (R.string.keys_shared_prefs_username), null);
 
             myDeleteButton.setOnClickListener(this::onClick);
+            myContactRecyclerView = itemView.findViewById(R.id.contactRecycleViewAllContacts);
         }
 
         /**
          * Executes a SendPostAsyncTask which removes the selected contact from the contacts table
          * in the database
+         *
          * @param v The button clicked
          */
         public void onClick(View v) {
+            deleteAdapterItem(getAdapterPosition());
+
             Uri uri = new Uri.Builder().scheme("https")
                     .appendPath(myContext.getString(R.string.ep_base_url))
                     .appendPath(myContext.getString(R.string.ep_delete_connection))
@@ -67,65 +76,70 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
             JSONObject request = new JSONObject();
             try {
                 request.put("myUsername", myUsername);
-                request.put("friendUsername",myFriendUsername.toString());
+                request.put("friendUsername", myFriendUsername.toString());
 
-            }
-            catch(JSONException e) {
+            } catch (JSONException e) {
                 Log.e("RVAdapterContact", "Error building JSON: " + e.getMessage());
             }
 
-            new SendPostAsyncTask.Builder(uri.toString(),request)
+            new SendPostAsyncTask.Builder(uri.toString(), request)
                     .onPostExecute(this::handleOnPostDeleteContact)
                     .build().execute();
         }
 
+        private void deleteAdapterItem(int adapterPosition) {
+            mDataset.remove(adapterPosition);
+            notifyItemRemoved(adapterPosition);
+            notifyDataSetChanged();
+
+        }
+
         /**
          * Handles errors if the sendPostAsyncTask wasn't successful. Sends a toast if it was successful.
+         *
          * @param theResponse The JSON received from the web service.
          */
         private void handleOnPostDeleteContact(String theResponse) {
             try {
                 JSONObject jsonResponse = new JSONObject(theResponse);
-                if(jsonResponse.getBoolean("success")) {
-                    Toast.makeText(myContext,"Deleted " + myFriendUsername.getText().toString(),
+                if (jsonResponse.getBoolean("success")) {
+                    Toast.makeText(myContext, "Deleted " + myFriendUsername.getText().toString(),
                             Toast.LENGTH_SHORT).show();
-
-                }
-                else {
+//                    mDataset = new String[0][0];
+//                    notifyDataSetChanged();
+                } else {
                     Log.wtf("RecyclerViewAdapterRequest/handleOnPostAccept",
                             "Unable to delete contact: " + jsonResponse.get("error"));
                 }
-            }
-            catch(JSONException e) {
+            } catch (JSONException e) {
                 Log.e("RVAdapterRequest",
                         "Error building JSON: " + e.getMessage());
             }
         }
     }
 
+
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecycleViewAdapterContact(String[][] theDataset) {
+    public RecyclerViewAdapterContact(List<String> theDataset) {
         mDataset = theDataset;
     }
 
-    public void setAdapterDataSet(String[][] myDataset) {
+    public void setAdapterDataSet(List<String> myDataset) {
         if (myDataset != null) {
             mDataset = myDataset;
             notifyDataSetChanged();
         } else {
-            mDataset = new String[0][0];
+            mDataset = new ArrayList<>();
             notifyDataSetChanged();
         }
-
-
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public RecycleViewAdapterContact.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                        int viewType) {
+    public RecyclerViewAdapterContact.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                    int viewType) {
         // create a new view
-        View v =  LayoutInflater.from(parent.getContext())
+        View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item_contact, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -134,19 +148,19 @@ public class RecycleViewAdapterContact extends RecyclerView.Adapter<RecycleViewA
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        
-            holder.myFriendUsername.setText(mDataset[position][0]);
-            holder.myFriendFullName.setText(mDataset[position][1]);
+        String[] data = mDataset.get(position).split(":");
+        Log.e("mDataset", mDataset.get(position).toString());
+        if (data.length > 0) {
+            holder.myFriendUsername.setText(data[0]);
+            holder.myFriendFullName.setText(data[1]);
+        }
 
     }
-
 
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 }

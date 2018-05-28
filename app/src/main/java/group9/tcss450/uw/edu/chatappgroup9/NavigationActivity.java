@@ -26,7 +26,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,10 +41,9 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import group9.tcss450.uw.edu.chatappgroup9.model.RecycleViewAdapterContact;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterContact;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterRequest;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
@@ -640,20 +638,22 @@ public class NavigationActivity extends AppCompatActivity
             JSONObject responseAsJSON = new JSONObject(theResponse);
             boolean success = responseAsJSON.getBoolean(getString(R.string.keys_json_success));
             RecyclerView recyclerView = findViewById(R.id.contactRecycleViewAllContacts);
-            RecycleViewAdapterContact mAdapter;
+            RecyclerViewAdapterContact mAdapter;
 
             if(success) {
                 JSONArray contactArray = responseAsJSON
                         .getJSONArray(getString(R.string.keys_json_contacts));
-
-                mAdapter = new RecycleViewAdapterContact(
-                        jsonArrayUsersDataToStringMultiArray(contactArray));
+                mAdapter = new RecyclerViewAdapterContact(jsonArrayContactDataToStringList(contactArray));
                 recyclerView.setAdapter(mAdapter);
+
+//                mAdapter = new RecyclerViewAdapterContact(
+//                        jsonArrayUsersDataToStringMultiArray(contactArray));
+//                recyclerView.setAdapter(mAdapter);
 
             }
             else {
                 //This is causing a fatal exception on response success=false. Cannot set adapter to null
-                ((RecycleViewAdapterContact) recyclerView.getAdapter()).setAdapterDataSet(null);
+                ((RecyclerViewAdapterContact) recyclerView.getAdapter()).setAdapterDataSet(null);
             }
         }
         catch (JSONException e) {
@@ -722,6 +722,29 @@ public class NavigationActivity extends AppCompatActivity
      * @return 2D array where the first column is the username and the second column is both the
      * first and last name of the user.
      */
+    private ArrayList<String> jsonArrayContactDataToStringList(JSONArray users) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            for (int i = 0; i < users.length(); i++) {
+                JSONObject msg = users.getJSONObject(i);
+                String usernameA = msg.get(getString(R.string.keys_json_username)).toString();
+                String firstNameA = msg.get(getString(R.string.keys_json_firstname)).toString();
+                String lastNameA = msg.get(getString(R.string.keys_json_lastname)).toString();
+                String msgString = usernameA + ":" + firstNameA + " " + lastNameA;
+                list.add(msgString);
+            }
+        } catch (JSONException e) {
+            Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
+        }
+        return list;
+    }
+
+    /**
+     *
+     * @param users the users data in Json array format
+     * @return 2D array where the first column is the username and the second column is both the
+     * first and last name of the user.
+     */
     private String[][] jsonArrayUsersDataToStringMultiArray(JSONArray users) {
         String[][] msgs = new String[users.length()][2];
         try {
@@ -732,12 +755,12 @@ public class NavigationActivity extends AppCompatActivity
                 String lastNameA = msg.get(getString(R.string.keys_json_lastname)).toString();
                 msgs[i][0] = usernameA;
                 msgs[i][1] = firstNameA + " " + lastNameA;
+//                Log.e(TAG, msgs[i].toString());
             }
         } catch (JSONException e) {
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
         }
         return msgs;
-
     }
 
 

@@ -60,7 +60,7 @@
     <string name="search_searchview_hint">Search username, names or email</string>
 
     <!-- Contacts Page -->
-    <string name="contacts_edittext_title1">Existing Contacts</string>
+    <string name="contacts_edittext_title1">Contacts</string>
     <string name="contacts_edittext_title2">Connection Requests</string>
     <string name="contacts_switch_view_pending">View Requests</string>
     <string name="contacts_switch_view_existing">View Existing</string>

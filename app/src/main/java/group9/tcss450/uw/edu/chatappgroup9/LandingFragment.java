@@ -25,7 +25,7 @@ import java.util.List;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterLandingPageChat;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
 
-
+//TODO need to fix delete contact history chat still exist
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -207,7 +207,6 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
         void onLogout();
     }

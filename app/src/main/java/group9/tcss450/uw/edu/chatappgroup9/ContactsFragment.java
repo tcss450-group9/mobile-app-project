@@ -66,7 +66,6 @@ public class ContactsFragment extends Fragment implements CompoundButton.OnCheck
             mListener.getPendingRequests(getString(R.string.ep_base_url),
                     getString(R.string.ep_view_requests), username);
         }
-        //recyclerView.setAdapter(new RecycleViewAdapterContact(myDummyValue));
         return v;
     }
 

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_stroke_shape">
 
 
     <ImageView
@@ -23,9 +24,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="TextView"
         android:textSize="20sp"
+        android:ellipsize="end"
+        android:maxLength="16"
         app:layout_constraintStart_toEndOf="@+id/recyclerViewItemRequestImageView"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,29 +36,31 @@
         android:id="@+id/recyclerViewItemRequestTextViewFullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="TextView"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/recyclerViewItemRequestImageView"
+        android:ellipsize="end"
+        android:maxLength="16"
+        app:layout_constraintStart_toStartOf="@+id/recyclerViewItemRequestTextViewUsername"
         app:layout_constraintTop_toBottomOf="@+id/recyclerViewItemRequestTextViewUsername" />
 
     <Button
         android:id="@+id/recyclerViewItemRequestButtonAccept"
+        style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
         android:text="@string/contacts_recyclerview_request_accept"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/recyclerViewItemRequestTextViewUsername"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/recyclerViewItemRequestButtonReject"
+        style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="@string/contacts_recyclerview_request_reject"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewItemRequestButtonAccept" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/recyclerViewItemRequestTextViewFullName"
+        app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>
