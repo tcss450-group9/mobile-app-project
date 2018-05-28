@@ -82,5 +82,7 @@
     <!-- chat Page -->
     <string name="chat_textview_send_hint">Write a message</string>
 
+    <!-- forgot password Page -->
+    <string name="forgot_textview_email_hint">Enter your email</string>
 
 </resources>
