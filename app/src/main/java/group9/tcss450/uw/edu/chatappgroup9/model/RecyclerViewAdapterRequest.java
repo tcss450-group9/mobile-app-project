@@ -15,20 +15,24 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import group9.tcss450.uw.edu.chatappgroup9.R;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerViewAdapterRequest.ViewHolder>{
-    private String[][] myDataset;
+    private List<String> mDataset;
 
-    public RecyclerViewAdapterRequest(String[][] dataset) {
-        myDataset = dataset;
+
+    public RecyclerViewAdapterRequest(ArrayList<String> dataset) {
+        mDataset = dataset;
     }
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView mySender;
-        TextView myFullName;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView mySenderUsername;
+        TextView mySenderFullName;
         Button myAcceptButton;
         Button myRejectButton;
         Context myContext;
@@ -37,8 +41,8 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
 
         public ViewHolder(View v) {
             super(v);
-            mySender = v.findViewById(R.id.recyclerViewItemRequestTextViewUsername);
-            myFullName = v.findViewById(R.id.recyclerViewItemRequestTextViewFullName);
+            mySenderUsername = v.findViewById(R.id.recyclerViewItemRequestTextViewUsername);
+            mySenderFullName = v.findViewById(R.id.recyclerViewItemRequestTextViewFullName);
 
             myAcceptButton = v.findViewById(R.id.recyclerViewItemRequestButtonAccept);
             myAcceptButton.setOnClickListener(this::onAcceptClicked);
@@ -57,7 +61,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
             JSONObject request = new JSONObject();
             try {
                 request.put("username", myUsername);
-                request.put("sender", mySender.getText());
+                request.put("sender", mySenderUsername.getText());
             }
             catch(JSONException e) {
                 Log.e("RecyclerViewAdapterRequest", "Error creating JSON: " + e.getMessage());
@@ -66,7 +70,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
                     .appendPath(myContext.getString(R.string.ep_base_url))
                     .appendPath(myContext.getString(R.string.ep_accept_request))
                     .appendQueryParameter("username", myUsername)
-                    .appendQueryParameter("sender", mySender.getText().toString())
+                    .appendQueryParameter("sender", mySenderUsername.getText().toString())
                     .build();
             Log.d("RecyclerViewAdapterRequest/handleOnPostAccept", uri.toString());
 
@@ -80,10 +84,11 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
          * @param theResponse The JSON received from the web service.
          */
         private void handleOnPostAccept(String theResponse) {
+            deleteAdapterItem(getAdapterPosition());
             try {
                 JSONObject jsonResponse = new JSONObject(theResponse);
                 if(jsonResponse.getBoolean("success")) {
-                    Toast.makeText(myContext,"Added " + mySender.getText().toString(),
+                    Toast.makeText(myContext,"Added " + mySenderUsername.getText().toString(),
                             Toast.LENGTH_SHORT).show();
 
                 }
@@ -102,7 +107,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
             JSONObject request = new JSONObject();
             try {
                 request.put("username", myUsername);
-                request.put("sender", mySender.getText());
+                request.put("sender", mySenderUsername.getText());
             }
             catch(JSONException e) {
                 Log.e("RecyclerViewAdapterRequest", "Error creating JSON: " + e.getMessage());
@@ -111,7 +116,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
                     .appendPath(myContext.getString(R.string.ep_base_url))
                     .appendPath(myContext.getString(R.string.ep_reject_request))
                     .appendQueryParameter("username", myUsername)
-                    .appendQueryParameter("sender", mySender.getText().toString())
+                    .appendQueryParameter("sender", mySenderUsername.getText().toString())
                     .build();
             Log.d("RecyclerViewAdapterRequest/handleOnPostAccept", uri.toString());
 
@@ -125,10 +130,11 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
          * @param theResponse The JSON received from the web service.
          */
         private void handleOnPostReject(String theResponse) {
+            deleteAdapterItem(getAdapterPosition());
             try {
                 JSONObject jsonResponse = new JSONObject(theResponse);
                 if(jsonResponse.getBoolean("success")) {
-                    Toast.makeText(myContext,"Rejected " + mySender.getText().toString()
+                    Toast.makeText(myContext,"Rejected " + mySenderUsername.getText().toString()
                             + " ._.", Toast.LENGTH_SHORT).show();
 
                 }
@@ -144,6 +150,16 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    /**
+     * only delete the data in the specified position of the data set.
+     * @param adapterPosition
+     */
+    private void deleteAdapterItem(int adapterPosition) {
+        mDataset.remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
+        notifyDataSetChanged();
+    }
+
     @Override
     public RecyclerViewAdapterRequest.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
@@ -155,21 +171,25 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public void onBindViewHolder(RecyclerViewAdapterRequest.ViewHolder holder, int position) {
-        holder.mySender.setText(myDataset[position][0]);
-        holder.myFullName.setText(myDataset[position][1]);
+        String[] data = mDataset.get(position).split(":");
+        Log.e("mDataset", mDataset.get(position).toString());
+        if (data.length > 0) {
+            holder.mySenderUsername.setText(data[0]);
+            holder.mySenderFullName.setText(data[1]);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return myDataset.length;
+        return mDataset.size();
     }
 
-    public void setAdapterDataSet(String[][] dataset) {
-        if (myDataset != null) {
-            myDataset = dataset;
+    public void setAdapterDataSet(List<String> dataset) {
+        if (mDataset != null) {
+            mDataset = dataset;
             notifyDataSetChanged();
         } else {
-            myDataset = new String[0][0];
+            mDataset = new ArrayList<String>();
             notifyDataSetChanged();
         }
     }

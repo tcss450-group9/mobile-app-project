@@ -431,8 +431,6 @@ public class NavigationActivity extends AppCompatActivity
 
         if (id == R.id.nav_landing) {
             loadFragment(new LandingFragment(), getString(R.string.keys_landing_fragment_tag));
-        } else if (id == R.id.nav_chat) {
-            loadFragment(new ChatFragment(), getString(R.string.keys_chat_fragment_tag));
         } else if (id == R.id.nav_contact) {
             loadFragment(new ContactsFragment(), getString(R.string.keys_contact_fragment_tag));
         } else if (id == R.id.nav_search) {
@@ -440,8 +438,7 @@ public class NavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_weather) {
             loadFragment(new WeatherFragment(), getString(R.string.keys_weather_fragment_tag));
         } else if (id ==R.id.nav_friends) {
-            attemptToGetFriendList();
-//            loadFriendsFragment();
+            getFriendListAndLoadFragment();
         } else if (id == R.id.nav_logout) {
             onLogout();
         }
@@ -646,13 +643,8 @@ public class NavigationActivity extends AppCompatActivity
                 mAdapter = new RecyclerViewAdapterContact(jsonArrayContactDataToStringList(contactArray));
                 recyclerView.setAdapter(mAdapter);
 
-//                mAdapter = new RecyclerViewAdapterContact(
-//                        jsonArrayUsersDataToStringMultiArray(contactArray));
-//                recyclerView.setAdapter(mAdapter);
-
             }
             else {
-                //This is causing a fatal exception on response success=false. Cannot set adapter to null
                 ((RecyclerViewAdapterContact) recyclerView.getAdapter()).setAdapterDataSet(null);
             }
         }
@@ -676,11 +668,10 @@ public class NavigationActivity extends AppCompatActivity
                         .getJSONArray(getString(R.string.keys_json_requests));
 
                 mAdapter = new RecyclerViewAdapterRequest(
-                        jsonArrayUsersDataToStringMultiArray(requestArray));
+                        jsonArrayContactDataToStringList(requestArray));
                 recyclerView.setAdapter(mAdapter);
             }
             else {
-                //TODO This is causing a fatal exception on response success=false. Cannot set adapter to null
                 ((RecyclerViewAdapterRequest) recyclerView.getAdapter()).setAdapterDataSet(null);
             }
         }
@@ -770,7 +761,7 @@ public class NavigationActivity extends AppCompatActivity
     }
 
 
-    private void attemptToGetFriendList() {
+    private void getFriendListAndLoadFragment() {
         String username = getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE)
                 .getString(getString(R.string.keys_shared_prefs_username),null);
         getFriendList(getString(R.string.ep_base_url),

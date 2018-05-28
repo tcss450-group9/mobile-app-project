@@ -87,11 +87,14 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
                     .build().execute();
         }
 
+        /**
+         * only delete the data in the specified position of the data set.
+         * @param adapterPosition
+         */
         private void deleteAdapterItem(int adapterPosition) {
             mDataset.remove(adapterPosition);
             notifyItemRemoved(adapterPosition);
             notifyDataSetChanged();
-
         }
 
         /**
@@ -129,7 +132,7 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
             mDataset = myDataset;
             notifyDataSetChanged();
         } else {
-            mDataset = new ArrayList<>();
+            mDataset = new ArrayList<String>();
             notifyDataSetChanged();
         }
     }

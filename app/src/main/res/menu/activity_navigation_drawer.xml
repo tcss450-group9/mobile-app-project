@@ -8,8 +8,8 @@
 
         />
     <item
-        android:id="@+id/nav_chat"
-        android:title="Chat"
+        android:id="@+id/nav_friends"
+        android:title="Friends"
         />
     <item
         android:id="@+id/nav_contact"
@@ -22,10 +22,6 @@
     <item
         android:id="@+id/nav_weather"
         android:title="Weather"
-        />
-    <item
-        android:id="@+id/nav_friends"
-        android:title="Friends"
         />
     <item
         android:id="@+id/nav_logout"
