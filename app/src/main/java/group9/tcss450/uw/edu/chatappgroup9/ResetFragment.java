@@ -67,7 +67,7 @@ public class ResetFragment extends Fragment {
         String confirmPassword = password2.getText().toString();
         Boolean result = true;
 
-        //TODO match password requirement! fix password visible
+        //TODO match password requirement!
         if (!password.equals(confirmPassword)) {
             result = false;
             password2.setError(PASSWORD_NOT_MATCH);
@@ -109,10 +109,19 @@ public class ResetFragment extends Fragment {
         ((EditText) getView().findViewById(R.id.Reset_Password_Verification))
                 .setText("");
         Toast.makeText(getContext(), "Password successfully changed.", Toast.LENGTH_LONG).show();
+        SharedPreferences prefs =
+                getActivity().getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+
+        prefs.edit().remove(getString(R.string.keys_shared_prefs_username));
+
+        prefs.edit().putBoolean(
+                getString(R.string.keys_prefs_stay_login),
+                false)
+                .apply();
         startActivity(new Intent(getContext(), MainActivity.class));
         getActivity().finish();
-
-
     }
 
     @Override

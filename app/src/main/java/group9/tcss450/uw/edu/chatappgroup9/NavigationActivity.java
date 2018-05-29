@@ -922,9 +922,9 @@ public class NavigationActivity extends AppCompatActivity
     private class DataUpdateReciever extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(NotificationIntentService.RECEIVED_UPDATE)) {
-                Log.d(TAG, "hey I just got your broadcast!");
-            }
+//            if (intent.getAction().equals(NotificationIntentService.RECEIVED_UPDATE)) {
+//                Log.d(TAG, "hey I just got your broadcast!");
+//            }
         }
     }
 }

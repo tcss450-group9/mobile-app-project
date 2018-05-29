@@ -176,11 +176,12 @@ public class NotificationIntentService extends IntentService {
         //go out and ask for new messages
         StringBuilder response = new StringBuilder();
 
-        String completeUrl = retrieve.toString() + "&after=" + pref.getString(getString(R.string.keys_prefs_time_stamp), "0");
+        String completeUrl = retrieve.toString() + "&after=" +
+                pref.getString(getString(R.string.keys_prefs_time_stamp), "0");
         Log.e(TAG, completeUrl);
         try {
 
-            URL urlObject = new URL(completeUrl);
+            URL urlObject = new URL(completeUrl); // change retrieve.toString() to completeUrl to enable.
             urlConnection = (HttpURLConnection) urlObject.openConnection();
             InputStream content = urlConnection.getInputStream();
             BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
@@ -201,9 +202,9 @@ public class NotificationIntentService extends IntentService {
             Intent i = new Intent(RECEIVED_UPDATE);
             //add bundle to send the response to any receivers
             i.putExtra(getString(R.string.keys_extra_results), response.toString());
-            sendBroadcast(i);
+//            sendBroadcast(i);
         } else {
-            createNotification(response.toString());
+//            createNotification(response.toString());
         }
         return true;
     }

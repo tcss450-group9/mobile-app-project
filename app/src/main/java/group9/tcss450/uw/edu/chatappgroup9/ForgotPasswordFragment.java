@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import java.util.Random;
 
+import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 
@@ -25,6 +26,7 @@ public class ForgotPasswordFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private final String TAG = "ForgotPasswordFragment";
+    private EditText myEmail;
 
     public ForgotPasswordFragment() {
         // Required empty public constructor
@@ -39,6 +41,7 @@ public class ForgotPasswordFragment extends Fragment {
         b.setOnClickListener(this::onSubmitClickForgot);
         b = v.findViewById(R.id.Forgot_password_Button_already_submit);
         b.setOnClickListener(this::onAlreadySubmit);
+        myEmail = v.findViewById(R.id.forgetPasswordEditTextEmail);
         return v;
     }
 
@@ -49,7 +52,7 @@ public class ForgotPasswordFragment extends Fragment {
                 .replace(R.id.fragmentContainer, frag, null)
                 .addToBackStack(null)
                 .commit();
-        ((EditText) getView().findViewById(R.id.Forgot_password_Editext))
+        ((EditText) getView().findViewById(R.id.forgetPasswordEditTextEmail))
                 .setText("");
     }
 
@@ -66,6 +69,12 @@ public class ForgotPasswordFragment extends Fragment {
     }
 
     public void onSubmitClickForgot(View view) {
+        String email = myEmail.getText().toString();
+        if (!InputVerificationTool.isEmail(email)) {
+            myEmail.setError("Please enter an email");
+            return;
+        }
+
         int veri = verificationPinGenerator();
         Log.d(TAG, "onSubmitClickForgot: here");
         Uri uri = new Uri.Builder().scheme("https")
@@ -76,7 +85,7 @@ public class ForgotPasswordFragment extends Fragment {
         //build the JSON object
         JSONObject msg = new JSONObject();
         try {
-            msg.put("email",((EditText)getActivity().findViewById( R.id.Forgot_password_Editext)).getText().toString());
+            msg.put("email",((EditText)getActivity().findViewById( R.id.forgetPasswordEditTextEmail)).getText().toString());
             msg.put("verification",veri);
             Log.d(TAG, "JSON: " + msg.toString());
         } catch (JSONException e) {
@@ -105,7 +114,7 @@ public class ForgotPasswordFragment extends Fragment {
                 .replace(R.id.fragmentContainer, frag, "frag")
                 .addToBackStack(null)
                 .commit();
-        ((EditText) getView().findViewById(R.id.Forgot_password_Editext))
+        ((EditText) getView().findViewById(R.id.forgetPasswordEditTextEmail))
                 .setText("");
     }
 
