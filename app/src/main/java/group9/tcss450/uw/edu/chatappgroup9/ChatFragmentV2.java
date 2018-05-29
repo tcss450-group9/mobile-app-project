@@ -19,10 +19,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.NothingSelectedSpinnerAdapter;
@@ -56,8 +60,9 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
     private String myTargetChatId;
     private String myTargetUsername;
     private final String TAG = "Chat FragmentV2";
+    private String myNewAddedUsername;
 
-
+    private TextView myChattingWith;
     public ChatFragmentV2() {
         // Required empty public constructor
     }
@@ -81,16 +86,16 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         //initialized with dummy value
         myAdapterMessages = new RecyclerViewAdapterMessages(new ArrayList<String>());
         myRecyclerView.setAdapter(myAdapterMessages);
-        TextView chattingWith = v.findViewById(R.id.chatTextViewChattingWith);
+        myChattingWith = v.findViewById(R.id.chatTextViewChattingWith);
 
         if (getArguments() == null) {
             myTargetChatId = "1";
-            chattingWith.setText("Chat ID " + myTargetChatId + " global ");
+            myChattingWith.setText("Chat ID " + myTargetChatId + " global ");
         } else {
             myTargetChatId = getArguments().getString("TARGET_CHAT_ID");
             myTargetUsername = getArguments().getString("TARGET_USERNAME");
             myContactsList = getArguments().getStringArrayList("CONTACTS_ID_USERNAME");
-            chattingWith.setText("Chatting with " + myTargetUsername);
+            myChattingWith.setText("Chatting with " + myTargetUsername);
             Log.e(TAG, "current TARGET_CHAT_ID : " + myTargetChatId);
         }
 
@@ -103,25 +108,29 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
     }
 
 
+    /**
+     * initializes the spinner.
+     */
     private void setUpSpinner() {
-
-        if (myContactsList != null) {
-            myCopiedContactsList = (ArrayList<String>) myContactsList.clone();
-            ArrayList<String> usernameList = splitContactList(myCopiedContactsList);
-            //dummy value
-            myCopiedContactsList.add(0, "-1");
-            ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_item_contact,
-                    R.id.spinnerItemTextViewUsername, usernameList);
-
-            adapter.setDropDownViewResource(R.layout.spinner_item_contact);
-            NothingSelectedSpinnerAdapter spinnerAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_item_contact, getContext());
-            mySpinner.setOnItemSelectedListener(this);
-            mySpinner.setAdapter(adapter);
-
-        } else {
-            //TODO get a new contact list
-
+        if (myContactsList == null) {
+            SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),Context.MODE_PRIVATE);
+            Gson gson = new Gson();
+            String friendsJson = preferences.getString(getString(R.string.keys_saved_friend_list), null);
+            Type type = new TypeToken<ArrayList<String>>(){}.getType();
+            myContactsList = gson.fromJson(friendsJson, type);
         }
+
+        myCopiedContactsList = (ArrayList<String>) myContactsList.clone();
+        ArrayList<String> usernameList = splitContactList(myCopiedContactsList);
+        //dummy value
+        myCopiedContactsList.add(0, "-1");
+        ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_item_contact,
+                R.id.spinnerItemTextViewUsername, usernameList);
+
+        adapter.setDropDownViewResource(R.layout.spinner_item_contact);
+        NothingSelectedSpinnerAdapter spinnerAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_item_contact, getContext());
+        mySpinner.setOnItemSelectedListener(this);
+        mySpinner.setAdapter(spinnerAdapter);
 
     }
 
@@ -164,15 +173,20 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         }
         Log.d(TAG, "leaveButtonOnClick: sending async" + msg.toString() + uri.toString());
         new SendPostAsyncTask.Builder(uri.toString(), msg)
-                .onPostExecute(this::handlechatOnPost)
+                .onPostExecute(this::handleLeaveChatOnPost)
                 .onCancelled(this::handleError)
                 .build().execute();
 
     }
 
-    private void handlechatOnPost(String s) {
+    /**
+     * back to landing fragment
+     * @param result
+     */
+    private void handleLeaveChatOnPost(String result) {
         LandingFragment frag = new LandingFragment();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, frag, getString(R.string.keys_landing_fragment_tag)).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
+                frag, getString(R.string.keys_landing_fragment_tag)).commit();
     }
 
 
@@ -214,8 +228,6 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
                 .setExceptionHandler(this::handleError)
                 .setDelay(1000)
                 .build();
-
-
     }
 
     @Override
@@ -242,19 +254,17 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
 
 
     /**
-     * getting messages from server
+     * getting messages from server, display message to the UI
      * @param messages
      */
     private void publishProgress(JSONObject messages) {
         final String[] msgs;
         if (messages.has(getString(R.string.keys_json_messages))) {
             try {
-
                 JSONArray jMessages = messages.getJSONArray(getString(R.string.keys_json_messages));
-
                 msgs = new String[jMessages.length()];
-                for (int i = 0; i < jMessages.length(); i++) {
 
+                for (int i = 0; i < jMessages.length(); i++) {
                     JSONObject msg = jMessages.getJSONObject(i);
                     String username = msg.get(getString(R.string.keys_json_username)).toString();
                     String userMessage = msg.get(getString(R.string.keys_json_message)).toString();
@@ -270,9 +280,6 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
                     myAdapterMessages.addData(s);
                     myRecyclerView.scrollToPosition(myAdapterMessages.getItemCount() - 1);
                 }
-//                Log.e("ChatFragemnt", myAdapterMessages.getItemCount() + "");
-//                myRecyclerView.scrollToPosition(myAdapterMessages.getItemCount() - 1);
-
             });
         }
     }
@@ -301,10 +308,13 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         Log.e("CHAT ERROR!!!", msg.toString());
     }
 
+    /**
+     * clear input text.
+     * @param result
+     */
     private void endOfSendMsgTask(final String result) {
         try {
             JSONObject res = new JSONObject(result);
-
             if (res.get(getString(R.string.keys_json_success)).toString()
                     .equals(getString(R.string.keys_json_success_value_true))) {
 
@@ -316,17 +326,27 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         }
     }
 
+    /**
+     * add the selected friend to a chat.
+     * @param parent
+     * @param view
+     * @param position
+     * @param l
+     */
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        if (adapterView.getCount() < 1) {
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
+        if (parent.getCount() < 1) {
             return;
         }
         Log.e(TAG, "onItemSelected");
-        //get the corresponding id in index i -1.
-        String idUsername = myCopiedContactsList.get(i);
-        String id = idUsername.split(":")[0];
+        String string = myCopiedContactsList.get(position);
+        String[] idUsername = string.split(":");
+        Log.e(TAG, "idUsername = " + idUsername.toString());
+        if (idUsername.length == 2) {
+            myNewAddedUsername = idUsername[1];
+        }
 
-        Log.e(TAG, "memberId = " + id);
+        Log.e(TAG, "memberId = " + idUsername[0]);
         Uri uri = new Uri.Builder().scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_addToChat)).build();
@@ -335,7 +355,7 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         JSONObject msg = new JSONObject();
         try {
             msg.put(getString(R.string.keys_json_chat_id), myTargetChatId);
-            msg.put(getString(R.string.keys_json_memberid), id);
+            msg.put(getString(R.string.keys_json_memberid), idUsername[0]);
 
         } catch (JSONException e) {
             Log.e(TAG, "JSON parse error " + e.getMessage());
@@ -346,11 +366,12 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
                 .onPostExecute(this::handleResetOnPost)
                 .onCancelled(this::handleError)
                 .build().execute();
-
     }
 
     private void handleResetOnPost(String s) {
-        Toast.makeText(getActivity(), "we Added a user", Toast.LENGTH_SHORT);
+//        if (myNewAddedUsername != null) {
+//            myChattingWith.setText(myChattingWith.getText().toString() + ", " + myNewAddedUsername);
+//        }
     }
 
     @Override

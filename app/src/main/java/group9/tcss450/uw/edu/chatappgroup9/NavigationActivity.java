@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -34,6 +33,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -133,8 +133,8 @@ public class NavigationActivity extends AppCompatActivity
             this.setTitle("Husky Mingle");
         }
 
-        if(savedInstanceState == null) {
-            if(findViewById(R.id.fragmentContainer) != null) {
+        if (savedInstanceState == null) {
+            if (findViewById(R.id.fragmentContainer) != null) {
                 getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer,
                         new LandingFragment(), getString(R.string.keys_landing_fragment_tag))
                         .commit();
@@ -186,9 +186,12 @@ public class NavigationActivity extends AppCompatActivity
             mGoogleApiClient.connect();
         }
         super.onStart();
+        getFriendList();
     }
 
-    /**, edit onPause and onResume to start and stop the service in the “background” or “foreground”:**/
+    /**
+     * , edit onPause and onResume to start and stop the service in the “background” or “foreground”:
+     **/
     @Override
     protected void onResume() {
         super.onResume();
@@ -365,8 +368,6 @@ public class NavigationActivity extends AppCompatActivity
     }
 
 
-
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -435,8 +436,8 @@ public class NavigationActivity extends AppCompatActivity
             loadFragment(new ContactsFragment(), getString(R.string.keys_contact_fragment_tag));
         } else if (id == R.id.nav_weather) {
             loadFragment(new WeatherFragment(), getString(R.string.keys_weather_fragment_tag));
-        } else if (id ==R.id.nav_friends) {
-            getFriendListAndLoadFragment();
+        } else if (id == R.id.nav_friends) {
+            loadFriendsFragment();
         } else if (id == R.id.nav_logout) {
             onLogout();
         }
@@ -449,27 +450,26 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     public void getAllContacts(String baseURL, String endPoint, String username) {
-        Log.d("Load Contact Fragment","Top of getAllContacts");
+        Log.d(TAG, "Top of getAllContacts");
         JSONArray contacts = new JSONArray(); //This is never populated and is returned empty. Perhaps change this function to void?
         JSONObject unObject = new JSONObject();
         try {
             unObject.put("username", username);
-        }
-        catch(JSONException e) {
-            Log.e("GETALLCONTACTS", "Error building username JSONObject: " + e.getMessage());
+        } catch (JSONException e) {
+            Log.e(TAG, "Error building username JSONObject: " + e.getMessage());
         }
 
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(baseURL)
                 .appendPath(endPoint)
-                .appendQueryParameter("username",username)
+                .appendQueryParameter("username", username)
                 .build();
         Log.d("Load Contact Fragment", uri.toString());
         new SendPostAsyncTask.Builder(uri.toString(), unObject)
                 .onPostExecute(this::handleGetAllContactsOnPost)
                 .build().execute();
-        Log.d("Load Contact Fragment","Bottom of getAllContacts");
+        Log.d("Load Contact Fragment", "Bottom of getAllContacts");
     }
 
     @Override
@@ -477,16 +477,15 @@ public class NavigationActivity extends AppCompatActivity
         JSONObject unObject = new JSONObject();
         try {
             unObject.put("username", username);
-        }
-        catch(JSONException e) {
-            Log.e("GETALLCONTACTS", "Error building username JSONObject: " + e.getMessage());
+        } catch (JSONException e) {
+            Log.e(TAG, "Error building username JSONObject: " + e.getMessage());
         }
 
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(baseURL)
                 .appendPath(endpoint)
-                .appendQueryParameter("username",username)
+                .appendQueryParameter("username", username)
                 .build();
         Log.d("Load Contact Fragment", uri.toString());
         new SendPostAsyncTask.Builder(uri.toString(), unObject)
@@ -508,8 +507,6 @@ public class NavigationActivity extends AppCompatActivity
                 getString(R.string.keys_prefs_stay_login),
                 false)
                 .apply();
-        //the way to close an app programmaticaly
-//        finishAndRemoveTask();
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
@@ -523,7 +520,7 @@ public class NavigationActivity extends AppCompatActivity
 
         try {
             emailJSON.put(getString(R.string.keys_json_email), theEmail);
-            Log.e("NavigationActivity", "Put email to json" );
+            Log.e("NavigationActivity", "Put email to json");
         } catch (JSONException theException) {
             Log.e("NavigationActivity", "Error creating JSON" + theException.getMessage());
         }
@@ -569,7 +566,6 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
-
     private void loadFragment(Fragment frag, String theFragmentTag) {
         Log.e("NavigationActivity", "" + theFragmentTag);
         FragmentTransaction ft = getSupportFragmentManager()
@@ -593,6 +589,7 @@ public class NavigationActivity extends AppCompatActivity
     /**
      * Handle the search by email response. If found a user, show the user's first name and last name
      * in the result text view; otherwise show user not found.
+     *
      * @param theResponse the response return from the server
      */
     private void handleEndOfSearchByName(String theResponse) {
@@ -628,30 +625,26 @@ public class NavigationActivity extends AppCompatActivity
      *                    the user has.
      */
     private void handleGetAllContactsOnPost(String theResponse) {
-        Log.d("Load Contact Fragment","Top of handleGetAllContactsOnPost");
+        Log.d("Load Contact Fragment", "Top of handleGetAllContactsOnPost");
         try {
             JSONObject responseAsJSON = new JSONObject(theResponse);
             boolean success = responseAsJSON.getBoolean(getString(R.string.keys_json_success));
             RecyclerView recyclerView = findViewById(R.id.contactRecycleViewAllContacts);
             RecyclerViewAdapterContact mAdapter;
 
-            if(success) {
+            if (success) {
                 JSONArray contactArray = responseAsJSON
                         .getJSONArray(getString(R.string.keys_json_contacts));
                 mAdapter = new RecyclerViewAdapterContact(jsonArrayContactDataToStringList(contactArray));
                 recyclerView.setAdapter(mAdapter);
-
-            }
-            else {
+            } else {
                 ((RecyclerViewAdapterContact) recyclerView.getAdapter()).setAdapterDataSet(null);
             }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             Log.e("NavigationActivity", "Unable to build JSON: " + e.getMessage());
         }
-        Log.d("Load Contact Fragment","Bottom of handleGetAllContactsOnPost");
+        Log.d("Load Contact Fragment", "Bottom of handleGetAllContactsOnPost");
     }
-
 
 
     private void handleGetPendingRequestsOnPost(String theResponse) {
@@ -661,26 +654,22 @@ public class NavigationActivity extends AppCompatActivity
             RecyclerView recyclerView = findViewById(R.id.contactsRecyclerViewRequests);
             RecyclerViewAdapterRequest mAdapter;
 
-            if(success) {
+            if (success) {
                 JSONArray requestArray = responseAsJSON
                         .getJSONArray(getString(R.string.keys_json_requests));
 
                 mAdapter = new RecyclerViewAdapterRequest(
                         jsonArrayContactDataToStringList(requestArray));
                 recyclerView.setAdapter(mAdapter);
-            }
-            else {
+            } else {
                 ((RecyclerViewAdapterRequest) recyclerView.getAdapter()).setAdapterDataSet(null);
             }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             Log.e("NavigationActivity", "Unable to build JSON: " + e.getMessage());
         }
     }
 
-
     /**
-     *
      * @param users the users data in Json array format
      * @return
      */
@@ -706,7 +695,6 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     /**
-     *
      * @param users the users data in Json array format
      * @return 2D array where the first column is the username and the second column is both the
      * first and last name of the user.
@@ -728,30 +716,6 @@ public class NavigationActivity extends AppCompatActivity
         return list;
     }
 
-    /**
-     *
-     * @param users the users data in Json array format
-     * @return 2D array where the first column is the username and the second column is both the
-     * first and last name of the user.
-     */
-    private String[][] jsonArrayUsersDataToStringMultiArray(JSONArray users) {
-        String[][] msgs = new String[users.length()][2];
-        try {
-            for (int i = 0; i < users.length(); i++) {
-                JSONObject msg = users.getJSONObject(i);
-                String usernameA = msg.get(getString(R.string.keys_json_username)).toString();
-                String firstNameA = msg.get(getString(R.string.keys_json_firstname)).toString();
-                String lastNameA = msg.get(getString(R.string.keys_json_lastname)).toString();
-                msgs[i][0] = usernameA;
-                msgs[i][1] = firstNameA + " " + lastNameA;
-//                Log.e(TAG, msgs[i].toString());
-            }
-        } catch (JSONException e) {
-            Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
-        }
-        return msgs;
-    }
-
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -759,34 +723,34 @@ public class NavigationActivity extends AppCompatActivity
     }
 
 
-    private void getFriendListAndLoadFragment() {
+    private void getFriendList() {
         String username = getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE)
-                .getString(getString(R.string.keys_shared_prefs_username),null);
+                .getString(getString(R.string.keys_shared_prefs_username), null);
         getFriendList(getString(R.string.ep_base_url),
                 getString(R.string.ep_view_connections), username);
     }
 
     /**
      * send a asynv task to the server to get all the contacts that associate with the username
+     *
      * @param baseURL
      * @param endPoint
-     * @param username the usernames
+     * @param username the username
      */
     @Override
     public void getFriendList(String baseURL, String endPoint, String username) {
         JSONObject unObject = new JSONObject();
         try {
             unObject.put("username", username);
-        }
-        catch(JSONException e) {
-            Log.e("GETALLCONTACTS", "Error building username JSONObject: " + e.getMessage());
+        } catch (JSONException e) {
+            Log.e(TAG, "Error building username JSONObject: " + e.getMessage());
         }
 
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(baseURL)
                 .appendPath(endPoint)
-                .appendQueryParameter("username",username)
+                .appendQueryParameter("username", username)
                 .build();
         new SendPostAsyncTask.Builder(uri.toString(), unObject)
                 .onPostExecute(this::handleGetFriendListOnPost)
@@ -795,6 +759,7 @@ public class NavigationActivity extends AppCompatActivity
 
     /**
      * extra the friend list from the response.
+     *
      * @param theResponse
      */
     private void handleGetFriendListOnPost(String theResponse) {
@@ -802,24 +767,23 @@ public class NavigationActivity extends AppCompatActivity
             JSONObject responseAsJSON = new JSONObject(theResponse);
             boolean success = responseAsJSON.getBoolean(getString(R.string.keys_json_success));
 
-            if(success) {
+            if (success) {
                 JSONArray contactArray = responseAsJSON
                         .getJSONArray(getString(R.string.keys_json_contacts));
                 myContactList = contactsJsonArrayToList(contactArray);
-                Log.d(TAG,"handleGetFriendListOnPost success " + myContactList.toString());
-                loadFriendsFragment();
-            }
-            else {
+                Log.e(TAG, "handleGetFriendListOnPost success " + myContactList.toString());
+//                loadFriendsFragment();
+            } else {
                 Log.e(TAG, "Unable to get friend list: ");
             }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             Log.e(TAG, "Unable to build JSON: " + e.getMessage());
         }
     }
 
     /**
      * converts a jason array returned from handleGetFriendListOnPost to an string array list.
+     *
      * @param allContacts the contacts data in Json array format
      * @return
      */
@@ -836,7 +800,23 @@ public class NavigationActivity extends AppCompatActivity
         } catch (JSONException e) {
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
         }
+        Log.e(TAG, "save friend id username ");
+        saveFriendIdUsername(msgs);
         return msgs;
+    }
+
+
+    /**
+     * saves the list in shared preference.
+     *
+     * @param theFriendList
+     */
+    private void saveFriendIdUsername(ArrayList<String> theFriendList) {
+        Gson gson = new Gson();
+        String jsonFriends = gson.toJson(theFriendList);
+        mySharedPreference.edit().putString(getString(R.string.keys_saved_friend_list), jsonFriends).apply();
+        Log.e(TAG, "saveFriendIdUsername " + jsonFriends);
+
     }
 
     public void displayClockThread(TextView theClock) {
@@ -844,7 +824,7 @@ public class NavigationActivity extends AppCompatActivity
             @Override
             public void run() {
                 try {
-                    while(!isInterrupted()) {
+                    while (!isInterrupted()) {
                         Thread.sleep(1000);
                         runOnUiThread(new Runnable() {
                             @Override
@@ -856,14 +836,14 @@ public class NavigationActivity extends AppCompatActivity
                             }
                         });
                     }
-                }
-                catch(InterruptedException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         };
         t.start();
     }
+
     /**-----------------------------------------------------------------------------------------**/
     /**
      * an inner class that will be a Broadcast Receiver for messages from the service
