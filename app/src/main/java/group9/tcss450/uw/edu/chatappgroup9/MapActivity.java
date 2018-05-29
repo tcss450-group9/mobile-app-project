@@ -1,5 +1,6 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -10,7 +11,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener{
 
     public static final String LATITUDE = "lat";
     public static final String LONGITUDE = "lng";
@@ -44,4 +45,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
     }
 
+    @Override
+    public void onMapClick(LatLng latLng) {
+        Intent i = new Intent(this, NavigationActivity.class);
+        i.putExtra(MapActivity.LATITUDE, latLng.latitude);
+        i.putExtra(MapActivity.LONGITUDE, latLng.longitude);
+        startActivity(i);
+    }
 }

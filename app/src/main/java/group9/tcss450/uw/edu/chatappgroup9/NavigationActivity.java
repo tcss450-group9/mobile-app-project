@@ -33,6 +33,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -82,6 +83,11 @@ public class NavigationActivity extends AppCompatActivity
     private static final int MY_PERMISSIONS_LOCATIONS = 814;
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
+    private LatLng mySelectedLocation;
+    private String myZipCode;
+    private boolean searchWeatherByMap;
+    private boolean searchWeatherByCurrentLocation;
+    private boolean searchWeatherByZip;
 
     private DataUpdateReciever mDataUpdateReceiver;
 
@@ -174,7 +180,9 @@ public class NavigationActivity extends AppCompatActivity
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
 
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
+        searchWeatherByCurrentLocation = true;
+        searchWeatherByMap = false;
+        searchWeatherByZip = false;
 
         startService(new Intent(this, NotificationIntentService.class));
 
@@ -842,6 +850,69 @@ public class NavigationActivity extends AppCompatActivity
             }
         };
         t.start();
+    }
+
+    /**
+     * Stores the geographic coordinates of a point chosen on the map fragment
+     * @param selection The location chosen on the map fragment to display weather for that area.
+     */
+    public void setMapSelection(LatLng selection) {
+        mySelectedLocation = selection;
+    }
+
+    /**
+     * Returns the last location selected on the map fragment as a set of geographic coordinates.
+     * @return mySelectedLocation the set of geographic coordinates indicating a location selected
+     *  on the map fragment
+     */
+    public LatLng getMapSelection() {
+        return mySelectedLocation;
+    }
+
+    /**
+     * Indicates whether the map was the selected input to perform the weather query.
+     * @return true if the map was used to choose a location for the weather query.
+     */
+    public boolean getSearchWeatherByMap() {
+        return searchWeatherByMap;
+    }
+
+    /**
+     * Sets the boolean determining if the map was used to select an input for the weather query.
+     */
+    public void setSearchWeatherByMap(boolean wasSelected) {
+        searchWeatherByMap = wasSelected;
+    }
+
+    /**
+     * Indicates whether the zip code was the selected input to perform the weather query.
+     * @return true if the zip code was used to choose a location for the weather query.
+     */
+    public boolean getSearchWeatherByZip() {
+        return searchWeatherByZip;
+    }
+
+    /**
+     * Sets the boolean determining if the zip code was used to select an input for the weather query.
+     */
+    public void setSearchWeatherByZip(boolean wasSelected) {
+        searchWeatherByZip = wasSelected;
+    }
+
+    /**
+     * Indicates whether the device's location was the selected input to perform the weather query.
+     * @return true if the device's location was used to choose a location for the weather query.
+     */
+    public boolean getSearchWeatherByCurrentLocation() {
+        return searchWeatherByCurrentLocation;
+    }
+
+    /**
+     * Sets the boolean determining if the device's location was used to select an input for the
+     * weather query.
+     */
+    public void setSearchWeatherByCurrentLocation(boolean wasSelected) {
+        searchWeatherByCurrentLocation = wasSelected;
     }
 
     /**-----------------------------------------------------------------------------------------**/

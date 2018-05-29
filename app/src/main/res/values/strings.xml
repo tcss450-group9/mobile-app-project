@@ -75,6 +75,8 @@
     <string name="contacts_recyclerview_request_accept">Accept</string>
     <string name="contacts_recyclerview_request_reject">Reject</string>
 
+    <!-- Weather Fragment -->
+    <string name="weather_edittext_zip_code_search_bar">Zip Code</string>
 
     <!-- landing Page -->
     <string name="landing_button_logout">Logout</string>

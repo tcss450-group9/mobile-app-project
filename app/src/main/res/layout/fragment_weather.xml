@@ -84,16 +84,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <EditText
+            android:id="@+id/weatherEditTextZipSearchBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:ems="10"
+            android:hint="@string/weather_edittext_zip_code_search_bar"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/weatherFloatingActionButtonMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:clickable="true"
             android:src="@drawable/ic_open_map"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/weatherButtonSearchZipCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:enabled="false"
+            android:text="@string/connections_edittext_searchbar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/weatherFloatingActionButtonMap"
+            app:layout_constraintStart_toEndOf="@+id/weatherEditTextZipSearchBar" />
 
     </android.support.constraint.ConstraintLayout>
 
