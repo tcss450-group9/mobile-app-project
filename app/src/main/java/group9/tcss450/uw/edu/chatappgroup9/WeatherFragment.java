@@ -199,17 +199,21 @@ public class WeatherFragment extends Fragment{
                 .onPostExecute(this::handleGetWeatherOnPost)
                 .build().execute();
         //myLastWeatherUpdate = myWeatherUtil.getCurrentWeather(myLatitude, myLongitude);
-        try {
+        /*try {
             JSONObject main = myLastWeatherUpdate.getJSONObject("main");
             JSONObject weather = (JSONObject) myLastWeatherUpdate.getJSONArray("weather").get(0);
+            String city = myLastWeatherUpdate.getString("name");
+            Log.d(TAG, city + "!!!!!!!!!!!!!!!!!!");
             String temp = convKelvinToFahrenheit(main.getString("temp"));
             String icon = weather.getString("icon");
-            myWeatherUtil.setWeatherIcon(icon, myWeatherIcon);
-            //setWeatherIcon(icon, myWeatherIcon);
+
+            //myWeatherUtil.setWeatherIcon(icon, myWeatherIcon);
+            setWeatherIcon(icon, myWeatherIcon);
+            myCity.setText(city);
             myCurrentTemp.setText(temp);
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
         //Mark the time this API call was made. (No more than one call every ten minutes)
@@ -250,8 +254,12 @@ public class WeatherFragment extends Fragment{
             JSONObject main = myLastWeatherUpdate.getJSONObject("main");
             JSONObject weather = (JSONObject) myLastWeatherUpdate.getJSONArray("weather").get(0);
             String temp = convKelvinToFahrenheit(main.getString("temp"));
+            String city = myLastWeatherUpdate.getString("name");
+            Log.d(TAG, city + "!!!!!!!!!!!!!!!!!!");
+            myCity.setText(city);
             String icon = weather.getString("icon");
             setWeatherIcon(icon, myWeatherIcon);
+
             //String dt = myLastWeatherUpdate.getString("dt"); //Inaccurate & unnecssary to get date/time from here
             //Date date = new Date(Long.parseLong(dt));
             //SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -411,7 +419,7 @@ public class WeatherFragment extends Fragment{
         new SendGetAsyncTask.Builder(uri.toString())
                 .onPostExecute(this::handleGet24HForecastOnPost)
                 .build().execute();
-        //myLastWeather24HForecast = myWeatherUtil.get5DayForecast(myLatitude, myLongitude);
+        //myLastWeather24HForecast = myWeatherUtil.get5DayForecast(myLatitude, myLongitude); //This asyncTask doesn't finish before the rest of this method runs
         try {
             Log.d(TAG, myLastWeather24HForecast.toString());
             JSONArray list = myLastWeather24HForecast.getJSONArray("list");
