@@ -22,7 +22,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterLandingPageChat;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterLandingFragmentChat;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
 
 //TODO need to fix delete contact history chat still exist
@@ -32,11 +32,11 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
  * {@link LandingFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class LandingFragment extends Fragment implements RecyclerViewAdapterLandingPageChat.ChatItemListener {
+public class LandingFragment extends Fragment implements RecyclerViewAdapterLandingFragmentChat.ChatItemListener {
     private NavigationActivity myActivity;
     private int myChatCount = 0;
     private ListenManager myChatsManager;
-    private RecyclerViewAdapterLandingPageChat myAdapter;
+    private RecyclerViewAdapterLandingFragmentChat myAdapter;
     private OnFragmentInteractionListener mListener;
     private final String TAG = "LandingFragment";
     private RecyclerView recyclerview;
@@ -55,8 +55,8 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
         // Inflate the layout for this fragment
         recyclerview = (RecyclerView) view.findViewById(R.id.landingRecyclerViewChats);
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerview.setAdapter(new RecyclerViewAdapterLandingPageChat(new ArrayList<>()));
-        myAdapter = (RecyclerViewAdapterLandingPageChat)recyclerview.getAdapter();
+        recyclerview.setAdapter(new RecyclerViewAdapterLandingFragmentChat(new ArrayList<>()));
+        myAdapter = (RecyclerViewAdapterLandingFragmentChat)recyclerview.getAdapter();
         myAdapter.setItemClickedListener(this);
         Button logout = view.findViewById(R.id.landingButtonLogout);
         logout.setOnClickListener(this::onLogoutPressed);

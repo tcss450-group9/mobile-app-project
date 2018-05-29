@@ -39,9 +39,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("NavigationActivity", "" + "SearchFragmentTag");
-        // Inflate the layout for this fragment
-         View view = inflater.inflate(R.layout.fragment_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         mySearchView = view.findViewById(R.id.searchSearchView);
         mySearchView.setOnQueryTextListener(this);
@@ -49,21 +47,15 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         View noneSearchView = view.findViewById(R.id.searchNoneSearchArea);
         noneSearchView.setOnClickListener(this::noneSearchViewAreaClick);
 
-
         RecyclerView recyclerView = view.findViewById(R.id.searchRecycleViewUserFound);
         recyclerView.setOnClickListener(this::noneSearchViewAreaClick);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
-        // specify an adapter (see also next example)
         RecyclerViewAdapterSearchResult mAdapter = new RecyclerViewAdapterSearchResult(new ArrayList<String>());
         recyclerView.setAdapter(mAdapter);
 
-         return view;
+        return view;
     }
 
     private void SearchViewOnClicked(View view) {
@@ -72,7 +64,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
 
     private void noneSearchViewAreaClick(View view) {
-        Log.e("SearchFragment","noneSearchViewAreaClick");
+        Log.e("SearchFragment", "noneSearchViewAreaClick");
         mySearchView.setQuery("", false);
         mySearchView.setIconified(true);
     }
@@ -83,6 +75,11 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         return false;
     }
 
+    /**
+     * detects user input and search by username, email or first name and last name.
+     * @param newText
+     * @return
+     */
     @Override
     public boolean onQueryTextChange(String newText) {
         if (!TextUtils.isEmpty(newText)) {
@@ -91,7 +88,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 myListener.onSearchByEmailAttempt(newText);
             } else if (InputVerificationTool.isUsername(newText)) {
                 myListener.onSearchByUsernameAttempt(newText);
-            } else  {
+            } else {
                 String[] strings = newText.split("\\s+");
                 if (strings.length > 1) {
                     myListener.onSearchByNameAttempt(strings[0], strings[1]);
@@ -119,19 +116,11 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         myListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         void onSearchByEmailAttempt(String searchInfo);
+
         void onSearchByUsernameAttempt(String searchInfo);
+
         void onSearchByNameAttempt(String firstname, String lastname);
     }
 }

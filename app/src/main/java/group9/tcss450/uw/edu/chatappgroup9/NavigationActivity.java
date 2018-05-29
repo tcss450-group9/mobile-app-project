@@ -597,7 +597,7 @@ public class NavigationActivity extends AppCompatActivity
         try {
             JSONObject responseJSON = new JSONObject(theResponse);
             boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
-            RecyclerView recyclerView = findViewById(R.id.contactRecyclerViewUserFound);
+            RecyclerView recyclerView = findViewById(R.id.searchRecycleViewUserFound);
             RecyclerViewAdapterSearchResult mAdapter;
 
             if (success) {

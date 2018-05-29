@@ -154,6 +154,7 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
 
     /**
      * listener for the leave button, leave this chat.
+     * sends a async task to the server.
      * @param view
      */
     public void leaveButtonOnClick(View view) {
@@ -284,6 +285,10 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         }
     }
 
+    /**
+     * sends a async task to the server for sending message
+     * @param theButton
+     */
     private void sendMessage(final View theButton) {
         JSONObject messageJson = new JSONObject();
         String msg = ((EditText) getView().findViewById(R.id.chatInputEditText))
@@ -327,7 +332,7 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
     }
 
     /**
-     * add the selected friend to a chat.
+     * sends a async task to the server to add the selected friend to a chat.
      * @param parent
      * @param view
      * @param position

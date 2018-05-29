@@ -4,48 +4,38 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.time.LocalTime;
 import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
 
+/**
+ * This class is a recycler view adapter for chat message. uses a list to hold all the data.
+ */
 public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerViewAdapterMessages.ViewHolder> {
 
-    private List<String> mDataset;
+    private List<String> myDataSet;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public ImageView myProfileImage;
-        public ImageView myOtherProfileImage;
-        public TextView myMessage;
-        public TextView myOtherUserMessage;
-        private TextView myMessageTime;
-        private TextView myOtherMessageTime;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView myMessage;
+        private TextView myOtherUserMessage;
         private LinearLayout myLeftLayout;
         private LinearLayout myRightLayout;
+
         public ViewHolder(View itemView) {
             super(itemView);
-            myProfileImage = itemView.findViewById(R.id.recycleViewItemProfileImage);
             myMessage = itemView.findViewById(R.id.recyclyViewItemUserMessages);
-            myOtherProfileImage = itemView.findViewById(R.id.recycleViewOtherUserProfileImage);
             myOtherUserMessage = itemView.findViewById(R.id.recyCleViewItemOtherUserMessage);
             myLeftLayout = itemView.findViewById(R.id.recycleViewItemChatLeftLayout);
             myRightLayout = itemView.findViewById(R.id.recycleViewItemChatRightLayout);
-            myMessageTime = itemView.findViewById(R.id.recyclyViewItemUserMessagesTime);
-            myOtherMessageTime = itemView.findViewById(R.id.recycleViewItemOtherUserMessageTime);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerViewAdapterMessages(List<String> theDataset) {
-        mDataset = theDataset;
+    public RecyclerViewAdapterMessages(List<String> theDataSet) {
+        myDataSet = theDataSet;
     }
 
     /**
@@ -53,7 +43,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
      * @param newMessage
      */
     public void addData(String newMessage) {
-        mDataset.add(newMessage);
+        myDataSet.add(newMessage);
         notifyItemInserted(getItemCount() - 1);
     }
 
@@ -68,19 +58,20 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    /**
+     * The layouts of the messages is invisible and must set visible.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        String[] data = mDataset.get(position).split(":");
+        String[] data = myDataSet.get(position).split(":");
 
         if (data.length > 0) {
 
             if (data[0].equals(data[1])) {
                 holder.myLeftLayout.setVisibility(View.VISIBLE);
                 holder.myMessage.setText(data[2]);
-
             } else {
                 holder.myRightLayout.setVisibility(View.VISIBLE);
                 holder.myOtherUserMessage.setText(data[2]);
@@ -96,6 +87,6 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return myDataSet.size();
     }
 }

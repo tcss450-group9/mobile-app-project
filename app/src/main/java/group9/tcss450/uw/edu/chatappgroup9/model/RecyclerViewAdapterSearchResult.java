@@ -20,15 +20,11 @@ import group9.tcss450.uw.edu.chatappgroup9.R;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<RecyclerViewAdapterSearchResult.ViewHolder> {
-    private List<String> mDataset;
+    private List<String> myDataSet;
     private final String TAG = "RecyclerViewAdapterSearchResult";
 
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView othersUsername;
         private TextView othersName;
         private String othersMemberId;
@@ -82,15 +78,19 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public RecyclerViewAdapterSearchResult(List<String> theDataset) {
-        mDataset = theDataset;
+        myDataSet = theDataset;
     }
 
-    public void setAdapterDataSet(List<String> myDataset) {
-        if (myDataset != null) {
-            mDataset = myDataset;
+    /**
+     * sets this adapter to the specified data set.
+     * @param theDataSet
+     */
+    public void setAdapterDataSet(List<String> theDataSet) {
+        if (theDataSet != null) {
+            myDataSet = theDataSet;
 
         } else {
-            mDataset = new ArrayList<>();
+            myDataSet = new ArrayList<>();
         }
         notifyDataSetChanged();
 
@@ -111,12 +111,10 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
 
-            Log.e(TAG, "item count: " + getItemCount() + "position: " + position + "mDataset[position] " + mDataset.get(position));
-            String[] data = mDataset.get(position).split(":");
-            Log.e("mDataset", mDataset.get(position).toString());
+//            Log.e(TAG, "item count: " + getItemCount() + "position: " + position + "myDataSet[position] " + myDataSet.get(position));
+            String[] data = myDataSet.get(position).split(":");
+            Log.e("myDataSet", myDataSet.get(position).toString());
             if (data.length > 0) {
                 holder.othersName.setText(data[1] + " " + data[2]);
                 holder.othersMemberId = data[3];
@@ -130,6 +128,6 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return myDataSet.size();
     }
 }

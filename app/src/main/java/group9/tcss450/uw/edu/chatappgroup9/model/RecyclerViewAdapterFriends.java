@@ -12,14 +12,14 @@ import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
 
+/**
+ * This class is a recycler view adapter for recycler view in FriendsFragment. This adapter use a list to hold all data.
+ */
 public class RecyclerViewAdapterFriends extends RecyclerView.Adapter<RecyclerViewAdapterFriends.ViewHolder> {
 
+    /** IDs and user names **/
     private List<String> myContactMembers;
     private FriendItemListener friendItemListener;
-    private String myTargetContactMember;
-    private final String TAG = "RecyclerViewAdapterFriends";
-
-
 
     public RecyclerViewAdapterFriends(List<String> theChatIds){
          this.myContactMembers = theChatIds;
@@ -41,6 +41,10 @@ public class RecyclerViewAdapterFriends extends RecyclerView.Adapter<RecyclerVie
 
         }
 
+        /**
+         * listener for item clicked. Fires a friends's member id and username.
+         * @param view
+         */
         private void contactItemOnClicked(View view) {
             friendItemListener.friendItemLayoutOnClicked(myContactMembers.get(getAdapterPosition()));
         }
@@ -56,19 +60,26 @@ public class RecyclerViewAdapterFriends extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        myTargetContactMember = myContactMembers.get(position);
         String[] idUsername = myContactMembers.get(position).split(":");
         holder.contactUsername.setText(idUsername[1]);
     }
 
-    public void addData(String newMessage) {
-        myContactMembers.add(newMessage);
+    /**
+     * add the specified messages to the data set.
+     * @param theNewMessage
+     */
+    public void addData(String theNewMessage) {
+        myContactMembers.add(theNewMessage);
         notifyDataSetChanged();
     }
 
-    public void setAdapterDataSet(List<String> newDataSet) {
-        if (newDataSet != null) {
-            myContactMembers = newDataSet;
+    /**
+     * sets this adapter to the specified data set.
+     * @param theDataSet
+     */
+    public void setAdapterDataSet(List<String> theDataSet) {
+        if (theDataSet != null) {
+            myContactMembers = theDataSet;
             notifyDataSetChanged();
         } else {
             myContactMembers = new ArrayList<>();

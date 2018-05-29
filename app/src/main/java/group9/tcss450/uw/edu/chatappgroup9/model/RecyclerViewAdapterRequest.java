@@ -21,23 +21,28 @@ import java.util.List;
 import group9.tcss450.uw.edu.chatappgroup9.R;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
+/**
+ * This class is a recycler view adapter for pending request in ContactsFragment. It uses a list to hold
+ * all the data.
+ */
 public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerViewAdapterRequest.ViewHolder>{
-    private List<String> mDataset;
+    private List<String> myDataSet;
+    private String TAG = "RecyclerViewAdapterRequest";
 
 
     public RecyclerViewAdapterRequest(ArrayList<String> dataset) {
-        mDataset = dataset;
+        myDataSet = dataset;
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView mySenderUsername;
-        TextView mySenderFullName;
-        Button myAcceptButton;
-        Button myRejectButton;
-        Context myContext;
-        SharedPreferences myPrefs;
-        String myUsername;
+        private TextView mySenderUsername;
+        private TextView mySenderFullName;
+        private Button myAcceptButton;
+        private Button myRejectButton;
+        private Context myContext;
+        private SharedPreferences myPrefs;
+        private String myUsername;
 
         public ViewHolder(View v) {
             super(v);
@@ -56,15 +61,19 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
                     myContext.getString(R.string.keys_shared_prefs_username), null);
         }
 
-        private void onAcceptClicked(View v) {
-            Log.d("RecyclerViewAdapterRequest", "Top of onAcceptClicked");
+        /**
+         * sends a async task to the server to accept the request.
+         * @param view the button.
+         */
+        private void onAcceptClicked(View view) {
+            Log.d(TAG, "Top of onAcceptClicked");
             JSONObject request = new JSONObject();
             try {
                 request.put("username", myUsername);
                 request.put("sender", mySenderUsername.getText());
             }
             catch(JSONException e) {
-                Log.e("RecyclerViewAdapterRequest", "Error creating JSON: " + e.getMessage());
+                Log.e(TAG, "Error creating JSON: " + e.getMessage());
             }
             Uri uri = new Uri.Builder().scheme("https")
                     .appendPath(myContext.getString(R.string.ep_base_url))
@@ -72,7 +81,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
                     .appendQueryParameter("username", myUsername)
                     .appendQueryParameter("sender", mySenderUsername.getText().toString())
                     .build();
-            Log.d("RecyclerViewAdapterRequest/handleOnPostAccept", uri.toString());
+            Log.d(TAG, uri.toString());
 
             new SendPostAsyncTask.Builder(uri.toString(), request)
                     .onPostExecute(this::handleOnPostAccept)
@@ -98,8 +107,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
                 }
             }
             catch(JSONException e) {
-                Log.e("RecyclerViewAdapterRequest/handleOnPostAccept",
-                        "Error building JSON: " + e.getMessage());
+                Log.e(TAG,"Error building JSON: " + e.getMessage());
             }
         }
 
@@ -110,7 +118,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
                 request.put("sender", mySenderUsername.getText());
             }
             catch(JSONException e) {
-                Log.e("RecyclerViewAdapterRequest", "Error creating JSON: " + e.getMessage());
+                Log.e(TAG, "Error creating JSON: " + e.getMessage());
             }
             Uri uri = new Uri.Builder().scheme("https")
                     .appendPath(myContext.getString(R.string.ep_base_url))
@@ -118,7 +126,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
                     .appendQueryParameter("username", myUsername)
                     .appendQueryParameter("sender", mySenderUsername.getText().toString())
                     .build();
-            Log.d("RecyclerViewAdapterRequest/handleOnPostAccept", uri.toString());
+            Log.d(TAG, "handleOnPostAccept " + uri.toString());
 
             new SendPostAsyncTask.Builder(uri.toString(), request)
                     .onPostExecute(this::handleOnPostReject)
@@ -144,8 +152,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
                 }
             }
             catch(JSONException e) {
-                Log.e("RecyclerViewAdapterRequest/handleOnPostReject",
-                        "Error building JSON: " + e.getMessage());
+                Log.e(TAG,"Error building JSON: " + e.getMessage());
             }
         }
     }
@@ -155,7 +162,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
      * @param adapterPosition
      */
     private void deleteAdapterItem(int adapterPosition) {
-        mDataset.remove(adapterPosition);
+        myDataSet.remove(adapterPosition);
         notifyItemRemoved(adapterPosition);
         notifyDataSetChanged();
     }
@@ -171,8 +178,8 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public void onBindViewHolder(RecyclerViewAdapterRequest.ViewHolder holder, int position) {
-        String[] data = mDataset.get(position).split(":");
-        Log.e("mDataset", mDataset.get(position).toString());
+        String[] data = myDataSet.get(position).split(":");
+        Log.e("myDataSet", myDataSet.get(position).toString());
         if (data.length > 0) {
             holder.mySenderUsername.setText(data[0]);
             holder.mySenderFullName.setText(data[1]);
@@ -181,15 +188,19 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return myDataSet.size();
     }
 
-    public void setAdapterDataSet(List<String> dataset) {
-        if (mDataset != null) {
-            mDataset = dataset;
+    /**
+     * sets this adapter to the specified data set.
+     * @param theDataSet
+     */
+    public void setAdapterDataSet(List<String> theDataSet) {
+        if (myDataSet != null) {
+            myDataSet = theDataSet;
             notifyDataSetChanged();
         } else {
-            mDataset = new ArrayList<String>();
+            myDataSet = new ArrayList<String>();
             notifyDataSetChanged();
         }
     }

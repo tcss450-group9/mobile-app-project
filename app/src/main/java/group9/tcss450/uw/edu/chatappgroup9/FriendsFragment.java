@@ -23,10 +23,8 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FriendsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ * This class represents all your contacts.
+ * you can starts chatting with your friends.
  */
 public class FriendsFragment extends Fragment implements RecyclerViewAdapterFriends.FriendItemListener {
 
@@ -58,9 +56,7 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
         }
         myFriendsRecyclerView = view.findViewById(R.id.friendsRecyclerViewContacts);
         myFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        Log.e(TAG, "RecyclerViewAdapterFriends myContactsList = " + myContactsList);
         RecyclerViewAdapterFriends adapter = new RecyclerViewAdapterFriends(myContactsList);
-//        Log.e(TAG, "RecyclerViewAdapterFriends = " + adapter);
         myFriendsRecyclerView.setAdapter(adapter);
         adapter.setItemClickedListener(this);
         myChatId = null;
@@ -194,7 +190,6 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
                 String chatid = jsonObject.getString(getString(R.string.keys_json_chatid));
                 loadChatFragment(chatid);
                 Log.e(TAG, "start chatting with chat id " + chatid);
-                Log.e(TAG, "start chatting success " + jsonObject.toString());
             } else {
                 Log.e(TAG, "start chatting fail " + jsonObject.toString());
             }
@@ -225,19 +220,14 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        /**
+         * sends a async task to the server to get all contacts.
+         * @param baseURL
+         * @param endPoint
+         * @param username
+         */
         void getFriendList(String baseURL, String endPoint, String username);
     }
 }

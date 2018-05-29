@@ -1,8 +1,6 @@
 package group9.tcss450.uw.edu.chatappgroup9.model;
 
-import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,25 +10,21 @@ import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
 
-public class RecyclerViewAdapterLandingPageChat extends RecyclerView.Adapter<RecyclerViewAdapterLandingPageChat.ViewHolder> {
+/**
+ * This class is a recycler view adapter for recycler view in Landing Fragment.
+ * This adapter use a list to hold all data.
+ */
+public class RecyclerViewAdapterLandingFragmentChat extends RecyclerView.Adapter<RecyclerViewAdapterLandingFragmentChat.ViewHolder> {
 
     private List<String> myChatIds;
     private ChatItemListener chatItemListener;
     private String targetChatId;
-    private final String TAG = "RecyclerViewAdapterLandingPageChat";
 
-
-
-    public RecyclerViewAdapterLandingPageChat(List<String> theChatIds){
+    public RecyclerViewAdapterLandingFragmentChat(List<String> theChatIds){
          this.myChatIds = theChatIds;
-
     }
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         Button oneChatItem;
         public ViewHolder(View itemView) {
             super(itemView);
@@ -38,6 +32,10 @@ public class RecyclerViewAdapterLandingPageChat extends RecyclerView.Adapter<Rec
             oneChatItem.setOnClickListener(this::chatItemOnClicked);
         }
 
+        /**
+         * Fires a chat id when a item clicked.
+         * @param view
+         */
         private void chatItemOnClicked(View view) {
             chatItemListener.chatItemOnClicked(myChatIds.get(getAdapterPosition()));
         }
