@@ -87,6 +87,10 @@
 
     <!-- forgot password Page -->
     <string name="forgot_textview_email_hint">Enter your email</string>
+    <string name="forgot_question_exclamation">\?!</string>
+    <string name="forgot_button_submit_request">Submit Reset Password Request</string>
+    <string name="forgot_already_active_request">I Already Have an Active Request</string>
+
 
     <!-- reset password Page -->
     <string name="reset_edittext_code_hint">Enter Your Code</string>
