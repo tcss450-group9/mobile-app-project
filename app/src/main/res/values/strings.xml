@@ -83,11 +83,14 @@
 
     <!-- chat Page -->
     <string name="chat_textview_send_hint">Write a message</string>
+    <string name="chat_spinner_first_row">Add another friend to chat</string>
 
     <!-- forgot password Page -->
     <string name="forgot_textview_email_hint">Enter your email</string>
 
-    <!-- forgot password Page -->
-    <string name="chat_spinner_first_row">Add another friend to chat</string>
+    <!-- reset password Page -->
+    <string name="reset_edittext_code_hint">Enter Your Code</string>
+    <string name="reset_edittext_new_pass_hint">New Password</string>
+    <string name="reset_edittext_confirm_password_hint">Confirm New Password</string>
 
 </resources>
