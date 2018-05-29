@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -203,22 +204,22 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences sharedPreferences =
-                getSharedPreferences(getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
-//        // Check to see if the service should aleardy be running
-//            //stop the service from the background
-//            NotificationIntentService.stopServiceAlarm(this);
-//            //restart but in the foreground
-//            NotificationIntentService.startServiceAlarm(this, true);
+
+// Check to see if the service should aleardy be running
+        if (mySharedPreference.getBoolean(getString(R.string.keys_sp_on), false)) {
+            //stop the service from the background
+            NotificationIntentService.stopServiceAlarm(this);
+            //restart but in the foreground
+            NotificationIntentService.startServiceAlarm(this, true);
+        }
 
 
 //            Log.e(TAG, "NotificationIntentService stop");
-//        if (mDataUpdateReceiver == null) {
-//            mDataUpdateReceiver = new DataUpdateReciever();
-//        }
-//        IntentFilter iFilter = new IntentFilter(NotificationIntentService.RECEIVED_UPDATE);
-//        registerReceiver(mDataUpdateReceiver, iFilter);
+        if (mDataUpdateReceiver == null) {
+            mDataUpdateReceiver = new DataUpdateReciever();
+        }
+        IntentFilter iFilter = new IntentFilter(NotificationIntentService.RECEIVED_UPDATE);
+        registerReceiver(mDataUpdateReceiver, iFilter);
 
     }
 
@@ -226,16 +227,17 @@ public class NavigationActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
 //        Log.e(TAG, "NotificationIntentService start");
-//
-//            //stop the service from the foreground
-//            NotificationIntentService.stopServiceAlarm(this);
-//            //restart but in the background
-//            NotificationIntentService.startServiceAlarm(this, false);
-//
+        if (mySharedPreference.getBoolean(getString(R.string.keys_sp_on), false)) {
+            //stop the service from the foreground
+            NotificationIntentService.stopServiceAlarm(this);
+            //restart but in the background
+            NotificationIntentService.startServiceAlarm(this, false);
+        }
 
 
-//        if (mDataUpdateReceiver != null){
-//            unregisterReceiver(mDataUpdateReceiver);
+        if (mDataUpdateReceiver != null){
+            unregisterReceiver(mDataUpdateReceiver);
+        }
 //        }
     }
 

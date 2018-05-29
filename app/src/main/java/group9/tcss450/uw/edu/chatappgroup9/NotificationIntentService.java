@@ -202,9 +202,9 @@ public class NotificationIntentService extends IntentService {
             Intent i = new Intent(RECEIVED_UPDATE);
             //add bundle to send the response to any receivers
             i.putExtra(getString(R.string.keys_extra_results), response.toString());
-//            sendBroadcast(i);
+            sendBroadcast(i);
         } else {
-//            createNotification(response.toString());
+            createNotification(response.toString());
         }
         return true;
     }
