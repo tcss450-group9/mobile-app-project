@@ -41,7 +41,6 @@
             android:name=".NotificationIntentService"
             android:exported="false" />
 
-        <activity android:name=".MapActivity"></activity>
     </application>
 
 </manifest>

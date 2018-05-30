@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,4 +83,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 title("Marker in Tacoma"));
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
     }
+
+    /*FragmentManager getSupportFragmentManager().addOnBackStackChangedListener(
+        new FragmentManager.OnBackStackChangedListener() {
+        public void onBackStackChanged() {
+            myActivity.setSearchWeatherByCurrentLocation(true);
+            myActivity.setSearchWeatherByMap(false);
+            myActivity.setSearchWeatherByZip(false);
+        }
+    });*/
 }
