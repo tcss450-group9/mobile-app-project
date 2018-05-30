@@ -54,6 +54,7 @@
     <string name="keys_extra_results">results</string>
     <string name="keys_is_foreground">FOREGROUND</string>
     <string name="keys_saved_friend_list">com.tcss450.chatapp.friend.list</string>
+    <string name="keys_verification_pin">verification.PIN</string>
 
 
 

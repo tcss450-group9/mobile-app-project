@@ -29,7 +29,7 @@ public class ResetFragment extends Fragment {
     private final String PASSWORD_TOO_SHORT = "Password is too short";
 
     private final String PASSWORD_TOO_SIMPLE = "Password is too simple";
-
+    private final String TAG = "ResetFragment";
 
     private OnFragmentInteractionListener mListener;
 
@@ -44,7 +44,7 @@ public class ResetFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_reset , container, false);
         Button b = v.findViewById(R.id.Password_Reset_Submit);
         b.setOnClickListener(this::onSubmitClickForgot);
-        Log.d("gwrwrw", "onCreateView: here1");
+        Log.d(TAG, "onCreateView: here1");
         return v;
     }
 
@@ -56,7 +56,7 @@ public class ResetFragment extends Fragment {
 
     public void onSubmitClickForgot(View view) {
 
-        Log.d("gerer", "onSubmitClickForgot: here");
+        Log.d(TAG, "onSubmitClickForgot: here");
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
         String user = prefs.getString(getString(R.string.keys_shared_prefs_username), "");
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
@@ -67,7 +67,7 @@ public class ResetFragment extends Fragment {
         String confirmPassword = password2.getText().toString();
         Boolean result = true;
 
-        //TODO match password requirement!
+
         if (!password.equals(confirmPassword)) {
             result = false;
             password2.setError(PASSWORD_NOT_MATCH);
@@ -85,43 +85,94 @@ public class ResetFragment extends Fragment {
         if(result) {
             JSONObject msg = new JSONObject();
             try {
-                msg.put("password", ((EditText) getActivity().findViewById(R.id.Reset_Password_NewPassword1)).getText().toString());
-                msg.put("verification", "-" + ((EditText) getActivity().findViewById(R.id.Reset_Password_Verification)).getText().toString());
+                msg.put(getString(R.string.keys_json_password),
+                        ((EditText) getActivity().findViewById(R.id.Reset_Password_NewPassword1)).getText().toString());
+                msg.put(getString(R.string.keys_json_verification),
+                        "-" + ((EditText) getActivity().findViewById(R.id.Reset_Password_Verification)).getText().toString());
                 Log.d("JSON", "onSubmitClickForgot: "+msg.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.d("rew", "onSubmitClickForgot: sending async");
+            Log.d(TAG, "onSubmitClickForgot: sending async");
             new SendPostAsyncTask.Builder(uri.toString(), msg)
                     .onPostExecute(this::handleResetOnPost)
                     .build().execute();
         }
     }
 
-    private void handleResetOnPost(String s) {
-        ResetFragment frag  = new ResetFragment();
-        Log.d("finished", "handleResetOnPost: finished async" + s);
+    private void handleResetOnPost(String result) {
+        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
+        int verificationPin = preferences.getInt(getString(R.string.keys_verification_pin), -99999);
+        EditText pin = getActivity().findViewById(R.id.Reset_Password_Verification);
+        try {
+            JSONObject resultJson = new JSONObject(result);
+            boolean success = resultJson.getBoolean(getString(R.string.keys_json_success));
+            if (success) {
+                int userInputVerificationPin = Integer.valueOf(pin.getText().toString());
+                Log.e(TAG, "success - shared preference verification PIN " + verificationPin +
+                        " userInputVerificationPin "+ userInputVerificationPin);
 
-        ((EditText) getView().findViewById(R.id.Reset_Password_NewPassword1))
-                .setText("");
-        ((EditText) getView().findViewById(R.id.Reset_Password_NewPassword2))
-                .setText("");
-        ((EditText) getView().findViewById(R.id.Reset_Password_Verification))
-                .setText("");
-        Toast.makeText(getContext(), "Password successfully changed.", Toast.LENGTH_LONG).show();
-        SharedPreferences prefs =
-                getActivity().getSharedPreferences(
-                        getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
+                if (userInputVerificationPin == verificationPin) {
+                    ResetFragment frag  = new ResetFragment();
+                    Log.d(TAG, "handleResetOnPost: finished async" + result);
 
-        prefs.edit().remove(getString(R.string.keys_shared_prefs_username));
+                    ((EditText) getView().findViewById(R.id.Reset_Password_NewPassword1))
+                            .setText("");
+                    ((EditText) getView().findViewById(R.id.Reset_Password_NewPassword2))
+                            .setText("");
+                    ((EditText) getView().findViewById(R.id.Reset_Password_Verification))
+                            .setText("");
+                    Toast.makeText(getContext(), "Password successfully changed.", Toast.LENGTH_LONG).show();
+                    SharedPreferences prefs =
+                            getActivity().getSharedPreferences(
+                                    getString(R.string.keys_shared_prefs),
+                                    Context.MODE_PRIVATE);
 
-        prefs.edit().putBoolean(
-                getString(R.string.keys_prefs_stay_login),
-                false)
-                .apply();
-        startActivity(new Intent(getContext(), MainActivity.class));
-        getActivity().finish();
+                    prefs.edit().remove(getString(R.string.keys_shared_prefs_username));
+
+                    prefs.edit().putBoolean(
+                            getString(R.string.keys_prefs_stay_login),
+                            false)
+                            .apply();
+                    startActivity(new Intent(getContext(), MainActivity.class));
+                    getActivity().finish();
+                } else {
+
+                    pin.setError("Wrong verification PIN!");
+                }
+
+            } else {
+                Log.e(TAG, "handleResetOnPost fail: " + resultJson.toString());
+            }
+        } catch (JSONException e) {
+
+        }
+
+
+
+//        ResetFragment frag  = new ResetFragment();
+//        Log.d(TAG, "handleResetOnPost: finished async" + result);
+//
+//        ((EditText) getView().findViewById(R.id.Reset_Password_NewPassword1))
+//                .setText("");
+//        ((EditText) getView().findViewById(R.id.Reset_Password_NewPassword2))
+//                .setText("");
+//        ((EditText) getView().findViewById(R.id.Reset_Password_Verification))
+//                .setText("");
+//        Toast.makeText(getContext(), "Password successfully changed.", Toast.LENGTH_LONG).show();
+//        SharedPreferences prefs =
+//                getActivity().getSharedPreferences(
+//                        getString(R.string.keys_shared_prefs),
+//                        Context.MODE_PRIVATE);
+//
+//        prefs.edit().remove(getString(R.string.keys_shared_prefs_username));
+//
+//        prefs.edit().putBoolean(
+//                getString(R.string.keys_prefs_stay_login),
+//                false)
+//                .apply();
+//        startActivity(new Intent(getContext(), MainActivity.class));
+//        getActivity().finish();
     }
 
     @Override

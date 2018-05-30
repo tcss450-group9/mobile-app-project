@@ -2,6 +2,7 @@ package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -75,7 +76,9 @@ public class ForgotPasswordFragment extends Fragment {
             return;
         }
 
-        int veri = verificationPinGenerator();
+        int verificationPin = verificationPinGenerator();
+        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
+        preferences.edit().putInt(getString(R.string.keys_verification_pin), -verificationPin).apply();
         Log.d(TAG, "onSubmitClickForgot: here");
         Uri uri = new Uri.Builder().scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
@@ -85,13 +88,13 @@ public class ForgotPasswordFragment extends Fragment {
         //build the JSON object
         JSONObject msg = new JSONObject();
         try {
-            msg.put("email",((EditText)getActivity().findViewById( R.id.forgetPasswordEditTextEmail)).getText().toString());
-            msg.put("verification",veri);
+            msg.put(getString(R.string.keys_json_email),((EditText)getActivity().findViewById( R.id.forgetPasswordEditTextEmail)).getText().toString());
+            msg.put(getString(R.string.keys_json_verification), verificationPin);
             Log.d(TAG, "JSON: " + msg.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d("rew", "onSubmitClickForgot: sending async");
+        Log.d(TAG, "onSubmitClickForgot: sending async");
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handleResetOnPost)
                 .onCancelled(this::handleError)
@@ -109,7 +112,7 @@ public class ForgotPasswordFragment extends Fragment {
 
     private void handleResetOnPost(String result) {
         ResetFragment frag  = new ResetFragment();
-        Log.d("finished", "handleResetOnPost: finished async" + result);
+        Log.d(TAG, "handleResetOnPost: finished async" + result);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, frag, "frag")
                 .addToBackStack(null)
@@ -132,7 +135,6 @@ public class ForgotPasswordFragment extends Fragment {
 
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }
