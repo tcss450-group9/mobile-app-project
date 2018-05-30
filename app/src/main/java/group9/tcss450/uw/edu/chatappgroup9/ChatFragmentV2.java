@@ -123,9 +123,11 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
             String friendsJson = preferences.getString(getString(R.string.keys_saved_friend_list), null);
             Type type = new TypeToken<ArrayList<String>>(){}.getType();
             myContactsList = gson.fromJson(friendsJson, type);
+            Log.e(TAG, "myContactsList is null");
         }
 
         myCopiedContactsList = (ArrayList<String>) myContactsList.clone();
+        Log.e(TAG, "myContactsList is not null - myCopiedContactsList " + myCopiedContactsList.size());
         ArrayList<String> usernameList = splitContactList(myCopiedContactsList);
         //dummy value
         myCopiedContactsList.add(0, "-1");
@@ -133,9 +135,9 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
                 R.id.spinnerItemTextViewUsername, usernameList);
 
         adapter.setDropDownViewResource(R.layout.spinner_item_contact);
-        NothingSelectedSpinnerAdapter spinnerAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_item_contact, getContext());
+//        NothingSelectedSpinnerAdapter spinnerAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_item_contact, getContext());//don't user this adapter
         mySpinner.setOnItemSelectedListener(this);
-        mySpinner.setAdapter(spinnerAdapter);
+        mySpinner.setAdapter(adapter);
 
     }
 
@@ -372,13 +374,7 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         }
     }
 
-    /**
-     * sends a async task to the server to add the selected friend to a chat.
-     * @param parent
-     * @param view
-     * @param position
-     * @param l
-     */
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
         if (parent.getCount() < 1) {
@@ -386,6 +382,8 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         }
         Log.e(TAG, "onItemSelected");
         String string = myCopiedContactsList.get(position);
+        Log.e(TAG, "myCopiedContactsList size " + myCopiedContactsList.size());
+        //TODO last position
         String[] idUsername = string.split(":");
         Log.e(TAG, "idUsername = " + idUsername.toString());
         if (idUsername.length == 2) {

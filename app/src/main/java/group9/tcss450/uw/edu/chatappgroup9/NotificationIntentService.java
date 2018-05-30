@@ -74,6 +74,8 @@ public class NotificationIntentService extends IntentService {
         pendingIntent.cancel();
     }
 
+
+    //same as private void buildNotification(String s) in Lab 4d
     public void createNotification(String aMessage) {
         final int NOTIFY_ID = 1002;
 
@@ -109,7 +111,7 @@ public class NotificationIntentService extends IntentService {
             pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
             builder.setContentTitle(aMessage)  // required
-                    .setSmallIcon(android.R.drawable.ic_popup_reminder) // required
+                    .setSmallIcon(R.drawable.ic_project_icon_husky) // required
                     .setContentText(this.getString(R.string.app_name))  // required
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setAutoCancel(true)
@@ -123,8 +125,8 @@ public class NotificationIntentService extends IntentService {
              builder =
                     new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.ic_project_icon_husky)
-                            .setContentTitle("Phish setlist")
-                            .setContentText("A new Setlist to view!");
+                            .setContentTitle("Husky Mingle")
+                            .setContentText("New message");
             //TODO need to change NavigationActivity to chatFragment
             // Creates an Intent for the Activity
             Intent notifyIntent =
