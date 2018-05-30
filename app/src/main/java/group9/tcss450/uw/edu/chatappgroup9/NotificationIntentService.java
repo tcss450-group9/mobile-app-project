@@ -104,7 +104,8 @@ public class NotificationIntentService extends IntentService {
             builder = new NotificationCompat.Builder(this, id);
 
             intent = new Intent(this, NavigationActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
             builder.setContentTitle(aMessage)  // required
@@ -124,7 +125,7 @@ public class NotificationIntentService extends IntentService {
                             .setSmallIcon(R.drawable.ic_project_icon_husky)
                             .setContentTitle("Phish setlist")
                             .setContentText("A new Setlist to view!");
-
+            //TODO need to change NavigationActivity to chatFragment
             // Creates an Intent for the Activity
             Intent notifyIntent =
                     new Intent(this, NavigationActivity.class);
@@ -178,7 +179,7 @@ public class NotificationIntentService extends IntentService {
 
         String completeUrl = retrieve.toString() + "&after=" +
                 pref.getString(getString(R.string.keys_prefs_time_stamp), "0");
-        Log.e(TAG, completeUrl);
+        Log.e(TAG, "completeUrl " + completeUrl + "is foreground: " + isInForeground);
         try {
 
             URL urlObject = new URL(completeUrl); // change retrieve.toString() to completeUrl to enable.
@@ -197,7 +198,7 @@ public class NotificationIntentService extends IntentService {
                 urlConnection.disconnect();
             }
         }
-
+    //TODO something wrong here. maybe
         if (isInForeground) {
             Intent i = new Intent(RECEIVED_UPDATE);
             //add bundle to send the response to any receivers

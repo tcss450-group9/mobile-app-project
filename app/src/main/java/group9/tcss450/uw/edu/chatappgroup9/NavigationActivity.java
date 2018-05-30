@@ -90,7 +90,7 @@ public class NavigationActivity extends AppCompatActivity
     private boolean searchWeatherByCurrentLocation;
     private boolean searchWeatherByZip;
 
-    private DataUpdateReciever mDataUpdateReceiver;
+//    private DataUpdateReciever mDataUpdateReceiver;
 
 
     @SuppressLint("RestrictedApi")
@@ -205,21 +205,21 @@ public class NavigationActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-// Check to see if the service should aleardy be running
-        if (mySharedPreference.getBoolean(getString(R.string.keys_sp_on), false)) {
-            //stop the service from the background
-            NotificationIntentService.stopServiceAlarm(this);
-            //restart but in the foreground
-            NotificationIntentService.startServiceAlarm(this, true);
-        }
-
-
-//            Log.e(TAG, "NotificationIntentService stop");
-        if (mDataUpdateReceiver == null) {
-            mDataUpdateReceiver = new DataUpdateReciever();
-        }
-        IntentFilter iFilter = new IntentFilter(NotificationIntentService.RECEIVED_UPDATE);
-        registerReceiver(mDataUpdateReceiver, iFilter);
+//// Check to see if the service should aleardy be running
+//        if (mySharedPreference.getBoolean(getString(R.string.keys_sp_on), false)) {
+//            //stop the service from the background
+//            NotificationIntentService.stopServiceAlarm(this);
+//            //restart but in the foreground
+//            NotificationIntentService.startServiceAlarm(this, true);
+//        }
+//
+//
+////            Log.e(TAG, "NotificationIntentService stop");
+//        if (mDataUpdateReceiver == null) {
+//            mDataUpdateReceiver = new DataUpdateReciever();
+//        }
+//        IntentFilter iFilter = new IntentFilter(NotificationIntentService.RECEIVED_UPDATE);
+//        registerReceiver(mDataUpdateReceiver, iFilter);
 
     }
 
@@ -227,17 +227,17 @@ public class NavigationActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
 //        Log.e(TAG, "NotificationIntentService start");
-        if (mySharedPreference.getBoolean(getString(R.string.keys_sp_on), false)) {
-            //stop the service from the foreground
-            NotificationIntentService.stopServiceAlarm(this);
-            //restart but in the background
-            NotificationIntentService.startServiceAlarm(this, false);
-        }
-
-
-        if (mDataUpdateReceiver != null){
-            unregisterReceiver(mDataUpdateReceiver);
-        }
+//        if (mySharedPreference.getBoolean(getString(R.string.keys_sp_on), false)) {
+//            //stop the service from the foreground
+//            NotificationIntentService.stopServiceAlarm(this);
+//            //restart but in the background
+//            NotificationIntentService.startServiceAlarm(this, false);
+//        }
+//
+//
+//        if (mDataUpdateReceiver != null){
+//            unregisterReceiver(mDataUpdateReceiver);
+//        }
 //        }
     }
 
@@ -917,16 +917,16 @@ public class NavigationActivity extends AppCompatActivity
         searchWeatherByCurrentLocation = wasSelected;
     }
 
-    /**-----------------------------------------------------------------------------------------**/
-    /**
-     * an inner class that will be a Broadcast Receiver for messages from the service
-     */
-    private class DataUpdateReciever extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(NotificationIntentService.RECEIVED_UPDATE)) {
-//                Log.d(TAG, "hey I just got your broadcast!");
-//            }
-        }
-    }
+//    /**-----------------------------------------------------------------------------------------**/
+//    /**
+//     * an inner class that will be a Broadcast Receiver for messages from the service
+//     */
+//    private class DataUpdateReciever extends BroadcastReceiver {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+////            if (intent.getAction().equals(NotificationIntentService.RECEIVED_UPDATE)) {
+////                Log.d(TAG, "hey I just got your broadcast!");
+////            }
+//        }
+//    }
 }

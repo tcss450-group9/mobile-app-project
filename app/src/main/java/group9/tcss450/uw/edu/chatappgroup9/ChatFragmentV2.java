@@ -1,6 +1,9 @@
 package group9.tcss450.uw.edu.chatappgroup9;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +20,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -61,8 +63,10 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
     private String myTargetUsername;
     private final String TAG = "Chat FragmentV2";
     private String myNewAddedUsername;
-
     private TextView myChattingWith;
+    private DataUpdateReciever mDataUpdateReceiver;
+    private SharedPreferences mySharedPreference;
+
     public ChatFragmentV2() {
         // Required empty public constructor
     }
@@ -87,6 +91,7 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         myAdapterMessages = new RecyclerViewAdapterMessages(new ArrayList<String>());
         myRecyclerView.setAdapter(myAdapterMessages);
         myChattingWith = v.findViewById(R.id.chatTextViewChattingWith);
+        mySharedPreference = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
 
         if (getArguments() == null) {
             myTargetChatId = "1";
@@ -235,6 +240,42 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
     public void onResume() {
         super.onResume();
         myListenManager.startListening();
+
+        // Check to see if the service should aleardy be running
+        if (mySharedPreference.getBoolean(getString(R.string.keys_sp_on), false)) {
+            //stop the service from the background
+            NotificationIntentService.stopServiceAlarm(getContext());
+            //restart but in the foreground
+            NotificationIntentService.startServiceAlarm(getContext(), true);
+        }
+
+
+            Log.e(TAG, "NotificationIntentService stop");
+        if (mDataUpdateReceiver == null) {
+            mDataUpdateReceiver = new DataUpdateReciever();
+        }
+        IntentFilter iFilter = new IntentFilter(NotificationIntentService.RECEIVED_UPDATE);
+        getActivity().registerReceiver(mDataUpdateReceiver, iFilter);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+                Log.e(TAG, "NotificationIntentService start");
+        if (mySharedPreference.getBoolean(getString(R.string.keys_sp_on), false)) {
+            //stop the service from the foreground
+            NotificationIntentService.stopServiceAlarm(getContext());
+            //restart but in the background
+            NotificationIntentService.startServiceAlarm(getContext(), false);
+        }
+
+
+        if (mDataUpdateReceiver != null){
+            getActivity().unregisterReceiver(mDataUpdateReceiver);
+            Log.e(TAG, "unregisterReceiver");
+        }
+
     }
 
 
@@ -382,5 +423,20 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    /**-----------------------------------------------------------------------------------------**/
+    /**
+     * an inner class that will be a Broadcast Receiver for messages from the service
+     */
+    private class DataUpdateReciever extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(NotificationIntentService.RECEIVED_UPDATE)) {
+                Log.d(TAG, "hey I just got your broadcast!");
+            } else {
+                Log.e(TAG, "intent.getAction().equals !!!! no");
+            }
+        }
     }
 }
