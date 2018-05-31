@@ -684,7 +684,7 @@ public class NavigationActivity extends AppCompatActivity
      * @return
      */
     private List<String> searchDataJsonArrayToStringArray(JSONArray users) {
-        List<String> msgs = new ArrayList<String>();
+        List<String> msgs = new ArrayList<>();
         try {
             for (int i = 0; i < users.length(); i++) {
                 JSONObject msg = users.getJSONObject(i);
