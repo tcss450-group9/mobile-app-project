@@ -25,7 +25,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
  * This class is a recycler view adapter for pending request in ContactsFragment. It uses a list to hold
  * all the data.
  */
-public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerViewAdapterRequest.ViewHolder>{
+public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerViewAdapterRequest.ViewHolder> {
     private List<String> myDataSet;
     private String TAG = "RecyclerViewAdapterRequest";
 
@@ -63,6 +63,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
 
         /**
          * sends a async task to the server to accept the request.
+         *
          * @param view the button.
          */
         private void onAcceptClicked(View view) {
@@ -71,8 +72,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
             try {
                 request.put("username", myUsername);
                 request.put("sender", mySenderUsername.getText());
-            }
-            catch(JSONException e) {
+            } catch (JSONException e) {
                 Log.e(TAG, "Error creating JSON: " + e.getMessage());
             }
             Uri uri = new Uri.Builder().scheme("https")
@@ -90,24 +90,23 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
 
         /**
          * Handles errors if the sendPostAsyncTask wasn't successful. Sends a toast if it was successful.
+         *
          * @param theResponse The JSON received from the web service.
          */
         private void handleOnPostAccept(String theResponse) {
             deleteAdapterItem(getAdapterPosition());
             try {
                 JSONObject jsonResponse = new JSONObject(theResponse);
-                if(jsonResponse.getBoolean("success")) {
-                    Toast.makeText(myContext,"Added " + mySenderUsername.getText().toString(),
+                if (jsonResponse.getBoolean("success")) {
+                    Toast.makeText(myContext, "Added " + mySenderUsername.getText().toString(),
                             Toast.LENGTH_SHORT).show();
 
-                }
-                else {
+                } else {
                     Log.wtf("RecyclerViewAdapterRequest/handleOnPostAccept",
                             "Unable to accept connection request");
                 }
-            }
-            catch(JSONException e) {
-                Log.e(TAG,"Error building JSON: " + e.getMessage());
+            } catch (JSONException e) {
+                Log.e(TAG, "Error building JSON: " + e.getMessage());
             }
         }
 
@@ -116,8 +115,7 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
             try {
                 request.put("username", myUsername);
                 request.put("sender", mySenderUsername.getText());
-            }
-            catch(JSONException e) {
+            } catch (JSONException e) {
                 Log.e(TAG, "Error creating JSON: " + e.getMessage());
             }
             Uri uri = new Uri.Builder().scheme("https")
@@ -135,30 +133,30 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
 
         /**
          * Handles errors if the sendPostAsyncTask wasn't successful. Sends a toast if it was successful.
+         *
          * @param theResponse The JSON received from the web service.
          */
         private void handleOnPostReject(String theResponse) {
             deleteAdapterItem(getAdapterPosition());
             try {
                 JSONObject jsonResponse = new JSONObject(theResponse);
-                if(jsonResponse.getBoolean("success")) {
-                    Toast.makeText(myContext,"Rejected " + mySenderUsername.getText().toString()
+                if (jsonResponse.getBoolean("success")) {
+                    Toast.makeText(myContext, "Rejected " + mySenderUsername.getText().toString()
                             + " ._.", Toast.LENGTH_SHORT).show();
 
-                }
-                else {
+                } else {
                     Log.wtf("RecyclerViewAdapterRequest/handleOnPostReject",
                             "Unable to reject connection request");
                 }
-            }
-            catch(JSONException e) {
-                Log.e(TAG,"Error building JSON: " + e.getMessage());
+            } catch (JSONException e) {
+                Log.e(TAG, "Error building JSON: " + e.getMessage());
             }
         }
     }
 
     /**
      * only delete the data in the specified position of the data set.
+     *
      * @param adapterPosition
      */
     private void deleteAdapterItem(int adapterPosition) {
@@ -193,15 +191,15 @@ public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerVie
 
     /**
      * sets this adapter to the specified data set.
+     *
      * @param theDataSet
      */
     public void setAdapterDataSet(List<String> theDataSet) {
         if (myDataSet != null) {
             myDataSet = theDataSet;
-            notifyDataSetChanged();
         } else {
             myDataSet = new ArrayList<String>();
-            notifyDataSetChanged();
         }
+        notifyDataSetChanged();
     }
 }

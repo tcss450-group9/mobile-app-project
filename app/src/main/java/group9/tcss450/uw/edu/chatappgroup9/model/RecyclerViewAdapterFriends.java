@@ -80,11 +80,10 @@ public class RecyclerViewAdapterFriends extends RecyclerView.Adapter<RecyclerVie
     public void setAdapterDataSet(List<String> theDataSet) {
         if (theDataSet != null) {
             myContactMembers = theDataSet;
-            notifyDataSetChanged();
         } else {
             myContactMembers = new ArrayList<>();
-            notifyDataSetChanged();
         }
+        notifyDataSetChanged();
 
     }
 

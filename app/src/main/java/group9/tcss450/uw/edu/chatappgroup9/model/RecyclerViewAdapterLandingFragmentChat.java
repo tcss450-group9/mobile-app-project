@@ -59,7 +59,6 @@ public class RecyclerViewAdapterLandingFragmentChat extends RecyclerView.Adapter
 
     public void addData(String newMessage) {
         myChatIds.add(newMessage);
-
         notifyDataSetChanged();
     }
 

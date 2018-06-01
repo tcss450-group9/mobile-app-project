@@ -40,19 +40,19 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
         }
 
         private void onSendRequestClicked(View view) {
-                Uri uri = new Uri.Builder().scheme("https").appendPath(itemView.getContext().getString(R.string.ep_base_url))
-                        .appendPath(itemView.getContext().getString(R.string.ep_send_friend_request)).build();
-                JSONObject nameJSON = new JSONObject();
+            Uri uri = new Uri.Builder().scheme("https").appendPath(itemView.getContext().getString(R.string.ep_base_url))
+                    .appendPath(itemView.getContext().getString(R.string.ep_send_friend_request)).build();
+            JSONObject nameJSON = new JSONObject();
 
-                try {
-                    nameJSON.put("memberA", myMemberId);
-                    nameJSON.put("memberB", othersMemberId);
-                } catch (JSONException theException) {
-                    Log.e("Request Button Clicked", "Error creating JSON" + theException.getMessage());
-                }
+            try {
+                nameJSON.put("memberA", myMemberId);
+                nameJSON.put("memberB", othersMemberId);
+            } catch (JSONException theException) {
+                Log.e("Request Button Clicked", "Error creating JSON" + theException.getMessage());
+            }
 
-                new SendPostAsyncTask.Builder(uri.toString(), nameJSON)
-                        .onPostExecute(this::handleEndOfSendRequest).build().execute();
+            new SendPostAsyncTask.Builder(uri.toString(), nameJSON)
+                    .onPostExecute(this::handleEndOfSendRequest).build().execute();
 
         }
 
@@ -83,6 +83,7 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
 
     /**
      * sets this adapter to the specified data set.
+     *
      * @param theDataSet
      */
     public void setAdapterDataSet(List<String> theDataSet) {
@@ -102,7 +103,7 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
     public RecyclerViewAdapterSearchResult.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                                          int viewType) {
         // create a new view
-        View v =  LayoutInflater.from(parent.getContext())
+        View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item_search, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -113,14 +114,14 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(ViewHolder holder, int position) {
 
 //            Log.e(TAG, "item count: " + getItemCount() + "position: " + position + "myDataSet[position] " + myDataSet.get(position));
-            String[] data = myDataSet.get(position).split(":");
-            Log.e("myDataSet", myDataSet.get(position).toString());
-            if (data.length > 0) {
-                holder.othersName.setText(data[1] + " " + data[2]);
-                holder.othersMemberId = data[3];
-                holder.myMemberId = data[4];
-                holder.othersUsername.setText(data[0]);
-            }
+        String[] data = myDataSet.get(position).split(":");
+        Log.e("myDataSet", myDataSet.get(position).toString());
+        if (data.length > 0) {
+            holder.othersName.setText(data[1] + " " + data[2]);
+            holder.othersMemberId = data[3];
+            holder.myMemberId = data[4];
+            holder.othersUsername.setText(data[0]);
+        }
 
 
     }

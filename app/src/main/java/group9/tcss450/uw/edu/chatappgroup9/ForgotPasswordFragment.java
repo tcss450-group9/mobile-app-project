@@ -107,7 +107,7 @@ public class ForgotPasswordFragment extends Fragment {
     }
 
     private void handleError(final String msg) {
-        Log.e("CHAT ERROR!!!", msg.toString());
+        Log.e("Forgot password submit ERROR!!!", msg.toString());
     }
 
     private void handleResetOnPost(String result) {
