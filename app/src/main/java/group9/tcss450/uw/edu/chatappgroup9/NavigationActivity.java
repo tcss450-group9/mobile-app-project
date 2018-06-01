@@ -51,6 +51,13 @@ import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
 
+/**
+ * This is the central hub for all the core features of the app apart from login/registration.
+ * NavigationActivity implements a NavigationView drawer which brings up ContactsFragment,
+ * FriendsFragment, WeatherFragment and LandingFragment.
+ * @author Group 9 (Cory added the empty stub)
+ * @version 5/31/18
+ */
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         LandingFragment.OnFragmentInteractionListener,
@@ -82,17 +89,36 @@ public class NavigationActivity extends AppCompatActivity
 
     private GoogleApiClient mGoogleApiClient;
     private static final int MY_PERMISSIONS_LOCATIONS = 814;
+
+    /**
+     * The request for the system's current location.
+     */
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
     private LatLng mySelectedLocation;
-    private String myZipCode;
+
+    /**
+     * True if the data for the weather API call came from selecting a point on the map.
+     */
     private boolean searchWeatherByMap;
+
+    /**
+     * True if the data for the weather API call came from the system's GPS location.
+     */
     private boolean searchWeatherByCurrentLocation;
+
+    /**
+     * True if the data for the weather API call came from the zip code search bar.
+     */
     private boolean searchWeatherByZip;
 
 //    private DataUpdateReciever mDataUpdateReceiver;
 
 
+    /**
+     * Initializes all the on screen elements. Chooses the theme. Gets current location.
+     * @param savedInstanceState
+     */
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -298,6 +324,7 @@ public class NavigationActivity extends AppCompatActivity
         Log.d(TAG, mCurrentLocation.toString());
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -395,6 +422,11 @@ public class NavigationActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Sets the theme to the setting selected by the user.
+     * @param item The menu item selected
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -421,8 +453,11 @@ public class NavigationActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Handles theme change to the activity.
+     * @param theme the integer value corresponding to the selected theme.
+     */
     public void changeTheme(int theme) {
-        // Handles theme changes to activity
         mTheme = theme;
         setTheme(mTheme);
 
@@ -434,7 +469,12 @@ public class NavigationActivity extends AppCompatActivity
         toast.show();
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /**
+     * Handles clicks on the navigation drawer. Each item loads the appropriate fragment,
+     * or logs out.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -458,6 +498,15 @@ public class NavigationActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Sends an AsyncTask (Post) to the webservice which receives a JSON response listing all the
+     * users existing connections. The recyclerview which displays the list of friends is populated
+     * onPostExecute.
+     * @param baseURL The web address where our web service is hosted.
+     * @param endPoint The web service handle where the server function that returns all the user's
+     *                 existing connections resides.
+     * @param username The user's username.
+     */
     @Override
     public void getAllContacts(String baseURL, String endPoint, String username) {
         Log.d(TAG, "Top of getAllContacts");
@@ -482,6 +531,15 @@ public class NavigationActivity extends AppCompatActivity
         Log.d("Load Contact Fragment", "Bottom of getAllContacts");
     }
 
+    /**
+     * Sends an AsyncTask (Post) to the webservice which receives a JSON response listing all the
+     * users pending connection requests. The recyclerview which displays the list of requests is
+     * populated onPostExecute.
+     * @param baseURL The web address where our web service is hosted.
+     * @param endpoint The web service handle where the server function that returns all the user's
+     *                 existing connections resides.
+     * @param username The user's username.
+     */
     @Override
     public void getPendingRequests(String baseURL, String endpoint, String username) {
         JSONObject unObject = new JSONObject();
@@ -504,6 +562,9 @@ public class NavigationActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Returns the user to the login screen after logging out.
+     */
     @Override
     public void onLogout() {
         SharedPreferences prefs =
@@ -520,7 +581,11 @@ public class NavigationActivity extends AppCompatActivity
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
-
+    /**
+     * Sends the given email address to the server and populates the recyclerview in connection
+     * search fragment with any matching members during onPostExecute.
+     * @param theEmail The text to query the database with.
+     */
     @Override
     public void onSearchByEmailAttempt(String theEmail) {
         Log.e("NavigationActivity", "Search by email");
@@ -540,6 +605,11 @@ public class NavigationActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Sends the given username to the server and populates the recyclerview in connection search
+     * fragment with any matching members during onPostExecute.
+     * @param theUsername The text to query the database with.
+     */
     @Override
     public void onSearchByUsernameAttempt(String theUsername) {
         Log.e("NavigationActivity", "Search by username");
@@ -557,6 +627,12 @@ public class NavigationActivity extends AppCompatActivity
                 .onPostExecute(this::handleEndOfSearchByName).build().execute();
     }
 
+    /**
+     * Sends the given first and last names to the server and populates the recyclerview in
+     * connection search fragment with any matching members during onPostExecute.
+     * @param theFirstName The searchee's first name.
+     * @param theLastName The searchee's last name.
+     */
     @Override
     public void onSearchByNameAttempt(String theFirstName, String theLastName) {
         Log.e("NavigationActivity", "Search by name");
@@ -576,6 +652,11 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Helper method for switching the current fragment.
+     * @param frag The fragment to switch to.
+     * @param theFragmentTag The key to associate with the Fragment value.
+     */
     private void loadFragment(Fragment frag, String theFragmentTag) {
         Log.e("NavigationActivity", "" + theFragmentTag);
         FragmentTransaction ft = getSupportFragmentManager()
@@ -586,6 +667,9 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Prepares a new FriendsFragment with the list of the user's friends and switches to it.
+     */
     private void loadFriendsFragment() {
         FriendsFragment friendsFragment = new FriendsFragment();
         Bundle bundle = new Bundle();
@@ -656,7 +740,11 @@ public class NavigationActivity extends AppCompatActivity
         Log.d("Load Contact Fragment", "Bottom of handleGetAllContactsOnPost");
     }
 
-
+    /**
+     * Parses the JSON response containing pending connection requests and populates the
+     * recyclerview with the results.
+     * @param theResponse
+     */
     private void handleGetPendingRequestsOnPost(String theResponse) {
         try {
             JSONObject responseAsJSON = new JSONObject(theResponse);
@@ -680,8 +768,10 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     /**
-     * @param users the users data in Json array format
-     * @return
+     * Parses the JSON response for each member returned and stores their first name, last name,
+     * username and memberId into a string array.
+     * @param users the users data in Json array format.
+     * @return The list of all users returned by the query.
      */
     private List<String> searchDataJsonArrayToStringArray(JSONArray users) {
         List<String> msgs = new ArrayList<String>();
@@ -732,7 +822,9 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
-
+    /**
+     * A parameter-less asynct task call to the server to get all the user's existing connections.
+     */
     private void getFriendList() {
         String username = getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE)
                 .getString(getString(R.string.keys_shared_prefs_username), null);
@@ -741,11 +833,11 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     /**
-     * send a asynv task to the server to get all the contacts that associate with the username
+     * Sends an async task to the server to get all the user's existing connections.
      *
-     * @param baseURL
-     * @param endPoint
-     * @param username the username
+     * @param baseURL The web address where the server is hosted.
+     * @param endPoint The handle for the desired web service.
+     * @param username the member to exclude from the response. Should be the user.
      */
     @Override
     public void getFriendList(String baseURL, String endPoint, String username) {
@@ -768,9 +860,9 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     /**
-     * extra the friend list from the response.
+     * Extract the friend list from the response.
      *
-     * @param theResponse
+     * @param theResponse the text received from the web service.
      */
     private void handleGetFriendListOnPost(String theResponse) {
         try {
@@ -829,6 +921,10 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Sets a TextView to the current time, then updates it every second in a separate thread.
+     * @param theClock The TextView to display the time on.
+     */
     public void displayClockThread(TextView theClock) {
         Thread t = new Thread() {
             @Override
