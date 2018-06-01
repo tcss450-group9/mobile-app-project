@@ -22,6 +22,14 @@ import java.util.List;
 import group9.tcss450.uw.edu.chatappgroup9.R;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
+/**
+ * This adapter populates the recyclerview on the ContactsFragment with the users existing contacts.
+ * Each contact consists of a username and full name which are replaced by the data returned by the
+ * database. Each contact also has a delete button which will remove the connection from the
+ * database and update the list. Their friendship has been nullified =(.
+ * @author Cory Davis
+ * @version 5/31/18
+ */
 public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerViewAdapterContact.ViewHolder> {
     private List<String> mDataset;
 

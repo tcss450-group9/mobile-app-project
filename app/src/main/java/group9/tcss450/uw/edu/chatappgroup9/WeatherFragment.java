@@ -28,20 +28,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.regex.Pattern;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapter24HForecast;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendGetAsyncTask;
-import group9.tcss450.uw.edu.chatappgroup9.utils.WeatherUtil;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link WeatherFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ * This fragment contains all the functionality for checking weather conditions. The current
+ * conditions are displayed as an icon, temperature reading and the city name. There is a
+ * recyclerview which displays the hourly forecast (Actually 5-day forecast in 3-hour intervals per
+ * the limitations on our Weather API "OpenWeatherMap") which displays an icon, temperature and time
+ * in hours for each interval of the same location.
+ *
+ * The user can reset both current and forecast data to match a new location chosen via google maps
+ * by pressing the floating action button. The user can alternatively use a search bar to enter a
+ * zip code.
+ * @author Cory Davis
+ * @version 4/22/18
  */
 public class WeatherFragment extends Fragment {
 
