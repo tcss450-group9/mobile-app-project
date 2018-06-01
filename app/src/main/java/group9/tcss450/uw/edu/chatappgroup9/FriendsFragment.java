@@ -127,7 +127,7 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
     }
 
     /**
-     *
+     * gets the chat id and uses it to create a chat session
      * @param result the returned chat id.
      */
     private void endOfGetNewChatId(String result) {

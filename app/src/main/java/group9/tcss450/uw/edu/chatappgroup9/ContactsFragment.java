@@ -37,7 +37,6 @@ public class ContactsFragment extends Fragment implements CompoundButton.OnCheck
     private RecyclerView myRequestsRecyclerView;
     private Switch mySwitch;
     private SharedPreferences myPrefs;
-    private SearchView mySearchView;
 
 
     public ContactsFragment() {

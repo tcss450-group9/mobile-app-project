@@ -49,7 +49,6 @@ public class WeatherFragment extends Fragment{
 
     private OnFragmentInteractionListener mListener;
     private NavigationActivity myActivity;
-    private WeatherUtil myWeatherUtil;
     private Location myLocation;
     private String myLongitude;
     private String myLatitude;
@@ -80,7 +79,6 @@ public class WeatherFragment extends Fragment{
         myPrefs = myActivity.getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
         myLastWeatherUpdate = new JSONObject();
         myLastWeather24HForecast = new JSONObject();
-        myWeatherUtil = new WeatherUtil(myActivity);
         myLocation = myActivity.getLocation();
         myLongitude = String.valueOf(myLocation.getLongitude());
         myLatitude = String.valueOf(myLocation.getLatitude());
@@ -462,31 +460,6 @@ public class WeatherFragment extends Fragment{
         new SendGetAsyncTask.Builder(uri.toString())
                 .onPostExecute(this::handleGet24HForecastOnPost)
                 .build().execute();
-        //myLastWeather24HForecast = myWeatherUtil.get5DayForecast(myLatitude, myLongitude);
-        /*try {
-            Log.d(TAG, myLastWeather24HForecast.toString());
-            JSONArray list = myLastWeather24HForecast.getJSONArray("list");
-            JSONObject curr;
-            JSONObject currMember;
-            Log.d("List Length", String.valueOf(list.length()));
-            String[][] adapterData = new String[list.length()][3];
-            for(int i = 0; i < list.length(); i++) {
-                //format the forecast data for the recyclerView adapter
-                curr = (JSONObject) list.get(i);
-                currMember = curr.getJSONObject("main");
-                //Get temperature
-                adapterData[i][0] = convKelvinToFahrenheit(currMember.getString("temp"));
-                //Get time
-                Log.d(TAG, String.valueOf(curr.getLong("dt")));
-                adapterData[i][1] = getDateTime(curr.getLong("dt"));
-                //Get icon
-                currMember = (JSONObject) curr.getJSONArray("weather").get(0);
-                adapterData[i][2] = currMember.getString("icon");
-            }
-            init24HForecastRecyclerView(adapterData);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
     }
 
     public void handleGet24HForecastOnPost(String response) {
@@ -514,7 +487,6 @@ public class WeatherFragment extends Fragment{
             }
             init24HForecastRecyclerView(adapterData);
 
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -522,15 +494,11 @@ public class WeatherFragment extends Fragment{
 
     public String convertDateTime(long millis) {
         long timeDiff = (millis - System.currentTimeMillis()) / 3600000;
-
         return String.valueOf(timeDiff);
     }
 
     public String getDateTime(long millis) {
-        //SimpleDateFormat sdf = new SimpleDateFormat("hha");
-        //SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy hh:mm:ss a");
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
-        //String out = sdf.format(millis);
         return sdf.format(millis);
     }
 }
