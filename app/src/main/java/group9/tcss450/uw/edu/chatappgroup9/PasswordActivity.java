@@ -16,9 +16,17 @@ import java.util.Random;
 
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
+/**
+ * This is the activity that loads the password reset  fragments and allows the user to reset the password.
+ *
+ *@author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
+ */
 public class PasswordActivity extends AppCompatActivity implements ForgotPasswordFragment.OnFragmentInteractionListener , ResetFragment.OnFragmentInteractionListener{
 
     @Override
+    /**
+     * This creates the activity and the layout.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
@@ -29,12 +37,19 @@ public class PasswordActivity extends AppCompatActivity implements ForgotPasswor
                 .commit();
 
     }
+
+    /**
+     * Loads the main activity on back press.
+     */
     public void onBackPressed() {
         startActivity(new Intent(this, MainActivity.class));
         this.finish();
     }
 
     @Override
+    /**
+     *
+     */
     public void onFragmentInteraction(Uri uri) {
 
     }

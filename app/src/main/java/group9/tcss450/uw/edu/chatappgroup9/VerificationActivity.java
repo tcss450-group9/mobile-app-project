@@ -16,6 +16,12 @@ import org.json.JSONObject;
 
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
+/**
+ *The activity that allows the user to verify their account.
+ *
+ *
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
+ */
 public class VerificationActivity extends AppCompatActivity {
 
     private final int MIN_LENGTH_PIN = 4;
@@ -29,6 +35,11 @@ public class VerificationActivity extends AppCompatActivity {
     private EditText myVerificationPin;
 
     @Override
+    /**
+     * this creates the activity.
+     *
+     * @savedInstanceState  this is the previous state of this activity
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
@@ -45,6 +56,10 @@ public class VerificationActivity extends AppCompatActivity {
         validate.setOnClickListener(this::verifyOnClicked);
     }
 
+    /**
+     * the internal method sends a async task to the DB that checks the verification code against the users submitted code.
+     * @param theValidateButton
+     */
     public void verifyOnClicked(View theValidateButton){
         if (isVerificationPinGood(theValidateButton)) {
             String pinStr = myVerificationPin.getText().toString();
@@ -53,6 +68,11 @@ public class VerificationActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * checks the verification submission for  correct formatting
+     * @param theValidateButton  this is the  button that has been clicked
+     * @return  returns true if the info is good.
+     */
     private boolean isVerificationPinGood(View theValidateButton) {
         boolean result = true;
         String pin = myVerificationPin.getText().toString();
@@ -189,6 +209,9 @@ public class VerificationActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * loads the login activity
+     */
     private void backToLogin() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

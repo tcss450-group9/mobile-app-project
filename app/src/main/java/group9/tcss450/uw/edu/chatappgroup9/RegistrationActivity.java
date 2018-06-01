@@ -20,6 +20,11 @@ import group9.tcss450.uw.edu.chatappgroup9.model.Credentials;
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
+/**
+ * This activity allow new user to register for the app   the user will then be sent to a new user verification fragment.
+ *
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
+ */
 public class RegistrationActivity extends AppCompatActivity {
 
     private int MIN_LENGTH_USERNAME_PASSWORD = 6;
@@ -44,7 +49,12 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private int myVerificationPin;
 
+    /**
+     * creates and initializes the state of the activity and   creates the layout for the activity
+     * @param savedInstanceState the state of the last time this activity was called
+     */
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
@@ -62,6 +72,12 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * creates the  on click listener for the submition button of the registration page.
+     * Build a credentials object and then called the register attempt method.
+     *
+     * @param theSubmitButton  this is the view of the submit button that will send the registration to the DB
+     */
     public void submitOnClicked(View theSubmitButton){
         if (isRegistrationInfoGood(theSubmitButton)) {
             final Credentials info = new Credentials.Builder(myUsername.getText().toString(),
@@ -196,11 +212,18 @@ public class RegistrationActivity extends AppCompatActivity {
                     + e.getMessage()+e.getLocalizedMessage());
         }
     }
+
+    /**
+     *  Loads the  mainactivity  to replace   this activity on back press
+     */
     public void onBackPressed() {
         startActivity(new Intent(this, MainActivity.class));
         this.finish();
     }
 
+    /**
+     *  On successful registration we load the verification fragment that verifies we have a valid email for submission.
+     */
     public void toVerificationActivity() {
         Intent intent = new Intent(this, VerificationActivity.class);
 
@@ -218,6 +241,10 @@ public class RegistrationActivity extends AppCompatActivity {
         this.finish();
     }
 
+    /**
+     * On Verification settings call generates a pin to add to the database for verification.
+     * @return
+     */
     public int verificationPinGenerator() {
         Random random = new Random();
 
