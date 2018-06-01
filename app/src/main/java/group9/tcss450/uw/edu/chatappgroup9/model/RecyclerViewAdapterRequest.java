@@ -24,6 +24,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 /**
  * This class is a recycler view adapter for pending request in ContactsFragment. It uses a list to hold
  * all the data.
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  */
 public class RecyclerViewAdapterRequest extends RecyclerView.Adapter<RecyclerViewAdapterRequest.ViewHolder> {
     private List<String> myDataSet;

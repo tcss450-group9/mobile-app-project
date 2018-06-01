@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 /**
  * Utility class to check is the username, first name, last name, password, email
  * match the requirement
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  */
 public class InputVerificationTool {
     /**

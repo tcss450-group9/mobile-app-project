@@ -13,6 +13,7 @@ import group9.tcss450.uw.edu.chatappgroup9.R;
 
 /**
  * This class is a recycler view adapter for chat message. uses a list to hold all the data.
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  */
 public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerViewAdapterMessages.ViewHolder> {
 

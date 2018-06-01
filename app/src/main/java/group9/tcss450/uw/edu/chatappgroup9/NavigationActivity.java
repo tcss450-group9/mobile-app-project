@@ -55,7 +55,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.ThemeUtil;
  * This is the central hub for all the core features of the app apart from login/registration.
  * NavigationActivity implements a NavigationView drawer which brings up ContactsFragment,
  * FriendsFragment, WeatherFragment and LandingFragment.
- * @author Group 9 (Cory added the empty stub)
+ * @author @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  * @version 5/31/18
  */
 public class NavigationActivity extends AppCompatActivity

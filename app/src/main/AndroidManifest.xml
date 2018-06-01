@@ -35,9 +35,6 @@
         <activity android:name=".PasswordActivity" />
 
         <service
-            android:name=".WeatherService"
-            android:exported="false" />
-        <service
             android:name=".NotificationIntentService"
             android:exported="false" />
 

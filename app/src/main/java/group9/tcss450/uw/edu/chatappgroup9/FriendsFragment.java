@@ -23,8 +23,8 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 
 /**
- * This class represents all your contacts.
- * you can starts chatting with your friends.
+ * This class represents all your contacts. You can starts chatting with your friends.
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  */
 public class FriendsFragment extends Fragment implements RecyclerViewAdapterFriends.FriendItemListener {
 

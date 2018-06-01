@@ -28,6 +28,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 /**
  * This class display all contacts and pending requests. you can delete a contact and
  * accept or reject a pending request.
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  */
 public class ContactsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
 

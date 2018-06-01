@@ -25,12 +25,10 @@ import java.util.List;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterLandingFragmentChat;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
 
-//TODO need to fix delete contact history chat still exist
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LandingFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ * This class is the fist page to see after login to the app.
+ * It show the most recent chats and the current location weather.
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  */
 public class LandingFragment extends Fragment implements RecyclerViewAdapterLandingFragmentChat.ChatItemListener {
     private NavigationActivity myActivity;

@@ -14,6 +14,7 @@ import group9.tcss450.uw.edu.chatappgroup9.R;
 
 /**
  * This class is a recycler view adapter for recycler view in FriendsFragment. This adapter use a list to hold all data.
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  */
 public class RecyclerViewAdapterFriends extends RecyclerView.Adapter<RecyclerViewAdapterFriends.ViewHolder> {
 

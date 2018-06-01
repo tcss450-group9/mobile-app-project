@@ -18,6 +18,7 @@ import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 /**
  * This class relates to search a user by username, email or fist name and last name
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  */
 public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
 

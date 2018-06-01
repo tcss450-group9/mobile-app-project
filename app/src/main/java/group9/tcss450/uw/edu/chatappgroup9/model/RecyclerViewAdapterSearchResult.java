@@ -19,6 +19,10 @@ import java.util.List;
 import group9.tcss450.uw.edu.chatappgroup9.R;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
+/**
+ * This is a search view adapter. uses a list to holder the data set.
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
+ */
 public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<RecyclerViewAdapterSearchResult.ViewHolder> {
     private List<String> myDataSet;
     private final String TAG = "RecyclerViewAdapterSearchResult";
@@ -39,6 +43,10 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
             mySendRequestButton.setOnClickListener(this::onSendRequestClicked);
         }
 
+        /**
+         * send a async task to the server to send a request.
+         * @param view
+         */
         private void onSendRequestClicked(View view) {
             Uri uri = new Uri.Builder().scheme("https").appendPath(itemView.getContext().getString(R.string.ep_base_url))
                     .appendPath(itemView.getContext().getString(R.string.ep_send_friend_request)).build();
@@ -56,6 +64,10 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
 
         }
 
+        /**
+         * tell the user a request was sent.
+         * @param result
+         */
         private void handleEndOfSendRequest(String result) {
 
             try {
@@ -76,7 +88,10 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
         }
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
+    /**
+     * initialized the data set.
+     * @param theDataset
+     */
     public RecyclerViewAdapterSearchResult(List<String> theDataset) {
         myDataSet = theDataset;
     }
