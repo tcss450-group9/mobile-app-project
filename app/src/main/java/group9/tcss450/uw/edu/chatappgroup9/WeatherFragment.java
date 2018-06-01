@@ -28,6 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapter24HForecast;
@@ -420,7 +422,7 @@ public class WeatherFragment extends Fragment{
                 .onPostExecute(this::handleGet24HForecastOnPost)
                 .build().execute();
         //myLastWeather24HForecast = myWeatherUtil.get5DayForecast(myLatitude, myLongitude); //This asyncTask doesn't finish before the rest of this method runs
-        try {
+        /*try {
             Log.d(TAG, myLastWeather24HForecast.toString());
             JSONArray list = myLastWeather24HForecast.getJSONArray("list");
             JSONObject curr;
@@ -443,7 +445,7 @@ public class WeatherFragment extends Fragment{
             init24HForecastRecyclerView(adapterData);
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private void get24HourForecastByZip(String zip) {
@@ -461,7 +463,7 @@ public class WeatherFragment extends Fragment{
                 .onPostExecute(this::handleGet24HForecastOnPost)
                 .build().execute();
         //myLastWeather24HForecast = myWeatherUtil.get5DayForecast(myLatitude, myLongitude);
-        try {
+        /*try {
             Log.d(TAG, myLastWeather24HForecast.toString());
             JSONArray list = myLastWeather24HForecast.getJSONArray("list");
             JSONObject curr;
@@ -484,7 +486,7 @@ public class WeatherFragment extends Fragment{
             init24HForecastRecyclerView(adapterData);
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void handleGet24HForecastOnPost(String response) {
@@ -518,8 +520,17 @@ public class WeatherFragment extends Fragment{
         }
     }
 
+    public String convertDateTime(long millis) {
+        long timeDiff = (millis - System.currentTimeMillis()) / 3600000;
+
+        return String.valueOf(timeDiff);
+    }
+
     public String getDateTime(long millis) {
-        SimpleDateFormat sdf = new SimpleDateFormat("hha");
+        //SimpleDateFormat sdf = new SimpleDateFormat("hha");
+        //SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy hh:mm:ss a");
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
+        //String out = sdf.format(millis);
         return sdf.format(millis);
     }
 }
