@@ -710,20 +710,28 @@ public class NavigationActivity extends AppCompatActivity
      * first and last name of the user.
      */
     private ArrayList<String> jsonArrayContactDataToStringList(JSONArray users) {
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> contactsList = new ArrayList<>();
+        ArrayList<String> friendsList = new ArrayList<>();
         try {
             for (int i = 0; i < users.length(); i++) {
                 JSONObject msg = users.getJSONObject(i);
+                //for Contacts Fragment
                 String usernameA = msg.get(getString(R.string.keys_json_username)).toString();
                 String firstNameA = msg.get(getString(R.string.keys_json_firstname)).toString();
                 String lastNameA = msg.get(getString(R.string.keys_json_lastname)).toString();
                 String msgString = usernameA + ":" + firstNameA + " " + lastNameA;
-                list.add(msgString);
+                contactsList.add(msgString);
+                //for Friend Fragment
+                String friendMemberId = msg.get(getString(R.string.keys_json_memberid)).toString();
+                String friendUsername = msg.get(getString(R.string.keys_json_username)).toString();
+                String friendsIdUsername = friendMemberId + ":" + friendUsername;
+                friendsList.add(friendsIdUsername);
             }
         } catch (JSONException e) {
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
         }
-        return list;
+        saveFriendIdUsername(friendsList);
+        return contactsList;
     }
 
 
@@ -826,7 +834,6 @@ public class NavigationActivity extends AppCompatActivity
         String jsonFriends = gson.toJson(theFriendList);
         mySharedPreference.edit().putString(getString(R.string.keys_saved_friend_list), jsonFriends).apply();
         Log.e(TAG, "saveFriendIdUsername " + jsonFriends);
-
     }
 
     public void displayClockThread(TextView theClock) {
