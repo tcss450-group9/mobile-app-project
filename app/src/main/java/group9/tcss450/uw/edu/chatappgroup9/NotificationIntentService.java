@@ -22,11 +22,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
 /**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p>
+ * This class sends a new message notification to a user, not finished
  */
 public class NotificationIntentService extends IntentService {
 

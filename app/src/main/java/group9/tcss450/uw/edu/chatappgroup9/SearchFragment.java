@@ -16,14 +16,8 @@ import java.util.ArrayList;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
-
-
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SearchFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * I added this comment just so I could push a change. <3 Cory
+ * This class relates to search a user by username, email or fist name and last name
  */
 public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
 
@@ -58,6 +52,10 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         return view;
     }
 
+    /**
+     * starts a searching by clicking the whole search view.
+     * @param view
+     */
     private void SearchViewOnClicked(View view) {
         mySearchView.setIconified(false);
     }
@@ -117,9 +115,9 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     }
 
     public interface OnFragmentInteractionListener {
-        void onSearchByEmailAttempt(String searchInfo);
+        void onSearchByEmailAttempt(String email);
 
-        void onSearchByUsernameAttempt(String searchInfo);
+        void onSearchByUsernameAttempt(String username);
 
         void onSearchByNameAttempt(String firstname, String lastname);
     }

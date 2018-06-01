@@ -135,7 +135,6 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
                 R.id.spinnerItemTextViewUsername, usernameList);
 
         adapter.setDropDownViewResource(R.layout.spinner_item_contact);
-//        NothingSelectedSpinnerAdapter spinnerAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_item_contact, getContext());//don't user this adapter
         mySpinner.setOnItemSelectedListener(this);
         mySpinner.setAdapter(adapter);
 
@@ -413,9 +412,7 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
     }
 
     private void handleResetOnPost(String s) {
-//        if (myNewAddedUsername != null) {
-//            myChattingWith.setText(myChattingWith.getText().toString() + ", " + myNewAddedUsername);
-//        }
+
     }
 
     @Override

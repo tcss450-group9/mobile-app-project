@@ -127,7 +127,7 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
     }
 
     /**
-     *
+     * gets the chat id and uses it to create a chat session
      * @param result the returned chat id.
      */
     private void endOfGetNewChatId(String result) {
@@ -170,7 +170,6 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
             Log.e(TAG, "JSON Parse Error" + e.getMessage());
         }
 
-        //TODO return exist chat id but still insert memberIdB to the database
         Log.e(TAG, "createNewChatSession " + chatId + " magsJson: " + magsJson.toString());
         new SendPostAsyncTask.Builder(uri.toString(), magsJson)
                 .onPostExecute(this::startChatting)
@@ -193,7 +192,6 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
             } else {
                 Log.e(TAG, "start chatting fail " + jsonObject.toString());
             }
-
         } catch (JSONException e) {
             Log.e(TAG, "JSON parse error " + e.getMessage());
         }

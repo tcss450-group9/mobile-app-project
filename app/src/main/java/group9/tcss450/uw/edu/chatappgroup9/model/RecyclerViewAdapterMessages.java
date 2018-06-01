@@ -59,6 +59,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
     }
 
     /**
+     * @since
      * The layouts of the messages is invisible and must set visible.
      * @param holder
      * @param position
