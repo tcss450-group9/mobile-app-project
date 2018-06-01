@@ -73,13 +73,9 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         return false;
     }
 
-    /**
-     * detects user input and search by username, email or first name and last name.
-     * @param newText
-     * @return
-     */
     @Override
     public boolean onQueryTextChange(String newText) {
+        //detects user input and search by username, email or first name and last name.
         if (!TextUtils.isEmpty(newText)) {
 //            Log.e("searchFragment", "change text: " + newText);
             if (InputVerificationTool.isEmail(newText)) {
@@ -115,10 +111,23 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     }
 
     public interface OnFragmentInteractionListener {
+        /**
+         * search by email
+         * @param email
+         */
         void onSearchByEmailAttempt(String email);
 
+        /**
+         * search by username
+         * @param username
+         */
         void onSearchByUsernameAttempt(String username);
 
+        /**
+         * search by first name and last name
+         * @param firstname
+         * @param lastname
+         */
         void onSearchByNameAttempt(String firstname, String lastname);
     }
 }

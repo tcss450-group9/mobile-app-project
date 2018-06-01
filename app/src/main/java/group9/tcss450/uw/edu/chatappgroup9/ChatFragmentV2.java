@@ -112,7 +112,6 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
         return v;
     }
 
-
     /**
      * initializes the spinner.
      */
@@ -411,7 +410,7 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
                 .build().execute();
     }
 
-    private void handleResetOnPost(String s) {
+    private void handleResetOnPost(String theRespond) {
 
     }
 
