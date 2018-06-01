@@ -24,6 +24,13 @@ import group9.tcss450.uw.edu.chatappgroup9.model.Credentials;
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
+/**
+ *This is the main Activity  that begins the app and also serves as the login page.
+ * This activity  can call the registration activity and the forgot password activity.
+ * It implements  the forgot password  fragment
+ *
+ *
+ */
 public class MainActivity extends AppCompatActivity implements ForgotPasswordFragment.OnFragmentInteractionListener  {
 
     private final String INVALID_LOGIN_INFO = "Invalid username or password";
@@ -35,6 +42,11 @@ public class MainActivity extends AppCompatActivity implements ForgotPasswordFra
     private SharedPreferences mySharePrefs;
 
     @Override
+    /**
+     * This Method creates the context of the activity and act like a constructor for the activity.
+     *
+     * @param savedInstanceState  the saved state of the activity.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -57,6 +69,11 @@ public class MainActivity extends AppCompatActivity implements ForgotPasswordFra
         }
     }
 
+    /**
+     * Sets the on  click listener for the login submit button.
+     *
+     * @param view  this is the button that will use the onclick listener
+     */
     public void loginOnClicked(View view){
         if (!isLoginInfoGood()) {
             myUsername.setError(INVALID_LOGIN_INFO);
@@ -192,9 +209,9 @@ public class MainActivity extends AppCompatActivity implements ForgotPasswordFra
 
 
     /**
-     * This method only call if login success;
+     * This method is called on login success;
      * it will save the user information in the shared preferences.
-     * @param resultsJSON
+     * @param resultsJSON  this is the return for the webservice call with the login information.
      */
     private void saveUserInfoToSharedPreference(JSONObject resultsJSON) {
         SharedPreferences prefs =
@@ -233,11 +250,6 @@ public class MainActivity extends AppCompatActivity implements ForgotPasswordFra
 
 
     }
-    public void onForgotClick(View view){
-        Intent intent = new Intent(this, PasswordActivity.class);
-        startActivity(intent);
-        }
-
 
     @Override
     public void onFragmentInteraction(Uri uri) {

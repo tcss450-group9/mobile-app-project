@@ -21,7 +21,11 @@ import java.util.Random;
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
-
+/**
+ * This fragment  sends the  request to reset the password and adds a verification code to the DB to allow the user to change the password.
+ *
+ *@author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
+ */
 public class ForgotPasswordFragment extends Fragment {
 
 
@@ -29,12 +33,22 @@ public class ForgotPasswordFragment extends Fragment {
     private final String TAG = "ForgotPasswordFragment";
     private EditText myEmail;
 
+    /**
+     * Required empty public constructor.
+     */
     public ForgotPasswordFragment() {
         // Required empty public constructor
     }
 
 
     @Override
+    /**
+     * creates the view that the view the fragment will be contained in.
+     *
+     * @param inflater  creates the view
+     * @param container  the activity that the fragement will be in
+     * @param savedInstanceState set to a previous state if one exists
+     */
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_forgot_password , container, false);
@@ -46,6 +60,11 @@ public class ForgotPasswordFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Chages the fragment if the user has clicked that they have an active change password request.
+     *
+     * @param view this is the view  that the button is contained in
+     */
     public void onAlreadySubmit(View view){
         ResetFragment frag  = new ResetFragment();
 
@@ -59,6 +78,9 @@ public class ForgotPasswordFragment extends Fragment {
 
 
     @Override
+    /**
+     * upon the fragment being attached to the activity.
+     */
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -69,6 +91,11 @@ public class ForgotPasswordFragment extends Fragment {
         }
     }
 
+    /**
+     * This sends an async task to the DB that tells it that user needs to reset their password and add a verification code to do so.
+     *
+     * @param view This is the button that with initiate the click.
+     */
     public void onSubmitClickForgot(View view) {
         String email = myEmail.getText().toString();
         if (!InputVerificationTool.isEmail(email)) {
@@ -106,6 +133,10 @@ public class ForgotPasswordFragment extends Fragment {
         getActivity().finish();
     }
 
+    /**
+     * prints and error message on failed request
+     * @param msg this the the errror message
+     */
     private void handleError(final String msg) {
         Log.e("Forgot password submit ERROR!!!", msg.toString());
     }
@@ -128,12 +159,17 @@ public class ForgotPasswordFragment extends Fragment {
     }
 
     @Override
+    /**
+     * this is what the fragment will do on detach from the context.
+     */
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-
+    /**
+     * does nothing
+     */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }

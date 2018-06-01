@@ -21,13 +21,17 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 
-
+/**
+ * allows the user to reset their password upon forgetting it.
+ *
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
+ */
 public class ResetFragment extends Fragment {
+    /* min lengths a password must be to be valid*/
     private int MIN_LENGTH_USERNAME_PASSWORD = 6;
-
+    /* error dialogs*/
     private final String PASSWORD_NOT_MATCH = "Passwords are not match";
     private final String PASSWORD_TOO_SHORT = "Password is too short";
-
     private final String PASSWORD_TOO_SIMPLE = "Password is too simple";
     private final String TAG = "ResetFragment";
 
@@ -38,6 +42,9 @@ public class ResetFragment extends Fragment {
     }
 
     @Override
+    /**
+     * creates  and sets the layout of the this fragment and returns it to the activity
+     */
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -48,12 +55,16 @@ public class ResetFragment extends Fragment {
         return v;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+//    public void onButtonPressed(Uri uri) {
+//        if (mListener != null) {
+//            mListener.onFragmentInteraction(uri);
+//        }
+//    }
 
+    /**
+     * Sets the onclicklistener for the forgotten password  submit button which sends a async tasks to the DB  that creates the new password in the DB.
+     * @param view  this is the button object to have it's  onclicklistener set
+     */
     public void onSubmitClickForgot(View view) {
 
         Log.d(TAG, "onSubmitClickForgot: here");
@@ -100,6 +111,10 @@ public class ResetFragment extends Fragment {
         }
     }
 
+    /**
+     * Tells the user that their password has been reset and then loads the next login fragment  so the user can login in with the new password.
+     * @param result  this is the json on result that tells us if the post request succeeded.
+     */
     private void handleResetOnPost(String result) {
         SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
         int verificationPin = preferences.getInt(getString(R.string.keys_verification_pin), -99999);
