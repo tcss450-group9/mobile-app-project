@@ -109,8 +109,6 @@ public class RecyclerViewAdapterSearchResult extends RecyclerView.Adapter<Recycl
             myDataSet = new ArrayList<>();
         }
         notifyDataSetChanged();
-
-
     }
 
     // Create new views (invoked by the layout manager)

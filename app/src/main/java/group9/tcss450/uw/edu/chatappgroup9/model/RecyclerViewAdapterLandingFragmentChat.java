@@ -53,9 +53,6 @@ public class RecyclerViewAdapterLandingFragmentChat extends RecyclerView.Adapter
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         targetChatId = myChatIds.get(position);
-        holder.oneChatItem.setText("matthew melodyriver Rabidhippo");
-
-
     }
 
     public void addData(String newMessage) {

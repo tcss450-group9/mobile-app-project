@@ -781,6 +781,7 @@ public class NavigationActivity extends AppCompatActivity
                         .getJSONArray(getString(R.string.keys_json_contacts));
                 mAdapter = new RecyclerViewAdapterContact(jsonArrayContactDataToStringList(contactArray));
                 recyclerView.setAdapter(mAdapter);
+
             } else {
                 ((RecyclerViewAdapterContact) recyclerView.getAdapter()).setAdapterDataSet(null);
             }
@@ -870,7 +871,7 @@ public class NavigationActivity extends AppCompatActivity
         } catch (JSONException e) {
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
         }
-        saveFriendIdUsername(friendsList);
+//        saveFriendIdUsername(friendsList);
         return contactsList;
     }
 

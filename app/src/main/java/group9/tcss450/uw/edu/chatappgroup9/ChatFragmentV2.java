@@ -124,6 +124,10 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
             myContactsList = gson.fromJson(friendsJson, type);
             Log.e(TAG, "myContactsList is null");
         }
+        if (myContactsList == null) {
+            myContactsList = new ArrayList<>();
+            Log.e(TAG, "create empty list");
+        }
 
         myCopiedContactsList = (ArrayList<String>) myContactsList.clone();
         Log.e(TAG, "myContactsList is not null - myCopiedContactsList " + myCopiedContactsList.size());
