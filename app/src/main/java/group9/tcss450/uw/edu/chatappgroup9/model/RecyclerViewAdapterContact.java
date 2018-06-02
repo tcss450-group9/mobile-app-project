@@ -48,6 +48,10 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
         private SharedPreferences myPrefs;
 
 
+        /**
+         * Constructor for creating a ViewHolder object.
+         * @param itemView
+         */
         public ViewHolder(View itemView) {
             super(itemView);
             viewRequestSwitch = itemView.findViewById(R.id.contactsSwitchExisting);
@@ -129,12 +133,14 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-
-    // Provide a suitable constructor (depends on the kind of dataset)
     public RecyclerViewAdapterContact(List<String> theDataset) {
         mDataset = theDataset;
     }
 
+    /**
+     * Sets the contact data to the given Array.
+     * @param myDataset An arraylist of contacts and their corresponding data.
+     */
     public void setAdapterDataSet(List<String> myDataset) {
         if (myDataset != null) {
             mDataset = myDataset;

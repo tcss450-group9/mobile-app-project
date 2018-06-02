@@ -9,14 +9,29 @@ import android.widget.TextView;
 
 import group9.tcss450.uw.edu.chatappgroup9.R;
 
+/**
+ * This adapter populates the recyclerview in WeatherFragment with the data for each 3 hour interval
+ * of the forecast. Each forecast item has an icon, a temperature TextView and a time TextView.
+ * @author Cory Davis
+ * @version 5/31/18
+ */
 public class RecyclerViewAdapter24HForecast extends RecyclerView.Adapter<RecyclerViewAdapter24HForecast.ViewHolder>  {
 
+    /**
+     * The dataset used to populate the recyclerview. Each row of the array is a new forecast for
+     * the hour. Column 0 is the temperature String. Column 1 is the time string. Column 2 is the
+     * icon code string.
+     */
     private String[][] mDataset;
 
     public RecyclerViewAdapter24HForecast(String[][] data) {
         mDataset = data;
     }
 
+    /**
+     * Represents each forecast item. Contains the time, temperature and icon and gives context to
+     * each item.
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView myTime;
@@ -31,6 +46,12 @@ public class RecyclerViewAdapter24HForecast extends RecyclerView.Adapter<Recycle
         }
     }
 
+    /**
+     * Inflates the viewholders
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public RecyclerViewAdapter24HForecast.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v =  LayoutInflater.from(parent.getContext())
@@ -39,6 +60,11 @@ public class RecyclerViewAdapter24HForecast extends RecyclerView.Adapter<Recycle
         return vh;
     }
 
+    /**
+     * Binds the data from the dataset onto each view in the viewholder.
+     * @param holder The current viewholder
+     * @param position The position the viewholder has in the recyclerview.
+     */
     @Override
     public void onBindViewHolder(RecyclerViewAdapter24HForecast.ViewHolder holder, int position) {
         holder.myTemp.setText(mDataset[position][0]);
@@ -51,6 +77,13 @@ public class RecyclerViewAdapter24HForecast extends RecyclerView.Adapter<Recycle
         return mDataset.length;
     }
 
+
+    /**
+     * Sets the given icon to the appropriate image depending on the code given by the weather API
+     * call.
+     * @param iconCode String code given by the weather API which indicates the correct picture to use.
+     * @param icon The ImageView to change to match the weather.
+     */
     public void setWeatherIcon(String iconCode, ImageView icon) {
         switch(iconCode) {
             case "01d": icon.setImageResource(R.drawable.ic_sunny);
