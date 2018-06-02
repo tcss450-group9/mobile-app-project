@@ -44,6 +44,13 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
         // Required empty public constructor
     }
 
+    /**
+     * Initializes the chat recyclerview. Displays the clock.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,7 +71,9 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
         return view;
     }
 
-
+    /**
+     * Sets the chat listener.
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -107,6 +116,10 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
         Log.e(" LISTEN ERROR!!!", e.getMessage());
     }
 
+    /**
+     * Updates the chat recyclerview with new chats.
+     * @param result
+     */
     private void endOfGetChatsTask(JSONObject result) {
         List<String> chatIdList = new ArrayList<>();
         try {
@@ -144,7 +157,6 @@ public class LandingFragment extends Fragment implements RecyclerViewAdapterLand
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

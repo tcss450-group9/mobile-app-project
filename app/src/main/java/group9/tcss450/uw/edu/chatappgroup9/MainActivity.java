@@ -251,6 +251,10 @@ public class MainActivity extends AppCompatActivity implements ForgotPasswordFra
 
     }
 
+    /**
+     * Kicks off the PasswordActivity when the "Forgot Password" button is clicked.
+     * @param view
+     */
     public void onForgotClick(View view) {
         Intent intent = new Intent(this, PasswordActivity.class);
         startActivity(intent);
