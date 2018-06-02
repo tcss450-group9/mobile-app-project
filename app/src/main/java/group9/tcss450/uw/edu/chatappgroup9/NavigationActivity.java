@@ -95,6 +95,8 @@ public class NavigationActivity extends AppCompatActivity
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
     private LatLng mySelectedLocation;
+    private double myLatitude;
+    private double myLongitude;
 
     /**
      * True if the data for the weather API call came from selecting a point on the map.
@@ -171,6 +173,11 @@ public class NavigationActivity extends AppCompatActivity
                         new LandingFragment(), getString(R.string.keys_landing_fragment_tag))
                         .commit();
             }
+
+        }
+        else {
+            myLatitude = savedInstanceState.getDouble("lat");
+            myLongitude = savedInstanceState.getDouble("lon");
         }
 
         // Create an instance of GoogleAPIClient.
@@ -266,6 +273,27 @@ public class NavigationActivity extends AppCompatActivity
 //        }
     }
 
+    /**
+     * Stores the latitude and longitude of the current location before onDestroy() is called.
+     * @param out The bundle containing the state of the activity before destroying.
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle out) {
+        super.onSaveInstanceState(out);
+        out.putDouble("lat",mCurrentLocation.getLatitude());
+        out.putDouble("lon",mCurrentLocation.getLongitude());
+    }
+
+    /**
+     * Stores the latitude and longitude of the current location before onDestroy() is called.
+     * @param out The bundle containing the state of the activity before destroying.
+     */
+    @Override
+    protected void onRestoreInstanceState(Bundle out) {
+        super.onRestoreInstanceState(out);
+
+    }
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         // If the initial location was never previously requested, we use
@@ -289,6 +317,8 @@ public class NavigationActivity extends AppCompatActivity
 
                 mCurrentLocation =
                         LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                myLatitude = mCurrentLocation.getLatitude();
+                myLongitude = mCurrentLocation.getLongitude();
 
                 if (mCurrentLocation != null) {
                     Log.i(TAG, mCurrentLocation.toString());
@@ -384,8 +414,28 @@ public class NavigationActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Returns the current location of the device.
+     * @return Location object of the device's current location
+     */
     public Location getLocation() {
         return mCurrentLocation;
+    }
+
+    /**
+     * Returns the latitude of the current location of the device.
+     * @return double indicating the latitude of the device's current location.
+     */
+    public double getLatitude() {
+        return myLatitude;
+    }
+
+    /**
+     * Returns the longitude of the current location of the device.
+     * @return double indicating the longitude of the device's current location.
+     */
+    public double getLongitude() {
+        return myLongitude;
     }
 
     protected void onStop() {

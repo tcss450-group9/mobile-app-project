@@ -107,10 +107,8 @@ public class WeatherFragment extends Fragment {
         myPrefs = myActivity.getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
         myLastWeatherUpdate = new JSONObject();
         myLastWeather24HForecast = new JSONObject();
-        myLocation = myActivity.getLocation();
-        myLongitude = String.valueOf(myLocation.getLongitude());
-        myLatitude = String.valueOf(myLocation.getLatitude());
-        Log.d(TAG, myLatitude + " " + myLongitude);
+        myLatitude = String.valueOf(myActivity.getLatitude());
+        myLongitude = String.valueOf(myActivity.getLongitude());
 
         //Set the timer for allowing API calls (>10 minutes ago)
         if(myPrefs.contains(getString(R.string.keys_shared_prefs_last_weather_api_call_time))) {
@@ -418,7 +416,6 @@ public class WeatherFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
