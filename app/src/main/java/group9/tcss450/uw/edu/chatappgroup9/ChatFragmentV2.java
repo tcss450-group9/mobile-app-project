@@ -31,7 +31,6 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import group9.tcss450.uw.edu.chatappgroup9.model.NothingSelectedSpinnerAdapter;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterMessages;
 import group9.tcss450.uw.edu.chatappgroup9.utils.ListenManager;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
@@ -40,6 +39,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
  * Chat class listens and sends message. You can add a friends to a chat through selecting
  * your friends from the spinner on the top. You can also leave a chat. leaving a chat will not
  * accept any new message.
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  */
 public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelectedListener {
     private String myUsername;
@@ -111,7 +111,6 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
 
         return v;
     }
-
 
     /**
      * initializes the spinner.
@@ -411,7 +410,7 @@ public class ChatFragmentV2 extends Fragment implements AdapterView.OnItemSelect
                 .build().execute();
     }
 
-    private void handleResetOnPost(String s) {
+    private void handleResetOnPost(String theRespond) {
 
     }
 

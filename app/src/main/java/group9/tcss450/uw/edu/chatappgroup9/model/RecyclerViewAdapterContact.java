@@ -27,7 +27,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
  * Each contact consists of a username and full name which are replaced by the data returned by the
  * database. Each contact also has a delete button which will remove the connection from the
  * database and update the list. Their friendship has been nullified =(.
- * @author Cory Davis
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  * @version 5/31/18
  */
 public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerViewAdapterContact.ViewHolder> {
@@ -42,8 +42,6 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
         private TextView myFriendFullName;
         private String myUsername;
         private Button myDeleteButton;
-        private Switch viewRequestSwitch;
-        private RecyclerView myContactRecyclerView;
         private Context myContext;
         private SharedPreferences myPrefs;
 
@@ -54,7 +52,6 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
          */
         public ViewHolder(View itemView) {
             super(itemView);
-            viewRequestSwitch = itemView.findViewById(R.id.contactsSwitchExisting);
             myFriendUsername = itemView.findViewById(R.id.recycleViewItemchatUsername);
             myFriendFullName = itemView.findViewById(R.id.recycleview_item_textview_fullname);
             myDeleteButton = itemView.findViewById(R.id.recycleview_item_button_add_remove);
@@ -65,7 +62,6 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
                     (R.string.keys_shared_prefs_username), null);
 
             myDeleteButton.setOnClickListener(this::onClick);
-            myContactRecyclerView = itemView.findViewById(R.id.contactRecycleViewAllContacts);
         }
 
         /**

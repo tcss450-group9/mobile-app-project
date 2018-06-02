@@ -24,6 +24,7 @@ import java.net.URL;
 
 /**
  * This class sends a new message notification to a user, not finished
+ * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  */
 public class NotificationIntentService extends IntentService {
 

@@ -28,7 +28,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
  *This is the main Activity  that begins the app and also serves as the login page.
  * This activity  can call the registration activity and the forgot password activity.
  * It implements  the forgot password  fragment
- *
+ *@author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  *
  */
 public class MainActivity extends AppCompatActivity implements ForgotPasswordFragment.OnFragmentInteractionListener  {
@@ -249,6 +249,11 @@ public class MainActivity extends AppCompatActivity implements ForgotPasswordFra
         }
 
 
+    }
+
+    public void onForgotClick(View view) {
+        Intent intent = new Intent(this, PasswordActivity.class);
+        startActivity(intent);
     }
 
     @Override
