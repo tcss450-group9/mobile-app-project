@@ -37,7 +37,7 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 
 /**
  * Chat claass listens and sends message. You can add a friends to a chat through selecting
- * your friends from the spinner on the top. You can also leave a chat. leaving a chat will not
+ * your friends from the as spinner on the top. You can also leave a chat. leaving a chat will not
  * accept any new message.
  * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
  */
