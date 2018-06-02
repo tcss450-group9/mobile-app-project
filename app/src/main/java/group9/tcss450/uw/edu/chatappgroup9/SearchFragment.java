@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.InputVerificationTool;
+
 /**
  * This class relates to search a user by username, email or fist name and last name
  * @author Garrett Engle, Jenzel Villanueva, Cory Davis,Minqing Chen
@@ -54,7 +55,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     }
 
     /**
-     * starts a searching by clicking the whole search view.
+     * This starts a search by clicking the whole search view.
      * @param view
      */
     private void SearchViewOnClicked(View view) {
@@ -74,9 +75,13 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         return false;
     }
 
+    /**
+     * Detects user input and search by username, email for first name and last name.
+     * @param newText new incoming text
+     * @return true if we get results
+     */
     @Override
     public boolean onQueryTextChange(String newText) {
-        //detects user input and search by username, email or first name and last name.
         if (!TextUtils.isEmpty(newText)) {
 //            Log.e("searchFragment", "change text: " + newText);
             if (InputVerificationTool.isEmail(newText)) {
@@ -111,6 +116,9 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         myListener = null;
     }
 
+    /**
+     * This interface is used for the kinda of interaction we have with the SearchFragment.
+     */
     public interface OnFragmentInteractionListener {
         /**
          * search by email
