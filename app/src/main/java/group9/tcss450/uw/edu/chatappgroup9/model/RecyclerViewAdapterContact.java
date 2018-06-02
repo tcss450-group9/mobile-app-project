@@ -33,9 +33,11 @@ import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
 public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerViewAdapterContact.ViewHolder> {
     private List<String> mDataset;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
+    /**
+     *  Provide a reference to the views for each data item
+     *  Complex data items may need more than one view per item, and
+     *  you provide access to all the views for a data item in a view holder
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private TextView myFriendUsername;
@@ -147,7 +149,9 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    // Create new views (invoked by the layout manager)
+    /**
+     * Create new views (invoked by the layout manager)
+     */
     @Override
     public RecyclerViewAdapterContact.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                                     int viewType) {
@@ -158,7 +162,9 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    /**
+     * Replace the contents of a view (invoked by the layout manager)
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String[] data = mDataset.get(position).split(":");
@@ -171,7 +177,9 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
     }
 
 
-    // Return the size of your dataset (invoked by the layout manager)
+    /**
+     * Return the size of your dataset (invoked by the layout manager)
+     */
     @Override
     public int getItemCount() {
         return mDataset.size();
