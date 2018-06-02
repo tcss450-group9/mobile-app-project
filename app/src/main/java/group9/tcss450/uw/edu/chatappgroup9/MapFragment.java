@@ -21,7 +21,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * This is a simple {@link Fragment} subclass. This class is the first page to see after the login
+ * to app. It shows the user a map, using the Google Maps API.
+ *
+ * @author @author Garrett Engle, Jenzel Villanueva, Cory Davis, Minqing Chen
+ * @version 6/1/18
  */
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
@@ -37,7 +41,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         // Required empty public constructor
     }
 
-
+    /**
+     * Creates and sets the layout of the this fragment and returns it to the activity.
+     *
+     * @return the View of this Fragment.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,6 +59,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         return v;
     }
 
+    /**
+     * After the view is created, this method gets this map ready.
+     * @param v The View of the fragment
+     * @param b The bundle; unused
+     */
     @Override
     public void onViewCreated(View v, Bundle b) {
         if(myMapView != null) {
@@ -60,6 +73,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
     }
 
+    /**
+     * This method is used for the kind of interaction from clicking on the Map
+     * @param latLng The latitude and longitude of the map
+     */
     @Override
     public void onMapClick(LatLng latLng) {
          myActivity.setMapSelection(latLng);
@@ -70,13 +87,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         ft.commit();
     }
 
+    /**
+     * This method lets us know when the map is ready to be used, and allows camera control.
+     * @param googleMap the map that we are using.
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
         mGoogleMap.setOnMapClickListener(this::onMapClick);
         // Hardcode - Add a marker in Tacoma, WA, and move the camera.
-        //LatLng latLng = new LatLng(47.2529, -122.4443);
+        // LatLng latLng = new LatLng(47.2529, -122.4443);
+
+        // Proper version
         LatLng latLng = new LatLng(mLat, mLng);
         mGoogleMap.addMarker(new MarkerOptions().
                 position(latLng).

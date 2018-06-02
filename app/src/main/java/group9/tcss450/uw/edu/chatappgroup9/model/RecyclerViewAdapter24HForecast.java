@@ -68,7 +68,7 @@ public class RecyclerViewAdapter24HForecast extends RecyclerView.Adapter<Recycle
     @Override
     public void onBindViewHolder(RecyclerViewAdapter24HForecast.ViewHolder holder, int position) {
         holder.myTemp.setText(mDataset[position][0]);
-        //holder.myTime.setText(mDataset[position][1]);
+        holder.myTime.setText(mDataset[position][1]);
         setWeatherIcon(mDataset[position][2], holder.myIcon);
     }
 
