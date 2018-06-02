@@ -2,10 +2,8 @@ package group9.tcss450.uw.edu.chatappgroup9;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -46,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterContact;
+import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterFriends;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterRequest;
 import group9.tcss450.uw.edu.chatappgroup9.model.RecyclerViewAdapterSearchResult;
 import group9.tcss450.uw.edu.chatappgroup9.utils.SendPostAsyncTask;
@@ -221,7 +220,7 @@ public class NavigationActivity extends AppCompatActivity
             mGoogleApiClient.connect();
         }
         super.onStart();
-        getFriendList();
+
     }
 
     /**
@@ -731,6 +730,7 @@ public class NavigationActivity extends AppCompatActivity
                         .getJSONArray(getString(R.string.keys_json_contacts));
                 mAdapter = new RecyclerViewAdapterContact(jsonArrayContactDataToStringList(contactArray));
                 recyclerView.setAdapter(mAdapter);
+                friendsJsonArrayToList(contactArray);
             } else {
                 ((RecyclerViewAdapterContact) recyclerView.getAdapter()).setAdapterDataSet(null);
             }
@@ -811,16 +811,16 @@ public class NavigationActivity extends AppCompatActivity
                 String lastNameA = msg.get(getString(R.string.keys_json_lastname)).toString();
                 String msgString = usernameA + ":" + firstNameA + " " + lastNameA;
                 contactsList.add(msgString);
-                //for Friend Fragment
-                String friendMemberId = msg.get(getString(R.string.keys_json_memberid)).toString();
-                String friendUsername = msg.get(getString(R.string.keys_json_username)).toString();
-                String friendsIdUsername = friendMemberId + ":" + friendUsername;
-                friendsList.add(friendsIdUsername);
+//                //for Friend Fragment
+//                String friendMemberId = msg.get(getString(R.string.keys_json_memberid)).toString();
+//                String friendUsername = msg.get(getString(R.string.keys_json_username)).toString();
+//                String friendsIdUsername = friendMemberId + ":" + friendUsername;
+//                friendsList.add(friendsIdUsername);
             }
         } catch (JSONException e) {
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
         }
-        saveFriendIdUsername(friendsList);
+//        saveFriendIdUsername(friendsList);
         return contactsList;
     }
 
@@ -873,6 +873,8 @@ public class NavigationActivity extends AppCompatActivity
      * @param theResponse the text received from the web service.
      */
     private void handleGetFriendListOnPost(String theResponse) {
+        RecyclerView recyclerView = findViewById(R.id.friendsRecyclerViewContacts);
+        RecyclerViewAdapterFriends mAdapter;
         try {
             JSONObject responseAsJSON = new JSONObject(theResponse);
             boolean success = responseAsJSON.getBoolean(getString(R.string.keys_json_success));
@@ -880,8 +882,10 @@ public class NavigationActivity extends AppCompatActivity
             if (success) {
                 JSONArray contactArray = responseAsJSON
                         .getJSONArray(getString(R.string.keys_json_contacts));
-                myContactList = contactsJsonArrayToList(contactArray);
+                myContactList = friendsJsonArrayToList(contactArray);
                 Log.e(TAG, "handleGetFriendListOnPost success " + myContactList.toString());
+                mAdapter = new RecyclerViewAdapterFriends(friendsJsonArrayToList(contactArray));
+                recyclerView.setAdapter(mAdapter);
 //                loadFriendsFragment();
             } else {
                 Log.e(TAG, "Unable to get friend list: ");
@@ -893,11 +897,11 @@ public class NavigationActivity extends AppCompatActivity
 
     /**
      * converts a jason array returned from handleGetFriendListOnPost to an string array list.
-     *
+     * and save to shared preferences.
      * @param allContacts the contacts data in Json array format
      * @return
      */
-    private ArrayList<String> contactsJsonArrayToList(JSONArray allContacts) {
+    private ArrayList<String> friendsJsonArrayToList(JSONArray allContacts) {
         ArrayList<String> msgs = new ArrayList<>();
         try {
             for (int i = 0; i < allContacts.length(); i++) {
@@ -911,7 +915,7 @@ public class NavigationActivity extends AppCompatActivity
             Log.e("NavigationActivity", "JSON parse error" + e.getMessage());
         }
         Log.e(TAG, "save friend id username ");
-        saveFriendIdUsername(msgs);
+//        saveFriendIdUsername(msgs);
         return msgs;
     }
 

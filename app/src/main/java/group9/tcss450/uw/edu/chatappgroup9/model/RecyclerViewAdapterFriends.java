@@ -90,6 +90,16 @@ public class RecyclerViewAdapterFriends extends RecyclerView.Adapter<RecyclerVie
 
     }
 
+    /**
+     * only delete the data in the specified position of the data set.
+     * @param adapterPosition
+     */
+    private void deleteAdapterItem(int adapterPosition) {
+        myContactMembers.remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
+        notifyDataSetChanged();
+    }
+
     public void setItemClickedListener(FriendItemListener listener) {
         friendItemListener = listener;
     }

@@ -51,12 +51,12 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
 
         Bundle bunbdle = getArguments();
         Log.e(TAG, "RecyclerViewAdapterFriends bunbdle = " + bunbdle);
-        if (bunbdle != null) {
-            myContactsList = bunbdle.getStringArrayList("CONTACTS_ID_USERNAME");
-        }
+//        if (bunbdle != null) {
+//            myContactsList = bunbdle.getStringArrayList("CONTACTS_ID_USERNAME");
+//        }
         myFriendsRecyclerView = view.findViewById(R.id.friendsRecyclerViewContacts);
         myFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        RecyclerViewAdapterFriends adapter = new RecyclerViewAdapterFriends(myContactsList);
+        RecyclerViewAdapterFriends adapter = new RecyclerViewAdapterFriends(new ArrayList<>());
         myFriendsRecyclerView.setAdapter(adapter);
         adapter.setItemClickedListener(this);
         myChatId = null;
@@ -67,6 +67,8 @@ public class FriendsFragment extends Fragment implements RecyclerViewAdapterFrie
         myMemberId = getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
                 Context.MODE_PRIVATE).getString(getString(R.string.keys_shared_prefs_memberid),
                 null);
+        myListener.getFriendList(getString(R.string.ep_base_url),
+                getString(R.string.ep_view_connections), myUsername);
         return view;
     }
 
